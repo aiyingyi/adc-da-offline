@@ -1,0 +1,69 @@
+GET  test/test/_search
+{
+  "query": {
+      "bool": {
+          "must": [{
+              "range": {
+                  "date_time": {                    # 设置数据时间范围
+                      "gte": "2020-09-03 00:00:00",
+                      "lte": "2020-09-04 00:00:00"
+                  }
+              }
+          }]
+      }
+  },
+  "size": 0,                # 不显示聚合使用的明细数据
+  "aggs": {
+      "group_by_interval": {
+        "date_histogram": {
+          "field": "date_time",
+          "interval": "1h",
+          "format": "yyyy-MM-dd HH:mm:ss"
+          },
+      "aggs": {
+          "select_first": {
+            "top_hits": {
+              "sort": [{
+                "date_time": {"order": "asc"}
+              }],
+              "size": 1
+            }
+       }
+     }
+    }
+  }
+}
+
+
+
+GET his_vehicle_data_20200913/_search
+{
+    "size":0,
+    "_source":false,
+    "aggs":{
+        "group_by_time":{
+            "date_histogram":{
+                "field":"msgTime",
+                "interval":"1h"
+            },
+            "aggs":{
+                "details":{
+                    "top_hits":{
+                        "size":1,
+                        "_source":[
+                            "name",
+                            "msgTime"
+                        ],
+                        "sort":[
+                            {
+                                "msgTime":{
+                                    "order":"desc"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
