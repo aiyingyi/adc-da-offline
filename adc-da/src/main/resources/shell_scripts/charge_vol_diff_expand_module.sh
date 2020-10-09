@@ -58,8 +58,8 @@ charge_statistics as
   select
       base.vin,
       '${args[$[2*$window_size-2]]}' as  last_charge_time,
-      collect_list(cast ((avg_vol_diff/(1000*3600*24)) as double)) as vol_diff,
-      collect_list(day_diff) as day_diff
+      collect_list(avg_vol_diff) as vol_diff,
+      collect_list( cast (day_diff as double)/(1000*3600*24)) as day_diff
   from
       (select    --计算充电之间的时间差
         vin,
@@ -71,6 +71,14 @@ charge_statistics as
 
 -- 将压差数组和时差数组输入自定义函数，输出是否预警，并写入记录
 
+insert into table ${db}.charge_vol_day_diff_es
+select
+  vin,
+  date_format(last_charge_time,'yyyy-MM-dd HH:mm:ss'),  --最近10次充电中最后一次充电的开始时间
+  vol_diff,
+  day_diff,
+  ${db}.charge_vol_diff_exp(vol_diff,day_diff)
+from charge_statistics
 "
 
 hive  -e "${sql}"

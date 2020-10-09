@@ -1,2 +1,3 @@
 Hive自定义UDF输入参数为数组类型
+
 https://blog.csdn.net/weixin_40039138/article/details/92385034

@@ -6,7 +6,9 @@ hive.exec.dynamic.partition.modet=nonstrict
 2. 开启动态分区
 hive-site.xml 的 Hive 服务高级配置代码段（安全阀）
 hive.exec.dynamic.partition=true
+3.自定义udf函数，上传不带依赖的jar包上传到aux路径中。
 --出现问题
 1. Hiveserver2 总是异常退出
 HiveServer2 的 Java 堆栈大小（字节）
 调节HiveServer2内存大小
+2. UDF函数输入若是Array类型，使用ArrayList接收
