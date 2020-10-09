@@ -58,7 +58,7 @@ select
     get_json_object(data,'$.vehicleType'),
     get_json_object(data,'$.enterprise'),
     get_json_object(data,'$.totalCurrent'),
-    get_json_object(data,'$.soc')
+    cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100
 from ${db}.ods_preprocess_vehicle_data
 where dt = '${do_date}';
 "

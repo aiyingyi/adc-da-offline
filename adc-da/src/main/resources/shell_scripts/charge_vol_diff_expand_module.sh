@@ -31,7 +31,7 @@ do
                and get_json_object(data,'$.msgTime') >= '${args[$[2*$i-2]]}'
                and get_json_object(data,'$.msgTime') <= '${args[$[2*$i-1]]}'
                and get_json_object(data,'$.vin') = '${vin}'
-               and cast(get_json_object(data,'$.soc') as double )>= 0.8
+               and cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100 >= 0.8
              "
    if [ $i -lt $[$window_size] ]
    then
