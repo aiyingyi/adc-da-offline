@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# named_struct 会把 整数直接当成int类型，从而不能插入double类型中
+# named_struct 会把整数直接当成int类型，从而不能插入double类型中
 
 db=warningplatform
 
