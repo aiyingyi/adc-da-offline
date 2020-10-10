@@ -74,7 +74,6 @@ object ChargeMonitor {
         shellArgs = shellArgs + value.vin
         // 传入执行脚本的路径和时间参数,以及vin码
         ShellUtil.exec(conn, shellProperties.getProperty("chargeVolDiffExtendModulePath") + shellArgs)
-
       }
 
       override def close(): Unit = {
@@ -86,7 +85,7 @@ object ChargeMonitor {
     })
 
     // 监控充电状态，计算充电容量
-    dataStream.keyBy(data => data.vin).process(new KeyedProcessFunction[String, ChargeInfo, (String, String, String)] {
+    dataStream.keyBy(data => data.vin).process(new KeyedProcessFunction[String, ChargeInfo, (String, String, String, Double, Double)] {
       // 保存是否充电状态
       private var isCharge: ValueState[Boolean] = _
       private var startTime: ValueState[String] = _
@@ -107,7 +106,7 @@ object ChargeMonitor {
       }
 
       // (String, String, String)为vin，startTime，endTime
-      override def processElement(value: ChargeInfo, ctx: KeyedProcessFunction[String, ChargeInfo, (String, String, String)]#Context, out: Collector[(String, String, String)]): Unit = {
+      override def processElement(value: ChargeInfo, ctx: KeyedProcessFunction[String, ChargeInfo, (String, String, String, Double, Double)]#Context, out: Collector[(String, String, String, Double, Double)]): Unit = {
         val vin: String = value.vin
         val chargeStatus: String = value.chargeStatus
         val msgTime: String = value.msgTime
@@ -136,21 +135,24 @@ object ChargeMonitor {
           if (isCharge.value() == true && startTime.value() < value.msgTime) { // 之前处于充电状态
             isCharge.update(false)
             if (endSoc.value() - startSoc.value() > 40) {
-              out.collect((vin, startTime.value(), endTime.value()))
+              out.collect((vin, startTime.value(), endTime.value(), startSoc.value(), endSoc.value()))
             }
           }
         }
       }
-    }).addSink(new RichSinkFunction[(String, String, String)] {
+    }).addSink(new RichSinkFunction[(String, String, String, Double, Double)] {
       var conn: Connection = _
+
       //  初始化ssh连接
       override def open(parameters: Configuration): Unit = {
         conn = ShellUtil.getConnection(shellProperties.getProperty("userName"), shellProperties.getProperty("passWord"), shellProperties.getProperty("ip"), shellProperties.getProperty("port").toInt)
       }
+
       // 在此处执行shell脚本
-      override def invoke(value: (String, String, String), context: SinkFunction.Context[_]): Unit = {
-        ShellUtil.exec(conn, shellProperties.getProperty("chargeCapacityPath") + " " + value._1 + " " + value._2 + " " + value._3)
+      override def invoke(value: (String, String, String, Double, Double), context: SinkFunction.Context[_]): Unit = {
+        ShellUtil.exec(conn, shellProperties.getProperty("chargeCapacityPath") + " " + value._1 + " " + value._2 + " " + value._3 + " " + value._4 + " " + value._5)
       }
+
       override def close(): Unit = {
         super.close()
         if (conn != null) {
@@ -162,6 +164,12 @@ object ChargeMonitor {
     env.execute("chargeMonitor")
   }
 }
+
+/**
+ * 监控10次有效充电的处理函数
+ *
+ * @param windowSize 窗口大小
+ */
 case class ChargeProcessFunction(windowSize: Int) extends KeyedProcessFunction[String, ChargeInfo, ChargeRecord] {
   // 充电次数
   private var chargeTimes: ValueState[Long] = _
@@ -192,7 +200,6 @@ case class ChargeProcessFunction(windowSize: Int) extends KeyedProcessFunction[S
     // 充电电量
     startSoc = getRuntimeContext.getState(new ValueStateDescriptor[Double]("startSoc", classOf[Double]))
     endSoc = getRuntimeContext.getState(new ValueStateDescriptor[Double]("endSoc", classOf[Double]))
-
   }
 
   override def processElement(value: ChargeInfo, ctx: KeyedProcessFunction[String, ChargeInfo, ChargeRecord]#Context, out: Collector[ChargeRecord]): Unit = {
