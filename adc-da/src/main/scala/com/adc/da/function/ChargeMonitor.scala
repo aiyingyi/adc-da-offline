@@ -46,7 +46,6 @@ object ChargeMonitor {
       shellIn.close()
     }
 
-
     // 创建数据源
     val dataStream: DataStream[ChargeInfo] = env.addSource(new FlinkKafkaConsumer011[String](kafkaProperties.getProperty("topic"), new SimpleStringSchema(), kafkaProperties))
       .map(data => {
@@ -75,7 +74,6 @@ object ChargeMonitor {
         // 传入执行脚本的路径和时间参数,以及vin码
         ShellUtil.exec(conn, shellProperties.getProperty("chargeVolDiffExtendModulePath") + shellArgs)
       }
-
       override def close(): Unit = {
         super.close()
         if (conn != null) {
@@ -83,7 +81,6 @@ object ChargeMonitor {
         }
       }
     })
-
     // 监控充电状态，计算充电容量
     dataStream.keyBy(data => data.vin).process(new KeyedProcessFunction[String, ChargeInfo, (String, String, String, Double, Double)] {
       // 保存是否充电状态
@@ -203,7 +200,6 @@ case class ChargeProcessFunction(windowSize: Int) extends KeyedProcessFunction[S
   }
 
   override def processElement(value: ChargeInfo, ctx: KeyedProcessFunction[String, ChargeInfo, ChargeRecord]#Context, out: Collector[ChargeRecord]): Unit = {
-
     val vin: String = value.vin
     val chargeStatus: String = value.chargeStatus
     val msgTime: String = value.msgTime
