@@ -18,6 +18,7 @@ import org.apache.flink.util.Collector
 import org.apache.flink.api.scala._
 
 /**
+ * 已经实现java代码
  * 实时监控车辆充电数据，将符合条件的充电过程筛选出来,执行充电压差扩大模型算法脚本/或者电池包衰减预警模型
  */
 object ChargeMonitor {

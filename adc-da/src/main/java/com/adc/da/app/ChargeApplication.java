@@ -1,13 +1,11 @@
 package com.adc.da.app;
 
 import ch.ethz.ssh2.Connection;
-import com.adc.da.bean.ChargeInfo;
 import com.adc.da.functions.ChargeVolDiffExpProcessFunction;
 import com.adc.da.util.ComUtil;
 import com.adc.da.util.ShellUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.typesafe.sslconfig.util.PrintlnLogger;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -15,6 +13,8 @@ import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.java.tuple.*;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.contrib.streaming.state.RocksDBStateBackend;
+import org.apache.flink.runtime.state.StateBackend;
 import org.apache.flink.runtime.state.memory.MemoryStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -36,13 +36,18 @@ import java.util.Properties;
 public class ChargeApplication {
 
     // 初始化执行环境
-    public static StreamExecutionEnvironment initEnvironment() {
+    public static StreamExecutionEnvironment initEnvironment() throws IOException {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        // 设置并行度
-        env.setParallelism(2);
-        //env.getConfig().registerTypeWithKryoSerializer();
+
         //  设置状态后端与检查点
+
         env.setStateBackend(new MemoryStateBackend());
+        //RocksDBStateBackend rocksDBStateBackend = new RocksDBStateBackend("hdfs://192.168.11.32:8020/flink-checkpoints", true);
+        //rocksDBStateBackend.setDbStoragePath("file:///home/flink/rocksdb");
+
+        //StateBackend stateBackend = rocksDBStateBackend;
+        //env.setStateBackend(stateBackend);
+
         // 触发检查点的间隔，周期性启动检查点，单位ms
         env.enableCheckpointing(1000L);
         //设置状态一致性级别
@@ -59,6 +64,10 @@ public class ChargeApplication {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = initEnvironment();
+
+        // 设置并行度
+        env.setParallelism(10);
+
         Properties shellConfig = ComUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = ComUtil.loadProperties("config/chargeMonitor.properties");
         // 需求1 充电压差扩大模型算法
@@ -177,7 +186,6 @@ public class ChargeApplication {
                 ShellUtil.exec(conn, shellConfig.getProperty("chargeCapacityPath") + " " + value.f0 + " " + value.f1 + " " + value.f2 + " " + value.f3 + " " + value.f3);
             }
         });
-
 
         env.execute("charge monitor");
     }

@@ -29,9 +29,35 @@ public class MatlabUtil {
 
     }
 
-    ;
+    /**
+     * 一维数据版本
+     *
+     * @param value
+     * @param win   (默认依据数组从0开始)
+     * @return
+     */
+    public static double[] medianSmooth(double[] value, int win) {
+
+        int n = value.length;
+        double[] result = new double[n];
+        result[0] = value[0];
+        for (int i = 1; i < n - 1; i++) {
+            if (i <= win) {
+                result[i] = median(matrixStartStop(value, 0, 2 * i), 1);
+            } else if (i > n - win - 1) {
+                result[i] = median(matrixStartStop(value, 2 * i - n - 1, n - 1), 1);
+            } else {
+                result[i] = median(matrixStartStop(value, i - win, i + win), 1);
+            }
+        }
+        result[n - 1] = value[n - 1];
+        return result;
+
+    }
 
     /**
+     * 二维数据版本
+     *
      * @param value
      * @param win   (默认依据数组从0开始)
      * @return
@@ -104,7 +130,6 @@ public class MatlabUtil {
             }
         }
 
-
     }
 
 
@@ -147,6 +172,28 @@ public class MatlabUtil {
         return result;
 
     }
+
+
+    /**
+     * 求平均值（无其他参数）
+     *
+     * @param value
+     * @return
+     */
+    public static double mean(double[] value) {
+
+        int valueLength = value.length;/* 获取行数*/
+        double result;/* 一维数组平均值*/
+        double totalValue = 0;
+        /* 循环遍历列*/
+        for (int i = 0; i < valueLength; i++) {
+            totalValue += value[i];
+        }
+        result = totalValue / valueLength;
+        return result;
+
+    }
+
 
     /**
      * 求平均值（无其他参数）
@@ -252,7 +299,25 @@ public class MatlabUtil {
 
 
     /**
-     * 求差分
+     * 一维数据：求差分
+     *
+     * @param value
+     * @return
+     */
+    public static double[] diff(double[] value) {
+
+        int valueLength = value.length;
+        double[] result = new double[valueLength - 1];
+        for (int i = 0; i < valueLength - 1; i++) {
+            result[i] = value[i + 1] - value[i];
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 二维矩阵：求差分
      *
      * @param value
      * @return
@@ -850,6 +915,28 @@ public class MatlabUtil {
 
     }
 
+    /**
+     * 除法
+     *
+     * @param dividend 被除数
+     * @param divisor  除数
+     * @return
+     */
+    public static double[] divide(double[] dividend, double[] divisor) {
+
+        int dividendLength = dividend.length;
+        int divisorLength = divisor.length;
+        int maxLength = divisorLength > dividendLength ? divisorLength : dividendLength; /* 获取行数最大值*/
+        double[] result = new double[maxLength]; /* 结果值*/
+
+        for (int row = 0; row < maxLength; row++) {
+            result[row] = dividend[row] / divisor[row];
+        }
+
+        return result;
+
+    }
+
 
     /**
      * 求标准偏差   默认每列求一个标准偏差
@@ -1030,7 +1117,27 @@ public class MatlabUtil {
 
 
     /**
-     * 将矩阵转化为列向量 并获取指定区间的元素  value(:)中start到stop
+     * 一维数据版本：将矩阵转化为列向量 并获取指定区间的元素  value(:)中start到stop
+     *
+     * @param value
+     * @param start
+     * @param stop
+     * @return
+     */
+    public static double[] matrixStartStop(double[] value, int start, int stop) {
+
+        double[] result = new double[stop - start + 1];                  /* 返回值*/
+        int j = 0;
+        for (int i = start; i <= stop; i++) {
+            result[j++] = value[i];
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 二维数据版本：将矩阵转化为列向量 并获取指定区间的元素  value(:)中start到stop
      *
      * @param value
      * @param start
@@ -1064,6 +1171,45 @@ public class MatlabUtil {
 
     }
 
+
+    /**
+     * 获取数组中指定位置的数据
+     *
+     * @param value
+     * @param spot
+     * @return
+     */
+    public static double[] arraySpot(double[] value, double[] spot) {
+
+        double[] result = new double[spot.length];
+        for (int i = 0; i < spot.length; i++) {
+            result[i] = value[(int) spot[i]];
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 求中间值
+     *
+     * @param value
+     * @param dim   1：每列返回一个值，为该列从大到小排列的中间值    2：每行返回一个值，为该行从大到小排列的中间值
+     * @return
+     */
+    public static double median(double[] value, int dim) {
+
+        int valueLength = value.length;
+        double result;
+        value = sort(value);
+        if (valueLength % 2 == 0) {
+            result = (value[valueLength / 2] + value[valueLength / 2 + 1]) / (double) 2;
+        } else {
+            result = value[valueLength / 2 + 1];
+        }
+        return result;
+
+    }
 
     /**
      * 求矩阵的中间值
@@ -1103,10 +1249,29 @@ public class MatlabUtil {
     }
 
     /**
+     * 一维数据从大到小进行排序
+     *
+     * @param value
+     * @return
+     */
+    public static double[] sort(double[] value) {
+
+        int valueLength = value.length;
+        double[] result = new double[valueLength];
+        Arrays.sort(value);
+        int j = 0;
+        for (int i = valueLength - 1; i >= 0; i--) {
+            result[j++] = value[i];
+        }
+        return result;
+
+    }
+
+    /**
      * 矩阵进行排序
      *
      * @param value
-     * @param dim   1：每列按照从大到小排序   2：没行按照从大到小排序
+     * @param dim   1：每列按照从大到小排序   2：每行按照从大到小排序
      * @return
      */
     public static double[][] sort(double[][] value, int dim) {
@@ -1229,6 +1394,7 @@ public class MatlabUtil {
 
     /**
      * 计算日期相差的天数（一天就以1为单位）   返回结果最前边加个0
+     *
      * @param dates
      * @return
      */
@@ -1243,7 +1409,7 @@ public class MatlabUtil {
             for (int i = 0; i < length - 1; i++) {
                 Date date = simpleDateFormat.parse(dates[i]);
                 Date afterDate = simpleDateFormat.parse(dates[i + 1]);
-                result[i+1] = (afterDate.getTime() - date.getTime()) / (24*60*60*1000);    /* 获取相差的天数*/
+                result[i + 1] = (afterDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000);    /* 获取相差的天数*/
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1254,28 +1420,29 @@ public class MatlabUtil {
 
     /**
      * 一次函数线性回归y = ax + b;
+     *
      * @param x
      * @param y
-     * @return  返回 a、b
+     * @return 返回 a、b
      */
-    public static double[] linearRegression(double[] x, double[] y){
+    public static double[] linearRegression(double[] x, double[] y) {
 
         double xSum = 0, ySum = 0;   /* x的多项和、y的多项和*/
-        for (int i=0; i<x.length; i++){
+        for (int i = 0; i < x.length; i++) {
             xSum += x[i];
             ySum += y[i];
         }
-        double xMean = xSum/x.length;
-        double yMean = ySum/y.length;
-        double num=0;            /*多项式和【(x-x的均值)*(y-y的均值)】*/
-        double den=0;           /*多项式和【(x-x的均值)*(x-x的均值)】*/
-        for(int i=0;i<x.length;i++){
-            num+=(x[i]-xMean)*(y[i]-yMean);
-            den+=(x[i]-xMean)*(x[i]-xMean);
+        double xMean = xSum / x.length;
+        double yMean = ySum / y.length;
+        double num = 0;            /*多项式和【(x-x的均值)*(y-y的均值)】*/
+        double den = 0;           /*多项式和【(x-x的均值)*(x-x的均值)】*/
+        for (int i = 0; i < x.length; i++) {
+            num += (x[i] - xMean) * (y[i] - yMean);
+            den += (x[i] - xMean) * (x[i] - xMean);
         }
-        double a = num/den;
-        double b = yMean - a*xMean;
-        double[] result = new double[]{a,b};
+        double a = num / den;
+        double b = yMean - a * xMean;
+        double[] result = new double[]{a, b};
         return result;
 
     }
@@ -1333,7 +1500,7 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             double[][] temp = new double[length][1];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[i][0] = result[i][0];
             }
             result = temp;
@@ -1347,7 +1514,7 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             double[][] temp = new double[length][1];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[i][0] = result[i][0];
             }
             result = temp;
@@ -1361,11 +1528,45 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             double[][] temp = new double[1][length];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[0][i] = result[0][i];
             }
             result = temp;
         }
+
+        if (flag == false) {
+            result = null;
+        }
+        return result;
+
+    }
+
+    /**
+     * reduce 模型三算法中的find函数-暂不支持扩展
+     *
+     * @param x
+     * @param condition1 小于condition的元素位置
+     * @return
+     */
+    public static double[] reduceFind(double[] x, double condition1) {
+
+        int xLength = x.length;
+        double[] result = new double[x.length];
+        boolean flag = false;  /* 标识结果是否没有值  false:没有值*/
+        int length = 0;
+
+        for (int i = 0; i < xLength; i++) {
+            if (x[i] < condition1) {
+                result[length++] = i + 1;
+                flag = true;
+            }
+        }
+        /* 去除长度多余的数据(为0的数据)*/
+        double[] temp = new double[length];
+        for (int i = 0; i < length; i++) {
+            temp[i] = result[i];
+        }
+        result = temp;
 
         if (flag == false) {
             result = null;
@@ -1400,7 +1601,7 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             int[][] temp = new int[length][1];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[i][0] = result[i][0];
             }
             result = temp;
@@ -1414,7 +1615,7 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             int[][] temp = new int[length][1];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[i][0] = result[i][0];
             }
             result = temp;
@@ -1428,7 +1629,7 @@ public class MatlabUtil {
             }
             /* 去除长度多余的数据(为0的数据)*/
             int[][] temp = new int[1][length];
-            for (int i=0; i<length; i++){
+            for (int i = 0; i < length; i++) {
                 temp[0][i] = result[0][i];
             }
             result = temp;

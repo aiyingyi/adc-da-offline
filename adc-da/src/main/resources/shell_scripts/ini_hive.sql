@@ -499,3 +499,18 @@ create external table charge_vol_day_diff_es
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
+-- 连接阻抗大模型es映射表
+create external table connection_impedance_es
+(
+    vin             string,
+    chargeEndTime   string,
+    chargeStartTime string,
+    isWarning       string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/connection_impedance_es'
+    TBLPROPERTIES ('es.resource' = 'connection_impedance_es/connection_impedance_es',
+        'es.mapping.names' =
+                'vin:vin,chargeEndTime:chargeEndTime,chargeStartTime:chargeStartTime,isWarning:isWarning',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
