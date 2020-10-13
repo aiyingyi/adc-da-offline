@@ -35,36 +35,9 @@ import java.util.Properties;
  */
 public class ChargeApplication {
 
-    // 初始化执行环境
-    public static StreamExecutionEnvironment initEnvironment() throws IOException {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-        //  设置状态后端与检查点
-
-        env.setStateBackend(new MemoryStateBackend());
-        //RocksDBStateBackend rocksDBStateBackend = new RocksDBStateBackend("hdfs://192.168.11.32:8020/flink-checkpoints", true);
-        //rocksDBStateBackend.setDbStoragePath("file:///home/flink/rocksdb");
-
-        //StateBackend stateBackend = rocksDBStateBackend;
-        //env.setStateBackend(stateBackend);
-
-        // 触发检查点的间隔，周期性启动检查点，单位ms
-        env.enableCheckpointing(1000L);
-        //设置状态一致性级别
-        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
-        env.getCheckpointConfig().setCheckpointTimeout(60000L);
-        env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
-        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500L);
-        env.getCheckpointConfig().setTolerableCheckpointFailureNumber(3);
-        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 1000L));
-        return env;
-    }
-
-
     public static void main(String[] args) throws Exception {
 
-        StreamExecutionEnvironment env = initEnvironment();
-
+        StreamExecutionEnvironment env = ComUtil.initEnvironment();
         // 设置并行度
         env.setParallelism(10);
 

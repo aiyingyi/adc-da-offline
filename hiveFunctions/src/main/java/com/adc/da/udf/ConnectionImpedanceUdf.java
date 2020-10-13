@@ -16,7 +16,7 @@ public class ConnectionImpedanceUdf extends UDF {
         double[] vdet0 = HiveUtils.listToArray(vdet);
         double[] I0 = HiveUtils.listToArray(I);
         double[] soc0 = HiveUtils.listToArray(soc);
-        return new PlatformAlgorithm().v(vdet0, I0, soc0, rth1, rth2)+"";
+        return new PlatformAlgorithm().v(vdet0, I0, soc0, rth1, rth2) + "";
 
     }
 }

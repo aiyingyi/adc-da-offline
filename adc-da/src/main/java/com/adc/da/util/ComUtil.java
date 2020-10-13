@@ -1,6 +1,11 @@
 package com.adc.da.util;
 
 
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.runtime.state.memory.MemoryStateBackend;
+import org.apache.flink.streaming.api.CheckpointingMode;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -29,6 +34,31 @@ public class ComUtil {
             }
         }
         return properties;
+    }
+
+    // 初始化执行环境
+    public static StreamExecutionEnvironment initEnvironment() throws IOException {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+        //  设置状态后端与检查点
+
+        env.setStateBackend(new MemoryStateBackend());
+        //RocksDBStateBackend rocksDBStateBackend = new RocksDBStateBackend("hdfs://192.168.11.32:8020/flink-checkpoints", true);
+        //rocksDBStateBackend.setDbStoragePath("file:///home/flink/rocksdb");
+
+        //StateBackend stateBackend = rocksDBStateBackend;
+        //env.setStateBackend(stateBackend);
+
+        // 触发检查点的间隔，周期性启动检查点，单位ms
+        env.enableCheckpointing(1000L);
+        //设置状态一致性级别
+        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
+        env.getCheckpointConfig().setCheckpointTimeout(60000L);
+        env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
+        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500L);
+        env.getCheckpointConfig().setTolerableCheckpointFailureNumber(3);
+        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 1000L));
+        return env;
     }
 
 
