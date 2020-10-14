@@ -32,7 +32,7 @@ ods_data as
 insert into table resistance_reduce_es
 select
     vin,
-    r_reduce(collect_list(resistance),cast('${th}' as int),cast('${win}' as int)),
+    ${db}.r_reduce(collect_list(resistance),cast('${th}' as int),cast('${win}' as int)),
     '${startTime}',
     '${endTime}'
 from ods_data

@@ -2,13 +2,14 @@ package com.adc.da.udf;
 
 import com.adc.da.algorithm.PlatformAlgorithm;
 import com.adc.da.util.HiveUtils;
+import org.apache.hadoop.hive.ql.exec.UDF;
 
 import java.util.ArrayList;
 
 /**
  * 绝缘电阻突降hive自定义UDF函数：r_reduce()
  */
-public class ResistanceRreduceUdf {
+public class ResistanceRreduceUdf  extends UDF {
 
     /**
      * @param res 电阻值
