@@ -29,24 +29,13 @@ ods_data as    -- 从ods层解析数据
   and   get_json_object(data,'$.msgTime') >= '${startTime}'
   and   get_json_object(data,'$.msgTime') <= '${endTime}'
   order by msgTime asc
-),
-pre_data as
-(
-  select
-    vin,
-    collect_list(soc) as soc,     -- soc数组  按照时间进行排序
-    collect_list(differenceCellVoltage) as differenceCellVoltage,   -- 压差数组
-    collect_list(totalCurrent) as totalCurrent   -- 电流数组
-  from ods_data
-  group by vin
 )
-
 insert into table ${db}.connection_impedance_es
 select
     vin,
     '${startTime}',
     '${endTime}',
-    conn_impedance(collect_list(differenceCellVoltage),collect_list(totalCurrent),collect_list(soc),
+    ${db}.conn_impedance(collect_list(differenceCellVoltage),collect_list(totalCurrent),collect_list(soc),
     cast('${rth1}' as double),
     cast('${rth2}' as double))
 from ods_data

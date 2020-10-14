@@ -20,7 +20,7 @@ vin=${args[$[${#args[@]}-1]]}
 query_sql="
 select
     get_json_object(data,'$.vin') as vin,
-    get_json_object(data,'$.differenceCellVoltage') as differenceCellVoltage,
+    cast(get_json_object(data,'$.differenceCellVoltage') as double)  as differenceCellVoltage,
 "
 
 # 拼接每次充电查询的sql

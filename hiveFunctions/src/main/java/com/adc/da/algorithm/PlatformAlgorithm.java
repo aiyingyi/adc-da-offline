@@ -3,6 +3,7 @@ package com.adc.da.algorithm;
 import com.adc.da.util.MatlabUtil;
 
 import java.text.ParseException;
+import java.util.Date;
 
 public class PlatformAlgorithm {
 
@@ -67,7 +68,30 @@ public class PlatformAlgorithm {
     }
 
     /**
-     * 模型三：绝缘突降预警
+     * 模型三：一维数据-绝缘突降预警
+     *
+     * @param ri
+     * @param th
+     * @param win
+     * @return
+     */
+    public int rReduce(double[] ri, int th, int win) {
+
+        double[] rSm = MatlabUtil.medianSmooth(ri, win);
+        /* 求差值*/
+        double[] rSmDet = MatlabUtil.diff(rSm);
+        /* 调用find函数*/
+        double[] idex = MatlabUtil.reduceFind(rSmDet, -th);
+        if (idex == null || idex.length == 0) {
+            return 0;   /* 不预警*/
+        } else {
+            return 1;   /* 预警*/
+        }
+
+    }
+
+    /**
+     * 模型三：二维数据-绝缘突降预警
      *
      * @param ri
      * @param th
@@ -128,26 +152,6 @@ public class PlatformAlgorithm {
      * 模型七：充电压差扩大模型算法
      *
      * @param voltageDifference 电压差：mV为单位（10个电压值）
-     * @param time              相差天数
-     * @return
-     */
-    public int chargeDifferentialVoltageExpansion(double[] voltageDifference, double[] time) {
-
-        double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
-        double[] ab = MatlabUtil.linearRegression(time, y);   /* y=ax+b 返回a、b的值*/
-        if (ab[0] > 0.05 && (MatlabUtil.max(time) - MatlabUtil.min(time)) > 40) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
-            return 1;   /* 预警*/
-        } else {
-            return 0;   /* 不预警*/
-        }
-
-    }
-
-
-    /**
-     * 模型七：充电压差扩大模型算法
-     *
-     * @param voltageDifference 电压差：mV为单位（10个电压值）
      * @param time              字符串类型
      * @return
      */
@@ -157,6 +161,25 @@ public class PlatformAlgorithm {
         double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
         double[] ab = MatlabUtil.linearRegression(x, y);   /* y=ax+b 返回a、b的值*/
         if (ab[0] > 0.05 && (MatlabUtil.max(x) - MatlabUtil.min(x)) > 40) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
+            return 1;   /* 预警*/
+        } else {
+            return 0;   /* 不预警*/
+        }
+
+    }
+
+    /**
+     * 模型七：充电压差扩大模型算法
+     *
+     * @param voltageDifference 电压差：mV为单位（10个电压值）
+     * @param time              相差天数
+     * @return
+     */
+    public int chargeDifferentialVoltageExpansion(double[] voltageDifference, double[] time) {
+
+        double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
+        double[] ab = MatlabUtil.linearRegression(time, y);   /* y=ax+b 返回a、b的值*/
+        if (ab[0] > 0.05 && (MatlabUtil.max(time) - MatlabUtil.min(time)) > 40) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
             return 1;   /* 预警*/
         } else {
             return 0;   /* 不预警*/
@@ -184,6 +207,7 @@ public class PlatformAlgorithm {
 
     }
 
+
     /**
      * 模型八：连接阻抗大模型算法（电池压差与电流正相关）
      *
@@ -194,7 +218,7 @@ public class PlatformAlgorithm {
      * @param rth2 阀值2
      * @return
      */
-    public int v(double[] vdet, double[] I, double[] soc, double rth1, double rth2) {
+    public int highConnectionImpedance(double[] vdet, double[] I, double[] soc, double rth1, double rth2) {
 
         double[] Rdet = MatlabUtil.divide(vdet, I);                                  /* 单位是mΩ*/
         if (Rdet.length > 50) {
@@ -238,11 +262,5 @@ public class PlatformAlgorithm {
 
     }
 
-    public static void main(String[] args) {
-
-
-    }
-
 
 }
-

@@ -14,6 +14,7 @@ import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.tuple.Tuple5;
 import org.apache.flink.configuration.Configuration;
@@ -48,7 +49,6 @@ public class ChargeAndStartupMonitor {
                 OdsData ods = new OdsData();
                 JSONObject obj = JSON.parseObject(data, JSONObject.class);
                 double soc = Double.parseDouble(obj.getString("soc").substring(0, obj.getString("soc").length() - 1));
-
                 ods.setVin(obj.getString("vin"));
                 ods.setMsgTime(obj.getLong("msgTime"));
                 ods.setSpeed(obj.getDouble("speed"));
@@ -59,16 +59,31 @@ public class ChargeAndStartupMonitor {
                 return ods;
             }
         });
-        dataStream.keyBy(ods -> ods.getVin());
+        //dataStream.keyBy(ods -> ods.getVin()).process;
 
 
         env.execute("ChargeAndRunMonitor");
     }
 }
 
-class ChargeAndStartup extends KeyedProcessFunction<String,>{
 
-        }
+class ChargeAndStartupFunction extends KeyedProcessFunction<String, OdsData, Tuple3<String, Long, Long>> {
+
+    @Override
+    public void open(Configuration parameters) throws Exception {
+        super.open(parameters);
+    }
+
+    @Override
+    public void close() throws Exception {
+        super.close();
+    }
+
+    @Override
+    public void processElement(OdsData value, Context ctx, Collector<Tuple3<String, Long, Long>> out) throws Exception {
+
+    }
+}
 
 
 

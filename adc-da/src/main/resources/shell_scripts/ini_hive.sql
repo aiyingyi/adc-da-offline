@@ -514,3 +514,19 @@ create external table connection_impedance_es
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
+
+-- 绝缘电阻突降模型es映射表
+create external table resistance_reduce_es
+(
+    vin       string,
+    startTime string,
+    endTime   string,
+    isWarning string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/resistance_reduce_es'
+    TBLPROPERTIES ('es.resource' = 'resistance_reduce/resistance_reduce',
+        'es.mapping.names' =
+                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );

@@ -13,10 +13,11 @@ import java.util.ArrayList;
 public class ConnectionImpedanceUdf extends UDF {
 
     public String evaluate(ArrayList<Double> vdet, ArrayList<Double> I, ArrayList<Double> soc, double rth1, double rth2) {
+
         double[] vdet0 = HiveUtils.listToArray(vdet);
         double[] I0 = HiveUtils.listToArray(I);
         double[] soc0 = HiveUtils.listToArray(soc);
-        return new PlatformAlgorithm().v(vdet0, I0, soc0, rth1, rth2) + "";
+        return new PlatformAlgorithm().highConnectionImpedance(vdet0, I0, soc0, rth1, rth2) + "";
 
     }
 }
