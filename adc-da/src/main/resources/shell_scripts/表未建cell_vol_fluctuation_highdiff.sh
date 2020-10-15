@@ -2,15 +2,15 @@
 
 db=warningplatform
 
-# 单体电压离散度高模型
+# 单体电压波动性差异大  放电状态执行一次
 
 # 脚本参数：vin,startTime,endTime
 vin=$1
 startTime=$2
 endTime=$3
 
-th1=$4
-th2=$5
+th1=0.16666
+
 
 sql="
 with
@@ -20,7 +20,8 @@ ods_data as
     select
         get_json_object(data,'$.vin') vin,
         get_json_object(data,'$.msgTime') msgTime,
-        get_json_object(data,'$.cellVoltage') cellVoltage,
+        cast(get_json_object(data,'$.maxCellVoltage') as double) maxCellVoltage,
+        cast(get_json_object(data,'$.minCellVoltage') as double) minCellVoltage
     from ${db}.ods_preprocess_vehicle_data
     where dt >= date_format('${startTime}','yyyy-MM-dd')
     and   dt <= date_format('${endTime}','yyyy-MM-dd')
@@ -29,13 +30,13 @@ ods_data as
     and   get_json_object(data,'$.msgTime') <= '${endTime}'
     order by msgTime asc
 )
--- cell_vol_highdis_es 未创建表
-insert into table cell_vol_highdis_es
+
+insert into table ${db}.vol_fluctuation_es
 select
   vin,
   '${startTime}',
   '${endTime}',
-  cell_vol_highdis(collect_list(cellVoltage),cast('${th1}' as int),cast('${th2}' as int))
+  ${db}.vol_fluctuation(collect_list(maxCellVoltage),collect_list(minCellVoltage),cast('${th1} as double'))
 from ods_data
 group by vin;
 

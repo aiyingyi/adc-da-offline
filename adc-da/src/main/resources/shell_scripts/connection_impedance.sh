@@ -30,6 +30,7 @@ ods_data as    -- 从ods层解析数据
   and   get_json_object(data,'$.msgTime') <= '${endTime}'
   order by msgTime asc
 )
+
 insert into table ${db}.connection_impedance_es
 select
     vin,

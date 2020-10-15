@@ -31,12 +31,12 @@ ods_data as
     order by msgTime asc
 )
 
-insert into table bms_sampling_es
+insert into table ${db}.bms_sampling_es
 select
   vin,
   '${startTime}',
   '${endTime}',
-  bms_sampling(collect_list(maxCellVoltageNum),collect_list(minCellVoltageNum),avg(differenceCellVoltage))
+  ${db}.bms_sampling(collect_list(maxCellVoltageNum),collect_list(minCellVoltageNum),avg(differenceCellVoltage))
 from ods_data
 group by vin;
 

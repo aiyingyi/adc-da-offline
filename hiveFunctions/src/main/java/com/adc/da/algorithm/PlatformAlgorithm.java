@@ -42,7 +42,7 @@ public class PlatformAlgorithm {
     }
 
     /**
-     * 模型二：
+     * 模型二：单体电压波动性差异大模型算法
      *
      * @param max_v
      * @param min_v
