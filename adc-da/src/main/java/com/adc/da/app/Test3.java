@@ -37,7 +37,7 @@ public class Test3 {
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
         Properties shellConfig = ComUtil.loadProperties("config/shell.properties");
-        Properties odsDataConfig = ComUtil.loadProperties("config/chargeMonitor.properties");
+        Properties odsDataConfig = ComUtil.loadProperties("config/odsTopic.properties");
 
 
         // 创建数据源
@@ -62,7 +62,7 @@ public class Test3 {
             public boolean filter(Tuple3<String, Long, String> data, Context<Tuple3<String, Long, String>> context) {
                 return "1".equals(data.f2);
             }
-        }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<Tuple3<String, Long, String>>() {
+        }).oneOrMore().next("uncharge").where(new IterativeCondition<Tuple3<String, Long, String>>() {
             @Override
             public boolean filter(Tuple3<String, Long, String> data, Context<Tuple3<String, Long, String>> context) throws Exception {
                 return "0".equals(data.f2);
@@ -74,9 +74,10 @@ public class Test3 {
 
             @Override
             public Tuple3<String, Long, Long> select(Map<String, List<Tuple3<String, Long, String>>> map) throws Exception {
-
                 List<Tuple3<String, Long, String>> chargeList = map.get("charge");
                 List<Tuple3<String, Long, String>> unchargeList = map.get("uncharge");
+
+                System.out.println(chargeList.size());
 
                 Tuple3<String, Long, String> tuple0 = chargeList.get(0);
                 Tuple3<String, Long, String> tuple1 = unchargeList.get(0);
@@ -85,7 +86,8 @@ public class Test3 {
         });
 
 
-        chargeStream.keyBy(data->data.f0).filter(new RichFilterFunction<Tuple3<String, Long, Long>>() {
+        chargeStream.print();
+       /* chargeStream.keyBy(data->data.f0).filter(new RichFilterFunction<Tuple3<String, Long, Long>>() {
 
             ValueState<ChargeRecordxxx> chargeState = null;
 
@@ -114,7 +116,7 @@ public class Test3 {
 
         }).print("充电判断");
 
-        dataStream.print("原始数据");
+        dataStream.print("原始数据");*/
         env.execute("test");
     }
 }

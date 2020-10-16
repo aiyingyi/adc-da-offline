@@ -3,6 +3,7 @@ package com.adc.da.algorithm;
 import com.adc.da.util.MatlabUtil;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 
 public class PlatformAlgorithm {
@@ -40,6 +41,34 @@ public class PlatformAlgorithm {
         }
 
     }
+
+
+    /**
+     * 模型二：单体电压波动性差异大模型算法
+     *
+     * @param max_v
+     * @param min_v
+     * @param th
+     * @return
+     */
+    public int vJumpConsist(double[] max_v, double[] min_v, double th) {
+
+        /* 求差分->求绝对值->求和*/
+        double xx = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(max_v)));   /* 最高电压 曲线斜率 绝对值 和*/
+        double yy = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(min_v)));   /* 最低电压 曲线斜率 绝对值 和*/
+        double[] zz = MatlabUtil.squareBrackets(MatlabUtil.abs(MatlabUtil.diff(max_v)), MatlabUtil.abs(MatlabUtil.diff(min_v)));
+        if ((xx > yy ? xx : yy) > 0 && MatlabUtil.mean(zz) > 0.005) {
+            if (((xx < yy ? xx : yy) / (xx > yy ? xx : yy)) < th) {
+                return 1;   /* 预警*/
+            } else {
+                return 0;   /* 不预警*/
+            }
+        } else {
+            return 0;      /* 不预警*/
+        }
+
+    }
+
 
     /**
      * 模型二：单体电压波动性差异大模型算法
@@ -288,6 +317,62 @@ public class PlatformAlgorithm {
             }
         } else {
             return 0;  /* 不预警*/
+        }
+
+    }
+
+    /**
+     * 模型十：容量异常
+     *
+     * @param vCh    充电工况下所有数据的单体电压，电芯编号0-95
+     * @param vDisCh 放电工况下所有数据的单体电压，电芯编号0-95
+     * @param th1    阀值：计算最高/最低单体的个数
+     * @param th2    阀值：充电电芯的占比
+     * @param th3    阀值：放电电芯的占比
+     * @return
+     */
+    public int capacityAbnormal(double[][] vCh, double[][] vDisCh, int th1, double th2, double th3) {
+
+        int vChRowLength = vCh.length;
+        int vDisChRwoLength = vDisCh.length;
+        double[] vMaxChNum = new double[vChRowLength * th1];       /* 存放最高单体电压的电芯编号*/
+        double[] vMinDisChNum = new double[vDisChRwoLength * th1];  /* 存放最低单体电压的电芯编号*/
+
+        /* 获取指定位置的电芯编号(单体电压最高)*/
+        int vMaxChNumIndex = 0;   /* 数组索引*/
+        for (int i = 0; i < vChRowLength; i++) {
+            double[] temporary = MatlabUtil.getIndexRow(vCh, i);
+            Arrays.sort(temporary);                      /* 从小到大排序*/
+            int temporaryLength = temporary.length;
+            for (int j = temporaryLength - th1; j < temporaryLength; j++) {
+                vMaxChNum[vMaxChNumIndex] = temporary[j];         /* 获取电芯编号*/
+                vMaxChNumIndex++;
+            }
+        }
+        /* 获取指定位置的电芯编号（单体电压最低）*/
+        int vMinDisChNumIndex = 0;
+        for (int i = 0; i < vDisChRwoLength; i++) {
+            double[] temporary = MatlabUtil.getIndexRow(vCh, i);
+            Arrays.sort(temporary);                      /* 从小到大排序*/
+            for (int j = 0; j < th1; j++) {
+                vMinDisChNum[vMinDisChNumIndex] = temporary[j];         /* 获取电芯编号*/
+                vMinDisChNumIndex++;
+            }
+        }
+        double[][] vMaxChTab = MatlabUtil.tabulate(vMaxChNum);          /* 电芯编号分布统计*/
+        double[][] vMinDisChTab = MatlabUtil.tabulate(vMinDisChNum);    /* 电芯编号分布统计*/
+        if (MatlabUtil.max(MatlabUtil.indexColumn(vMaxChTab, 3)) > th2) {
+            if (MatlabUtil.max(MatlabUtil.indexColumn(vMinDisChTab, 3)) > th3) {
+                if (Math.abs(MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMaxChTab, 3)) - MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMinDisChTab, 3))) == 1) {
+                    return 1;  /* 预警：电芯容量异常*/
+                } else {
+                    return 0;  /* 不预警*/
+                }
+            } else {
+                return 0;      /* 不预警*/
+            }
+        } else {
+            return 0;          /* 不预警*/
         }
 
     }

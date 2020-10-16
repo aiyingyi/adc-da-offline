@@ -136,6 +136,23 @@ public class MatlabUtil {
 
 
     /**
+     * 求和
+     * @param value
+     * @return
+     */
+    public static double sum(double[] value) {
+
+        double result = 0;
+        int valueLength = value.length;
+        for (int i=0; i<valueLength; i++){
+            result += value[i];
+        }
+        return result;
+
+    }
+
+
+    /**
      * matlab  sum函数求和（为矩阵时：每列进行求和，返回行向量；为行向量时，行进行求和；为列向量时，列进行求和）
      *
      * @param value
@@ -506,7 +523,24 @@ public class MatlabUtil {
 
 
     /**
-     * 求绝对值
+     * 一维数据：求绝对值
+     *
+     * @param value
+     * @return
+     */
+    public static double[] abs(double[] value) {
+
+        int valueLength = value.length;
+        for (int i = 0; i < valueLength; i++) {
+            value[i] = Math.abs(value[i]);
+        }
+        return value;
+
+    }
+
+
+    /**
+     * 二维数据：求绝对值
      *
      * @param value
      * @return
@@ -1334,6 +1368,28 @@ public class MatlabUtil {
      * @param value2
      * @return
      */
+    public static double[] squareBrackets(double[] value1, double[] value2) {
+
+        int value1Length = value1.length;
+        int value2Length = value2.length;
+        double[] result = new double[value1Length + value2Length];
+        for (int i = 0; i < value1Length; i++) {
+            result[i] = value1[i];
+        }
+        for (int i = 0; i < value2Length; i++) {
+            result[value1Length + i] = value2[i];
+        }
+        return result;
+
+    }
+
+    /**
+     * 中括号 -暂时只支持两个列向量组合
+     *
+     * @param value1
+     * @param value2
+     * @return
+     */
     public static double[][] squareBrackets(double[][] value1, double[][] value2) {
 
         int value1RowLength = value1.length;
@@ -1344,6 +1400,25 @@ public class MatlabUtil {
         }
         for (int row = 0; row < value2RowLength; row++) {
             result[value1RowLength + row][0] = value2[row][0];
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 获取指定的行
+     *
+     * @param value 矩阵数组
+     * @param index 行索引（从0开始）
+     * @return
+     */
+    public static double[] getIndexRow(double[][] value, int index) {
+
+        int valueRowLength = value[0].length;
+        double[] result = new double[valueRowLength];
+        for (int i = 0; i < valueRowLength; i++) {
+            result[i] = value[index][i];
         }
         return result;
 
@@ -1468,37 +1543,35 @@ public class MatlabUtil {
 
 
     /**
-     *统计数组的值、频数、频率
+     * 统计数组的值、频数、频率
+     *
      * @param value
-     * @return  返回多行三列的数据 每列依次是元素值、频数、频率（100代表100%）
+     * @return 返回多行三列的数据 每列依次是元素值、频数、频率（100代表100%）
      */
-    public static double[][] tabulate(int[] value){
+    public static double[][] tabulate(int[] value) {
 
         Arrays.sort(value);
         double maxValue = MatlabUtil.max(value);   /* 获取数组最大值*/
         double[][] result = new double[(int) maxValue][3];   /* 定义返回结果*/
         int valueLength = value.length;  /* 获取数组长度*/
-//        int distinctValue = distinct(value).length;
-//        int recordCount = 0;   /* 记录value数据出现的个数*/
-        for(int i=1;;i++){
+        for (int i = 1; ; i++) {
             int count = 0;  /* 数组出现的频数*/
-            for (int j=0; j<valueLength; j++){
-                if (i == value[j]){
+            for (int j = 0; j < valueLength; j++) {
+                if (i == value[j]) {
                     count++;
                 } else {
                     if (count > 0) break;
                 }
             }
-            result[i-1][0] = i;   /* value数据值*/
-            if (count > 0){        /* value数据出现时*/
-                result[i-1][1] = count;                                             /* value数据出现的频次*/
-                result[i-1][2] = ((double) count/(double)valueLength)*(double)100;  /* value数据出现的频率*/
+            result[i - 1][0] = i;   /* value数据值*/
+            if (count > 0) {        /* value数据出现时*/
+                result[i - 1][1] = count;                                             /* value数据出现的频次*/
+                result[i - 1][2] = ((double) count / (double) valueLength) * (double) 100;  /* value数据出现的频率*/
             } else {               /* value数据未出现时*/
-                result[i-1][1] = 0;
-                result[i-1][2] = 0;
+                result[i - 1][1] = 0;
+                result[i - 1][2] = 0;
             }
-//            recordCount++;    /* value数组数据出现个数加1*/
-            if (i == maxValue){
+            if (i == maxValue) {
                 break;        /* 统计结束跳出做外层循环*/
             }
         }
@@ -1506,15 +1579,55 @@ public class MatlabUtil {
 
     }
 
+
+    /**
+     * 统计数组的值、频数、频率
+     *
+     * @param value
+     * @return 返回多行三列的数据 每列依次是元素值、频数、频率（100代表100%）
+     */
+    public static double[][] tabulate(double[] value) {
+
+        Arrays.sort(value);
+        double maxValue = MatlabUtil.max(value);   /* 获取数组最大值*/
+        double[][] result = new double[(int) maxValue][3];   /* 定义返回结果*/
+        int valueLength = value.length;  /* 获取数组长度*/
+        for (int i = 1; ; i++) {
+            int count = 0;  /* 数组出现的频数*/
+            for (int j = 0; j < valueLength; j++) {
+                if (i == value[j]) {
+                    count++;
+                } else {
+                    if (count > 0) break;
+                }
+            }
+            result[i - 1][0] = i;   /* value数据值*/
+            if (count > 0) {        /* value数据出现时*/
+                result[i - 1][1] = count;                                             /* value数据出现的频次*/
+                result[i - 1][2] = ((double) count / (double) valueLength) * (double) 100;  /* value数据出现的频率*/
+            } else {               /* value数据未出现时*/
+                result[i - 1][1] = 0;
+                result[i - 1][2] = 0;
+            }
+            if (i == maxValue) {
+                break;        /* 统计结束跳出做外层循环*/
+            }
+        }
+        return result;
+
+    }
+
+
     /**
      * 数组去重
+     *
      * @param value
      * @return
      */
-    public static Integer[] distinct(int[] value){
+    public static Integer[] distinct(int[] value) {
 
         List<Integer> list = new ArrayList();
-        for (int i=0; i<value.length; i++){
+        for (int i = 0; i < value.length; i++) {
             if (!list.contains(value[i])) {
                 list.add(value[i]);
             }
@@ -1526,16 +1639,17 @@ public class MatlabUtil {
 
     /**
      * 获取指定的列
-     * @param value   矩阵
-     * @param index   列索引
+     *
+     * @param value 矩阵
+     * @param index 列索引
      * @return
      */
-    public static double[] indexColumn(double[][] value, int index){
+    public static double[] indexColumn(double[][] value, int index) {
 
         int rowLength = value.length;
         double[] result = new double[rowLength];
-        for (int i=0; i< rowLength; i++){
-            result[i] = value[i][index-1];
+        for (int i = 0; i < rowLength; i++) {
+            result[i] = value[i][index - 1];
         }
         return result;
 
@@ -1568,15 +1682,15 @@ public class MatlabUtil {
     }
 
 
-    public static int maxValueIndex(double[] value){
+    public static int maxValueIndex(double[] value) {
 
         int valueLength = value.length;
-        int index=1;
+        int index = 1;
         double maxValue = value[0];
-        for (int i=1; i<valueLength; i++){
-            if (value[i] > maxValue){
+        for (int i = 1; i < valueLength; i++) {
+            if (value[i] > maxValue) {
                 maxValue = value[i];
-                index = i+1;
+                index = i + 1;
             }
         }
         return index;
