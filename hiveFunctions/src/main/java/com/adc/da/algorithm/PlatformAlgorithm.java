@@ -262,5 +262,35 @@ public class PlatformAlgorithm {
 
     }
 
+    /**
+     * 模型九：BMS采样异常
+     *
+     * @param vdet    压差平均值
+     * @param vMaxNum 最高电压单体编号
+     * @param vMinNum 最低电压单体编号
+     * @param rth1    阀值1
+     * @param rth2    阀值2
+     * @return
+     */
+    public int bmsSamplingAnomaly(double vdet, int[] vMaxNum, int[] vMinNum, int rth1, int rth2) {
+
+        if (vdet > rth1) {
+            double[][] vMaxTable = MatlabUtil.tabulate(vMaxNum);     /* 数组统计*/
+            double[][] vMinTable = MatlabUtil.tabulate(vMinNum);     /* 数组统计*/
+            if (MatlabUtil.max(MatlabUtil.indexColumn(vMaxTable, 3)) > rth2 && MatlabUtil.max(MatlabUtil.indexColumn(vMinTable, 3)) > rth2) {   /* 最高单体和最低单体编号占比最大值高于rth2*/
+                if (Math.abs(MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMaxTable, 3)) - MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMinTable, 3))) == 1) {
+                    return 1;  /* 预警*/
+                } else {
+                    return 0;  /* 不预警*/
+                }
+            } else {
+                return 0;  /* 不预警*/
+            }
+        } else {
+            return 0;  /* 不预警*/
+        }
+
+    }
+
 
 }

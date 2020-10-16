@@ -15,13 +15,11 @@ import java.util.function.ToIntFunction;
  */
 public class BmsSamplingUdf extends UDF {
 
-    public String evaluate(ArrayList<Integer> maxNum, ArrayList<Integer> minNum, double vdet) {
+    public String evaluate(ArrayList<Integer> maxNum, ArrayList<Integer> minNum, double vdet, int th1, int th2) {
 
         int[] max = ArrayUtils.toPrimitive((Integer[]) maxNum.toArray());
         int[] min = ArrayUtils.toPrimitive((Integer[]) minNum.toArray());
 
-        // ToDo 完成算法调用
-        return null;
-
+        return new PlatformAlgorithm().bmsSamplingAnomaly(vdet, max, min, th1, th2) + "";
     }
 }

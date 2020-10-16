@@ -11,6 +11,9 @@ endTime=$3
 
 # 不需要传入工况参数，根据平均压差判断是充电还是放电
 
+th1=$4
+th2=$5
+
 sql="
 with
 --  获取预处理的历史数据
@@ -36,7 +39,7 @@ select
   vin,
   '${startTime}',
   '${endTime}',
-  ${db}.bms_sampling(collect_list(maxCellVoltageNum),collect_list(minCellVoltageNum),avg(differenceCellVoltage))
+  ${db}.bms_sampling(collect_list(maxCellVoltageNum),collect_list(minCellVoltageNum),avg(differenceCellVoltage),cast('${th1}' as int),cast('${th2}' as int))
 from ods_data
 group by vin;
 

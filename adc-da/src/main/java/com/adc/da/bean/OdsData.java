@@ -16,6 +16,16 @@ public class OdsData {
     private String chargeStatus;   // 充电状态
     private double soc;
 
-
-
+    @Override
+    public String toString() {
+        return "OdsData{" +
+                "vin='" + vin + '\'' +
+                ", msgTime=" + msgTime +
+                ", speed=" + speed +
+                ", startupStatus='" + startupStatus + '\'' +
+                ", gearStatus='" + gearStatus + '\'' +
+                ", chargeStatus='" + chargeStatus + '\'' +
+                ", soc=" + soc +
+                '}';
+    }
 }

@@ -2,8 +2,10 @@ package com.adc.da.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class MatlabUtil {
 
@@ -437,6 +439,23 @@ public class MatlabUtil {
      * @return
      */
     public static double max(double[] value) {
+
+        double length = value.length;   /* 行最小值*/
+        double max = value[0];
+        for (int i = 0; i < length; i++) {  /* 遍历行向量*/
+            max = max > value[i] ? max : value[i];  /* 获取最大值*/
+        }
+        return max;
+
+    }
+
+    /**
+     * 获取最大值
+     *
+     * @param value
+     * @return
+     */
+    public static double max(int[] value) {
 
         double length = value.length;   /* 行最小值*/
         double max = value[0];
@@ -1449,6 +1468,81 @@ public class MatlabUtil {
 
 
     /**
+     *统计数组的值、频数、频率
+     * @param value
+     * @return  返回多行三列的数据 每列依次是元素值、频数、频率（100代表100%）
+     */
+    public static double[][] tabulate(int[] value){
+
+        Arrays.sort(value);
+        double maxValue = MatlabUtil.max(value);   /* 获取数组最大值*/
+        double[][] result = new double[(int) maxValue][3];   /* 定义返回结果*/
+        int valueLength = value.length;  /* 获取数组长度*/
+//        int distinctValue = distinct(value).length;
+//        int recordCount = 0;   /* 记录value数据出现的个数*/
+        for(int i=1;;i++){
+            int count = 0;  /* 数组出现的频数*/
+            for (int j=0; j<valueLength; j++){
+                if (i == value[j]){
+                    count++;
+                } else {
+                    if (count > 0) break;
+                }
+            }
+            result[i-1][0] = i;   /* value数据值*/
+            if (count > 0){        /* value数据出现时*/
+                result[i-1][1] = count;                                             /* value数据出现的频次*/
+                result[i-1][2] = ((double) count/(double)valueLength)*(double)100;  /* value数据出现的频率*/
+            } else {               /* value数据未出现时*/
+                result[i-1][1] = 0;
+                result[i-1][2] = 0;
+            }
+//            recordCount++;    /* value数组数据出现个数加1*/
+            if (i == maxValue){
+                break;        /* 统计结束跳出做外层循环*/
+            }
+        }
+        return result;
+
+    }
+
+    /**
+     * 数组去重
+     * @param value
+     * @return
+     */
+    public static Integer[] distinct(int[] value){
+
+        List<Integer> list = new ArrayList();
+        for (int i=0; i<value.length; i++){
+            if (!list.contains(value[i])) {
+                list.add(value[i]);
+            }
+        }
+        return list.toArray(new Integer[1]);
+
+    }
+
+
+    /**
+     * 获取指定的列
+     * @param value   矩阵
+     * @param index   列索引
+     * @return
+     */
+    public static double[] indexColumn(double[][] value, int index){
+
+        int rowLength = value.length;
+        double[] result = new double[rowLength];
+        for (int i=0; i< rowLength; i++){
+            result[i] = value[i][index-1];
+        }
+        return result;
+
+    }
+
+
+    /**
      * boxoutlier算法中的find()函数-暂不支持扩展
      *
      * @param x          列向量
@@ -1470,6 +1564,22 @@ public class MatlabUtil {
             }
         }
         return result;
+
+    }
+
+
+    public static int maxValueIndex(double[] value){
+
+        int valueLength = value.length;
+        int index=1;
+        double maxValue = value[0];
+        for (int i=1; i<valueLength; i++){
+            if (value[i] > maxValue){
+                maxValue = value[i];
+                index = i+1;
+            }
+        }
+        return index;
 
     }
 
