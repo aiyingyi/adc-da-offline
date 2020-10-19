@@ -82,7 +82,7 @@
 
 
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.4.0</version>
@@ -98,7 +98,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.4.0</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.jvnet.hudson</groupId>
@@ -134,6 +134,13 @@
             <artifactId>flink-cep_${scala.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-elasticsearch6_2.11</artifactId>
+            <version>1.11.2</version>
+        </dependency>
+
 
 
 

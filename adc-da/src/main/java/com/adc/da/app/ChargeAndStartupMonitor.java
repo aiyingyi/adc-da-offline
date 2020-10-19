@@ -3,6 +3,7 @@ package com.adc.da.app;
 import com.adc.da.bean.ChargeRecord;
 import com.adc.da.bean.OdsData;
 import com.adc.da.functions.ChargeSinkFunction;
+import com.adc.da.functions.HighSelfDischargeEsSink;
 import com.adc.da.util.ComUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -24,11 +25,8 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * 监控充电完成和行驶结束，触发计算
@@ -58,6 +56,11 @@ public class ChargeAndStartupMonitor {
                 ods.setGearStatus(obj.getString("gearStatus"));
                 ods.setChargeStatus(obj.getString("chargeStatus"));
                 ods.setSoc(soc);
+                ods.setOdo(obj.getDouble("odo"));
+                // 解析电压数组
+                String cellVoltage = obj.getString("cellVoltage");
+                double[] vols = Arrays.stream(cellVoltage.substring(1, cellVoltage.length() - 2).split(",")).mapToDouble(vol -> Double.parseDouble(vol)).toArray();
+                ods.setCellVoltage(vols);
                 return ods;
             }
         }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(6))
@@ -119,14 +122,49 @@ public class ChargeAndStartupMonitor {
         });
 
         /**
-         * 1. 充电压差扩大模型算法调用
-         * 2. 充电完成后调用:1. 电池包衰减预警模型,2. 执行充电方式，电量以及最大最低电压单体频次脚本
+         * 1. 充电压差扩大模型算法调用（10次充电）
+         * 2. 充电完成后调用:
+         *  1) 电池包衰减预警模型
+         *  2) 单体电池离散度高(充电、行驶结束后)
+         *  3)执行充电方式，电量以及最大最低电压单体频次脚本
          */
 
         chargeStream.keyBy(data -> data.getVin()).addSink(new ChargeSinkFunction(2, shellConfig));
 
+
+        /**
+         *判断车辆是否静置半天
+         */
+        Pattern<OdsData, OdsData> staticPattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, IterativeCondition.Context<OdsData> context) {
+                return true;
+            }
+        }).next("end").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
+                OdsData start = context.getEventsForPattern("start").iterator().next();
+                double gap = (data.getMsgTime() - start.getMsgTime()) / (1000 * 3600 * 24.0);
+                return gap > 0.5 && start.getSoc() == data.getSoc() ? true : false;
+            }
+        });
+
+        // 获取静置状态的两端的两条数据
+        SingleOutputStreamOperator<OdsData[]> staticStream = CEP.pattern(dataStream, staticPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
+            @Override
+            public OdsData[] select(Map<String, List<OdsData>> pattern) throws Exception {
+                OdsData[] startAndEnd = new OdsData[2];
+                startAndEnd[0] = pattern.get("start").get(0);
+                startAndEnd[1] = pattern.get("end").get(0);
+                return startAndEnd;
+            }
+        });
+
+        staticStream.addSink(HighSelfDischargeEsSink.getEsSink());
+
         env.execute("ChargeAndStartupMonitor");
     }
 }
+
 
 

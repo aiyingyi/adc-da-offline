@@ -45,28 +45,50 @@ charge_data as   -- 最近10次有效充电为且充电数据帧soc > 0.8 的数
 (
  ${charge_data_sql}
 ),
+
+-- 计算平均压差，并按照充电时间排序
 charge_info as
 (
   select
     vin,
-    cast(charge_start_time as bigint) charge_start_time,
-    avg(differenceCellVoltage) as avg_vol_diff
-  from  charge_data group by vin,charge_start_time
+    charge_start_time,
+    avg(differenceCellVoltage * 1000) as avg_vol_diff    -- 将压差转换成mv
+  from  charge_data
+  group by vin,charge_start_time
+  order by vin,charge_start_time asc
+),
+-- 每次充电和第一次充电的时间差
+charge_time as
+(
+  select
+    tmp.vin as vin,
+    collect_list(tmp.timeDiff) as timeDiff
+  from
+    (
+      select
+        vin,
+        cast ((cast(charge_start_time as bigint)-cast('${1}' as bigint))/(1000*60*60*24) as int) as timeDiff
+      from charge_info
+    ) as tmp
+  group by tmp.vin
 ),
 charge_statistics as
 (
   select
-      base.vin,
-      '${args[$[2*$window_size-2]]}' as  last_charge_time,
-      collect_list(avg_vol_diff) as vol_diff,
-      collect_list( cast (day_diff as double)/(1000*3600*24)) as day_diff
+    t1.vin,
+    '${args[$[2*$window_size-2]]}' as  last_charge_time,
+    t1.vol_diff as vol_diff,   -- 压差
+    t1.charge_start_time as charge_start_time, -- 充电开始时间
+    t2.timeDiff as timeDiff    --  时间差
   from
-      (select    --计算充电之间的时间差
+    (select
         vin,
-        avg_vol_diff,
-        charge_start_time-LAG(charge_start_time,1,charge_start_time)  over(partition by vin order by charge_start_time asc)  as day_diff
-      from charge_info) as base
-  group by base.vin
+        collect_list(avg_vol_diff) as vol_diff,
+        collect_list(charge_start_time) as charge_start_time
+    from charge_info
+    group by vin) as t1
+  join charge_time as t2
+  on t1.vin = t2.vin
 )
 
 -- 将压差数组和时差数组输入自定义函数，输出是否预警，并写入记录
@@ -76,9 +98,10 @@ select
   vin,
   date_format(last_charge_time,'yyyy-MM-dd HH:mm:ss'),  --最近10次充电中最后一次充电的开始时间
   vol_diff,
-  day_diff,
-  ${db}.charge_vol_diff_exp(vol_diff,day_diff)
+  timeDiff,
+  ${db}.charge_vol_diff_exp(vol_diff,charge_start_time)
 from charge_statistics
 "
 
 hive  -e "${sql}"
+

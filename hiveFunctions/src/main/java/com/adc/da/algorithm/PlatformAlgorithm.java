@@ -198,26 +198,6 @@ public class PlatformAlgorithm {
     }
 
     /**
-     * 模型七：充电压差扩大模型算法
-     *
-     * @param voltageDifference 电压差：mV为单位（10个电压值）
-     * @param time              相差天数
-     * @return
-     */
-    public int chargeDifferentialVoltageExpansion(double[] voltageDifference, double[] time) {
-
-        double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
-        double[] ab = MatlabUtil.linearRegression(time, y);   /* y=ax+b 返回a、b的值*/
-        if (ab[0] > 0.05 && (MatlabUtil.max(time) - MatlabUtil.min(time)) > 40) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
-            return 1;   /* 预警*/
-        } else {
-            return 0;   /* 不预警*/
-        }
-
-    }
-
-
-    /**
      * 模型七：拟合直线x轴、y轴交点
      *
      * @param voltageDifference 电压差：mV为单位（10个电压值）

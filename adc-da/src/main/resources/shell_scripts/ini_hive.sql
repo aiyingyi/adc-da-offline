@@ -489,7 +489,7 @@ create external table charge_vol_day_diff_es
     vin       string,
     dt        string,
     volDiff   array<double>,
-    dayDiff   array<double>,
+    dayDiff   array<int>,
     isWarning string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/charge_vol_day_diff_es'

@@ -13,8 +13,11 @@ import scala.actors.threadpool.Arrays;
 import java.util.Properties;
 
 /**
- * 1. 充电压差扩大模型算法调用
- * 2. 充电完成后调用:1. 电池包衰减预警模型,2. 执行充电方式，电量以及最大最低电压单体频次脚本
+ * 1. 充电压差扩大模型算法调用（10次充电）
+ * 2. 充电完成后调用:
+ * 1) 电池包衰减预警模型
+ * 2) 单体电池离散度高(充电、行驶结束后)
+ * 3)执行充电方式，电量以及最大最低电压单体频次脚本
  */
 
 public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
@@ -55,12 +58,16 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
 
         // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
         ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value.getStartTime() + " " + value.getEndTime() + " " + value.getVin());
+        // 2. 单体电池离散度高
+        ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
 
-        // 2. TODO 电池包衰减预警模型
+
+
+        // 3. TODO 电池包衰减预警模型
         if (value.getEndSoc() - value.getStartSoc() > 40) {
             // ShellUtil.exec(conn) );
         }
-        // 3.充电压差扩大模型
+        // 4.充电压差扩大模型
         if (value.getStartSoc() <= 80 && value.getEndSoc() >= 80) {
 
             if (chargeTimes.value() == null) {

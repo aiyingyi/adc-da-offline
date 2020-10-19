@@ -9,8 +9,8 @@ vin=$1
 startTime=$2
 endTime=$3
 
-th1=$4
-th2=$5
+th1=20
+th2=80
 
 sql="
 with
@@ -30,6 +30,7 @@ ods_data as
     order by msgTime asc
 )
 
+===================================未完成    es索引建表，sql更改
 insert into table ${db}.cell_vol_highdis_es
 select
   vin,
