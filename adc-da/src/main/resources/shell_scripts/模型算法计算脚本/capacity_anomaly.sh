@@ -2,7 +2,7 @@
 
 db=warningplatform
 
-# 容量异常模型算法，每个充放电循环完成一次
+# 单体内阻或者容量异常模型算法，每个充放电循环完成一次
 # vin,充放电时间端点
 
 vin=$1
@@ -11,7 +11,7 @@ charge_end=$3
 discharge_start=$4
 discharge_end=$5
 
-# 电芯个数
+# 计算电芯的个数
 th1=3
 # 充电电芯占比
 th2=50
@@ -20,7 +20,7 @@ th3=50
 
 sql="
 with
---  获取预处理的数据
+--  获取充电数据
 charge_data as
 (
     select
@@ -35,7 +35,7 @@ charge_data as
     and   get_json_object(data,'$.msgTime') <= '${charge_end}'
     order by msgTime asc
 ),
-discharge_data as
+discharge_data as  -- 放电数据
 (
     select
         get_json_object(data,'$.vin') vin,
@@ -70,6 +70,5 @@ select
   '${discharge_end}',
   ${db}.capacity_anomaly(cvols,dvols,cast('${th1}' as int),cast('${th2}' as double),cast('${th3}' as double))
 from vol_info
-
 "
 hive  -e "${sql}"

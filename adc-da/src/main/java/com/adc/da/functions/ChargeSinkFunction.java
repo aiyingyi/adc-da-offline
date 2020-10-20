@@ -50,6 +50,9 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
     public void close() throws Exception {
         chargeTimes.clear();
         chargeStartAndEnd.clear();
+        if (conn != null) {
+            conn.close();
+        }
     }
 
     @Override
@@ -58,16 +61,15 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
 
         // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
         ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value.getStartTime() + " " + value.getEndTime() + " " + value.getVin());
-        // 2. 单体电池离散度高
+        // 2. 单体电压离散度高
         ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
-
-
-
-        // 3. TODO 电池包衰减预警模型
+        // 3. 连接阻抗大模型算法
+        ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
+        // 4. TODO 电池包衰减预警模型
         if (value.getEndSoc() - value.getStartSoc() > 40) {
             // ShellUtil.exec(conn) );
         }
-        // 4.充电压差扩大模型
+        // 5.充电压差扩大模型
         if (value.getStartSoc() <= 80 && value.getEndSoc() >= 80) {
 
             if (chargeTimes.value() == null) {

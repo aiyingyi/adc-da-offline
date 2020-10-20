@@ -1,12 +1,17 @@
 package com.adc.da.app;
 
+import ch.ethz.ssh2.Connection;
 import com.adc.da.bean.ChargeRecord;
+import com.adc.da.bean.EventInfo;
 import com.adc.da.bean.OdsData;
 import com.adc.da.functions.ChargeSinkFunction;
+import com.adc.da.functions.EventInfoSink;
 import com.adc.da.functions.HighSelfDischargeEsSink;
 import com.adc.da.util.ComUtil;
+import com.adc.da.util.ShellUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -24,6 +29,9 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import scala.actors.migration.pattern;
 
 import java.time.Duration;
 import java.util.*;
@@ -72,7 +80,9 @@ public class ChargeAndStartupMonitor {
                 })
         ).keyBy(data -> data.getVin());
 
-        // 监控充电完成
+        /**
+         * 充电完成状态匹配
+         */
         Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, IterativeCondition.Context<OdsData> context) {
@@ -126,14 +136,12 @@ public class ChargeAndStartupMonitor {
          * 2. 充电完成后调用:
          *  1) 电池包衰减预警模型
          *  2) 单体电池离散度高(充电、行驶结束后)
-         *  3)执行充电方式，电量以及最大最低电压单体频次脚本
+         *  3) 执行充电方式，电量以及最大最低电压单体频次脚本
          */
 
         chargeStream.keyBy(data -> data.getVin()).addSink(new ChargeSinkFunction(2, shellConfig));
-
-
         /**
-         *判断车辆是否静置半天
+         * 判断车辆是否静置半天
          */
         Pattern<OdsData, OdsData> staticPattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
             @Override
@@ -160,7 +168,64 @@ public class ChargeAndStartupMonitor {
             }
         });
 
-        staticStream.addSink(HighSelfDischargeEsSink.getEsSink());
+        // todo sink未完成
+        staticStream.keyBy(data -> data[0].getVin()).addSink(HighSelfDischargeEsSink.getEsSink());
+
+        /**
+         * 放电状态匹配：上一次充电完成-下次充电开始的时间
+         */
+        Pattern<OdsData, OdsData> disChargePattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) {
+                return "0".equals(data.getChargeStatus());
+            }
+        }).oneOrMore().consecutive().greedy().next("end").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
+                return "1".equals(data.getChargeStatus());
+            }
+        });
+
+        SingleOutputStreamOperator<EventInfo> disChargeStream = CEP.pattern(dataStream, disChargePattren).select(new PatternSelectFunction<OdsData, EventInfo>() {
+            @Override
+            public EventInfo select(Map<String, List<OdsData>> pattern) throws Exception {
+                List<OdsData> start = pattern.get("start");
+                return new EventInfo(start.get(0).getVin(), start.get(0).getMsgTime(), start.get(start.size() - 1).getMsgTime());
+            }
+        }).keyBy(data -> data.getVin()).filter(new RichFilterFunction<EventInfo>() {
+            // 放电状态
+            ValueState<EventInfo> disChargeState = null;
+            EventInfo value = null;
+
+            // 过滤掉其他的匹配，只保留第一个匹配
+            @Override
+            public boolean filter(EventInfo data) throws Exception {
+                value = disChargeState.value();
+                if (value == null || value.getEndTime() != data.getEndTime()) {
+                    disChargeState.update(data);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void open(Configuration parameters) throws Exception {
+                disChargeState = getRuntimeContext().getState(new ValueStateDescriptor("disChargeStartAndEnd", EventInfo.class));
+            }
+
+            @Override
+            public void close() throws Exception {
+                disChargeState.clear();
+            }
+        });
+        // 执行单体电压波动性差异大模型算法脚本
+        disChargeStream.keyBy(data -> data.getVin()).addSink(new EventInfoSink(shellConfig) {
+            @Override
+            public void invoke(EventInfo value, Context context) throws Exception {
+                ShellUtil.exec(conn, shellConfig.getProperty("volFluctuation") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
+            }
+        });
+
 
         env.execute("ChargeAndStartupMonitor");
     }

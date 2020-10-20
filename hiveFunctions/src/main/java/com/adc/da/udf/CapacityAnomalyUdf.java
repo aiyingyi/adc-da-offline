@@ -8,15 +8,17 @@ import org.apache.hadoop.hive.ql.metadata.Hive;
 import java.util.ArrayList;
 
 /**
- * 容量差异模型UDF  capacity_anomaly()
+ * 单体内阻或者容量差异模型UDF  capacity_anomaly()
  */
-public class CapacityAnomaly extends UDF {
+public class CapacityAnomalyUdf extends UDF {
 
     public String evaluate(ArrayList<String> chargeVol, ArrayList<String> disChargeVol, int th1, double th2, double th3) {
 
         // 充电电压
         double[][] cvols = HiveUtils.parseVol(chargeVol);
-        double[][] dvols = HiveUtils.parseVol(disChargeVol);// 放电电压
+
+        // 放电电压
+        double[][] dvols = HiveUtils.parseVol(disChargeVol);
 
         return new PlatformAlgorithm().capacityAbnormal(cvols, dvols, th1, th2, th3) + "";
     }

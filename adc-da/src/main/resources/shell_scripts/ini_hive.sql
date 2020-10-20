@@ -499,6 +499,42 @@ create external table charge_vol_day_diff_es
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
+-- 单体离散度高模型
+create external table cell_vol_highdis_es
+(
+    vin       string,
+    startTime string,
+    endTime   string,
+    isWarning string,
+    volAvg    array<double>,
+    volStd    array<double>
+
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/connection_impedance_es'
+    TBLPROPERTIES ('es.resource' = 'connection_impedance_es/connection_impedance_es',
+        'es.mapping.names' =
+                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning,volAvg:volAvg,volStd:volStd',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
+-- 单体内阻-容量异常模型索引
+create external table capacity_anomaly_es
+(
+    vin            string,
+    chargeStart    string,
+    chargeEnd      string,
+    disChargeStart string,
+    disChargeEnd   string,
+    isWarning      string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/capacity_anomaly_es'
+    TBLPROPERTIES ('es.resource' = 'capacity_anomaly/capacity_anomaly',
+        'es.mapping.names' =
+                'isWarning:isWarning,disChargeEnd:disChargeEnd,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,disChargeStart:disChargeStart',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
+
 -- 连接阻抗大模型es映射表
 create external table connection_impedance_es
 (
@@ -508,9 +544,25 @@ create external table connection_impedance_es
     isWarning       string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/connection_impedance_es'
-    TBLPROPERTIES ('es.resource' = 'connection_impedance_es/connection_impedance_es',
+    TBLPROPERTIES ('es.resource' = 'connection_impedance/connection_impedance',
         'es.mapping.names' =
                 'vin:vin,chargeEndTime:chargeEndTime,chargeStartTime:chargeStartTime,isWarning:isWarning',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
+
+-- 单体电压波动性差异大
+create external table cell_vol_fluctuation_es
+(
+    vin       string,
+    startTime string,
+    endTime   string,
+    isWarning string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/cell_vol_fluctuation_es'
+    TBLPROPERTIES ('es.resource' = 'cell_vol_fluctuation/cell_vol_fluctuation',
+        'es.mapping.names' =
+                'isWarning:isWarning,startTime:startTime,vin:vin,endTime:endTime',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
@@ -531,7 +583,7 @@ create external table resistance_reduce_es
         'es.port' = '9200'
         );
 
--- 绝缘电阻突降模型es映射表
+-- bms检测异常es映射表
 create external table bms_sampling_es
 (
     vin       string,

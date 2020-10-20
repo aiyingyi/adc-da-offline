@@ -29,14 +29,15 @@ ods_data as
     and   get_json_object(data,'$.msgTime') <= '${endTime}'
     order by msgTime asc
 )
-
-===================================未完成    es索引建表，sql更改
+--  自定义udf函数：vol_avg_std():计算均值和方差 ,cell_vol_highdis()：输出预警
 insert into table ${db}.cell_vol_highdis_es
 select
   vin,
   '${startTime}',
   '${endTime}',
-  ${db}.cell_vol_highdis(collect_list(cellVoltage),cast('${th1}' as int),cast('${th2}' as int))
+  ${db}.cell_vol_highdis(collect_list(cellVoltage),cast('${th1}' as int),cast('${th2}' as int)),
+  ${db}.vol_avg_std(collect_list(cellVoltage),'avg'),
+  ${db}.vol_avg_std(collect_list(cellVoltage),'std')
 from ods_data
 group by vin;
 

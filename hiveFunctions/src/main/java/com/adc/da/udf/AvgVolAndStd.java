@@ -9,15 +9,14 @@ import java.util.ArrayList;
 
 /**
  * 单体离散度高模型算法，计算电压的偏差均值和偏差方差
- *
+ * <p>
  * hive函数：vol_avg_std()
  */
 public class AvgVolAndStd extends UDF {
 
     /**
-     *
      * @param cellVols
-     * @param flag   std:偏差方差  avg：偏差均值
+     * @param flag     std:偏差方差  avg：偏差均值
      * @return
      */
 
@@ -38,7 +37,6 @@ public class AvgVolAndStd extends UDF {
             y[0][column] = MatlabUtil.abs(MatlabUtil.std(MatlabUtil.column(Vdet, column), 0, 1))[0][0];
         }
         ArrayList<Double> res = new ArrayList<>();
-
         if (flag.equals("avg")) {
             for (double v : x[0]) {
                 res.add(new Double(v));
@@ -47,8 +45,9 @@ public class AvgVolAndStd extends UDF {
             for (double v : y[0]) {
                 res.add(new Double(v));
             }
-        } else
+        } else {
             return null;
+        }
         return res;
 
     }
