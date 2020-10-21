@@ -312,14 +312,20 @@ create external table vehicle_initial
     location '/warningplatform.db/dwd/vehicle_initial';
 
 --  创建车辆分类表,每月统计一次
-create external table vehicle_classification
+create external table vehicle_classification_es
 (
     enterprise     string,
     vin            string,
-    classification string
-) partitioned by (dt string)
-    row format delimited fields terminated by '\t'
-    location '/warningplatform.db/dwd/vehicle_classification';
+    classification string,
+    dt             string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/vehicle_classification_es'
+    TBLPROPERTIES ('es.resource' = 'vehicle_classification/vehicle_classification',
+        'es.mapping.names' =
+                'enterprise:enterprise,vin:vin,classification:classification,dt:dt',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
 
 -- 创建预警模型统计es映射表，记录每一周不同车类别的箱线值
 
@@ -478,6 +484,37 @@ create external table charge_current_frequency_es
     TBLPROPERTIES ('es.resource' = 'charge_current_frequency/charge_current_frequency',
         'es.mapping.names' =
                 'province:province,vehicleType:vehicleType,vin:vin,chargeType:chargeType,chargeCurrentFrequency:chargeCurrentFrequency,statis_time:time',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
+
+--  创建每天的按照车辆分类统计的各个预警模型的箱线值es索引
+
+create external table warning_boxplot_perday_es
+(
+    classification string,
+    vol_diff_exception
+                   struct<Q3 :double,Q2 :double,Q1 :double,maxvalue :double,minvalue :double>,
+    temper_rate_exception
+                   struct<Q3 :double,Q2 :double,Q1 :double,maxvalue :double,minvalue :double>,
+
+    temper_exception
+                   struct<Q3 :double,Q2 :double,Q1 :double,maxvalue :double,minvalue :double>,
+
+    temper_diff_exception
+                   struct<Q3 :double,Q2 :double,Q1 :double,maxvalue :double,minvalue :double>,
+
+    resistance_exception
+                   struct<Q3 :double,Q2 :double,Q1 :double,maxvalue :double,minvalue :double>,
+    dt             string
+) row format delimited fields terminated by ','
+    collection items terminated by '_'
+    map keys terminated by ':'
+    STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/warning_boxplot_perday_es'
+    TBLPROPERTIES ('es.resource' = 'warning_boxplot_perday/warning_boxplot_perday',
+        'es.mapping.names' =
+                'enterprise:enterprise,province:province,vehicle_type:vehicleType,vol_diff_exception:cellVoldiffException,temper_rate_exception:temperRateException,temper_exception:temperException,temper_diff_exception:temperDiffException,resistance_exception:resistanceException,Q3:Q3,Q2:Q2,Q1:Q1,maxvalue:maxvalue,minvalue:minvalue',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
