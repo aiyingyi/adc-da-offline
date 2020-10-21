@@ -1,12 +1,12 @@
 package com.adc.da.app;
 
-import ch.ethz.ssh2.Connection;
 import com.adc.da.bean.ChargeRecord;
 import com.adc.da.bean.EventInfo;
 import com.adc.da.bean.OdsData;
+import com.adc.da.bean.chargeAndDisChargeInfo;
 import com.adc.da.functions.ChargeSinkFunction;
-import com.adc.da.functions.EventInfoSink;
 import com.adc.da.functions.HighSelfDischargeEsSink;
+import com.adc.da.functions.ShellRichSink;
 import com.adc.da.util.ComUtil;
 import com.adc.da.util.ShellUtil;
 import com.alibaba.fastjson.JSON;
@@ -30,8 +30,7 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import scala.actors.migration.pattern;
+
 
 import java.time.Duration;
 import java.util.*;
@@ -141,7 +140,7 @@ public class ChargeAndStartupMonitor {
 
         chargeStream.keyBy(data -> data.getVin()).addSink(new ChargeSinkFunction(2, shellConfig));
         /**
-         * 判断车辆是否静置半天
+         * 电芯自放电大模型算法 判断车辆是否静置半天
          */
         Pattern<OdsData, OdsData> staticPattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
             @Override
@@ -168,7 +167,7 @@ public class ChargeAndStartupMonitor {
             }
         });
 
-        // todo sink未完成
+        // todo sink未完成  sink到es
         staticStream.keyBy(data -> data[0].getVin()).addSink(HighSelfDischargeEsSink.getEsSink());
 
         /**
@@ -219,14 +218,76 @@ public class ChargeAndStartupMonitor {
             }
         });
         // 执行单体电压波动性差异大模型算法脚本
-        disChargeStream.keyBy(data -> data.getVin()).addSink(new EventInfoSink(shellConfig) {
+        disChargeStream.keyBy(data -> data.getVin()).addSink(new ShellRichSink<EventInfo>(shellConfig) {
             @Override
             public void invoke(EventInfo value, Context context) throws Exception {
                 ShellUtil.exec(conn, shellConfig.getProperty("volFluctuation") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
             }
         });
 
+        /**
+         * 一次充放电循环状态匹配
+         */
+        Pattern<OdsData, OdsData> circlePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) {
+                return "1".equals(data.getChargeStatus());
+            }
+        }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
+                return "0".equals(data.getChargeStatus());
+            }
+        }).oneOrMore().consecutive().greedy().next("nextCharge").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData value, Context<OdsData> ctx) throws Exception {
+                return "1".equals(value.getChargeStatus());
+            }
+        }).times(1);
 
+        SingleOutputStreamOperator<chargeAndDisChargeInfo> chargeCircle = CEP.pattern(dataStream, circlePattren).select(new PatternSelectFunction<OdsData, chargeAndDisChargeInfo>() {
+            @Override
+            public chargeAndDisChargeInfo select(Map<String, List<OdsData>> pattern) throws Exception {
+                List<OdsData> charge = pattern.get("charge"); // 首次充电
+                List<OdsData> disCharge = pattern.get("uncharge"); // 未充电
+                chargeAndDisChargeInfo info = new chargeAndDisChargeInfo();
+                info.setChargeStartTime(charge.get(0).getMsgTime());
+                info.setChargeEndTime(charge.get(charge.size() - 1).getMsgTime());
+                info.setDisChargeStartTime(disCharge.get(0).getMsgTime());
+                info.setDisChargeEndTime(disCharge.get(charge.size() - 1).getMsgTime());
+                info.setVin(charge.get(0).getVin());
+                return info;
+            }
+        }).keyBy(data -> data.getVin()).filter(new RichFilterFunction<chargeAndDisChargeInfo>() {
+
+            ValueState<chargeAndDisChargeInfo> state = null;
+
+            @Override
+            public void open(Configuration parameters) throws Exception {
+                state = getRuntimeContext().getState(new ValueStateDescriptor<chargeAndDisChargeInfo>("info", chargeAndDisChargeInfo.class));
+            }
+
+            @Override
+            public void close() throws Exception {
+                state.clear();
+            }
+
+            @Override
+            public boolean filter(chargeAndDisChargeInfo data) throws Exception {
+                if (state.value() == null || state.value().getDisChargeEndTime() < data.getChargeEndTime() && state.value().getChargeStartTime() > data.getChargeStartTime()) {
+                    state.update(data);
+                    return true;
+                }
+                return false;
+            }
+        });
+        chargeCircle.keyBy(data -> data.getVin()).addSink(new ShellRichSink<chargeAndDisChargeInfo>(shellConfig) {
+            @Override
+            // 执行容量异常脚本
+            public void invoke(chargeAndDisChargeInfo value, Context context) throws Exception {
+                ShellUtil.exec(conn, shellConfig.getProperty("capacity_anomaly") + " " + value.getVin() + " " + value.getChargeStartTime() + " " + value.getChargeEndTime() + " " + value.getDisChargeStartTime() + " " + value.getDisChargeEndTime());
+            }
+        });
         env.execute("ChargeAndStartupMonitor");
     }
 }

@@ -17,7 +17,8 @@ import java.util.Properties;
  * 2. 充电完成后调用:
  * 1) 电池包衰减预警模型
  * 2) 单体电池离散度高(充电、行驶结束后)
- * 3)执行充电方式，电量以及最大最低电压单体频次脚本
+ * 3) 执行充电方式,电量以及最大最低电压单体频次脚本
+ * 4) 连接阻抗大模型算法
  */
 
 public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
@@ -58,7 +59,6 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
     @Override
     public void invoke(ChargeRecord value, SinkFunction.Context context) throws Exception {
 
-
         // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
         ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value.getStartTime() + " " + value.getEndTime() + " " + value.getVin());
         // 2. 单体电压离散度高
@@ -71,7 +71,6 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
         }
         // 5.充电压差扩大模型
         if (value.getStartSoc() <= 80 && value.getEndSoc() >= 80) {
-
             if (chargeTimes.value() == null) {
                 // 初始化状态，不可以在open()中初始化
                 chargeTimes.update(1);
@@ -93,7 +92,6 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
                 long[] timeArray = chargeStartAndEnd.value();
                 // 时间数组按照值进行排序，是对充电进行排序
                 Arrays.sort(timeArray);
-
                 // 拼接10次充电的时间戳字符串
                 String shellArgs = " ";
                 for (long time : timeArray) {

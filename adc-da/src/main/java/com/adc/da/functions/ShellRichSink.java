@@ -8,14 +8,19 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
 import java.util.Properties;
 
-public class EventInfoSink extends RichSinkFunction<EventInfo> {
+/**
+ * 执行shell脚本的sink
+ *
+ * @param <T> stream的类型
+ */
+public class ShellRichSink<T> extends RichSinkFunction<T> {
 
     // shell环境配置以及脚本执行路径
     public Properties shellConfig = null;
     public Connection conn = null;
 
 
-    public EventInfoSink(Properties shellConfig) {
+    public ShellRichSink(Properties shellConfig) {
         this.shellConfig = shellConfig;
     }
 
@@ -35,6 +40,6 @@ public class EventInfoSink extends RichSinkFunction<EventInfo> {
      * 调用的时候重写
      */
     @Override
-    public void invoke(EventInfo value, Context context) throws Exception {
+    public void invoke(T value, Context context) throws Exception {
     }
 }

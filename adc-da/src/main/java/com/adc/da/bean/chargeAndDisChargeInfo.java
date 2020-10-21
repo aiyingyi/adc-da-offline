@@ -7,7 +7,7 @@ import lombok.Data;
  */
 
 /**
- * 充放电时间信息
+ * 一次充放电循环的时间信息
  */
 @Data
 public class chargeAndDisChargeInfo {
