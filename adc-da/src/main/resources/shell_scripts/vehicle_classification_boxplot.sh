@@ -15,26 +15,41 @@ do_date=`date -d "1 day ago" "+%Y-%m-%d %H:%M:%S"`
 # 首先执行 ods_to_dwd_preprocess.sh 脚本，将前一天的数据导入到dwd层
 sql="
 with
--- 计算每辆车的平均值
-avg_vehicle_data_perday as(
-
-select
-
-from
- (
-   select
-        vin,
-        round(avg(differenceCellVoltage),1)  diff_Voltage,
-        round(avg(maxProbeTemperature-minProbeTemperature),1) diff_temper,
-        round(avg(maxTemperatureRate),1) temper_rate,
-        round(avg(averageProbeTemperature),1) temper,
-        round(avg(resistance),1) resistance,
+-- 计算每辆车的平均值,并添加分类字段
+avg_vehicle_data_perday as
+(
+  select
+    avg_data.vin,
+    c.classification,
+    avg_data.diff_Voltage,
+    avg_data.diff_temper,
+    avg_data.temper_rate,
+    avg_data.temper,
+    avg_data.resistance
+  from
+  (
+    select
+      vin,
+      round(avg(differenceCellVoltage),1)  diff_Voltage,
+      round(avg(maxProbeTemperature-minProbeTemperature),1) diff_temper,
+      round(avg(maxTemperatureRate),1) temper_rate,
+      round(avg(averageProbeTemperature),1) temper,
+      round(avg(resistance),1) resistance
     from ${db}.dwd_preprocess_vehicle_data
     where dt = date_format('${do_date}','yyyy-MM-dd')
     group by vin
   )  as avg_data
-join (select vin,)
+  join (
+    select
+      vin,
+      classification
+    from ${db}.vehicle_classification_es
+    where dt = date_format('${do_date}','yyyy-MM')
+  ) as c
+  on c.vin = avg_data.vin
 ),
+-- 根据车类，异常类型去计算分位数
+
 
 
 

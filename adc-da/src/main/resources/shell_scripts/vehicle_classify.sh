@@ -7,6 +7,7 @@ db=warningplatform
 
 # 获取当前日期,当前日期应该是本月最后一天
 do_date=`date  "+%Y-%m-%d %H:%M:%S"`
+
 last_month=`date  -d "${do_date} 1 month ago" "+%Y-%m"`
 first_day_this_month=`date "+%Y-%m-01"`
 # 获取上个月最后一天的日期
@@ -82,18 +83,39 @@ vehicle_last_data as
           where dt>='${start_time}' and dt < '${do_date}'
       ) as vehicle_data_rk
     where vehicle_data_rk.rk = 1
+),
+-- 表连接,对每辆车进行分类
+classify_this_month  as
+(
+  select
+      last.enterprise,
+      last.vin,
+      concat_ws('-',last.province,last.vehicleType,date_format(base.delivery_time,'yyyy'),ini.quarter,cast(last.odo_level as string)) as classification,
+      date_format('${do_date}','yyyy-MM') as dt
+  from  vehicle_last_data  last join  ${db}.vehicle_initial as ini
+  on last.vin = ini.vin
+  join  ${db}.vehicle_base_info  base
+  on last.vin = base.vin
+),
+-- 获取上一个月的分类情况
+classify_last_month  as
+(
+  select
+    enterprise,
+    vin,
+    classification
+  from   ${db}.vehicle_classification_es
+  where dt = '${last_month}'
 )
 -- 计算当月的新分类，注意：本月没有的车辆按照上个月的进行分类
 insert into table  ${db}.vehicle_classification_es
 select
-    last.enterprise,
-    last.vin,
-    concat_ws('-',last.province,last.vehicleType,date_format(base.delivery_time,'yyyy'),ini.quarter,cast(last.odo_level as string)) as classification,
-    date_format('${do_date}','yyyy-MM') as dt
-from  vehicle_last_data  last join  ${db}.vehicle_initial as ini
-on last.vin = ini.vin
-join  ${db}.vehicle_base_info  base
-on last.vin = base.vin
+  nvl(new.enterprise,old.enterprise),
+  nvl(new.vin,old.vin),
+  nvl(new.classification,old.classification),
+  date_format('${do_date}','yyyy-MM') as dt
+from  classify_this_month   new  full outer join  classify_last_month   old
+on new.vin = old.vin;
 "
 hive -e  "${sql}"
 
