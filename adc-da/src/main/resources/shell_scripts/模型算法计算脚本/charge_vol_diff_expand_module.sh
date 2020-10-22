@@ -2,7 +2,6 @@
 
 db=warningplatform
 
-# 充电压差扩大模型算法，缺少将soc由字符串例如80%转换成小数步骤
 # 电压单位问题
 # 指定算法计算的窗口大小(充电次数)
 window_size=10
@@ -22,7 +21,6 @@ select
     get_json_object(data,'$.vin') as vin,
     cast(get_json_object(data,'$.differenceCellVoltage') as double)  as differenceCellVoltage,
 "
-
 # 拼接每次充电查询的sql
 for((i = 1;i<=$[${window_size}];i++))
 do
@@ -44,6 +42,16 @@ with
 charge_data as   -- 最近10次有效充电为且充电数据帧soc > 0.8 的数据
 (
  ${charge_data_sql}
+),
+-- 计算出最后一次充电的省份信息
+charge_province as
+(
+  select
+    get_json_object(data,'$.vin') as vin,
+    get_json_object(data,'$.province') as province
+  from ${db}.ods_preprocess_vehicle_data
+  where dt = date_format('${args[$[2*$window_size-1]]}','yyyy-MM-dd')
+  and msgTime = '${args[$[2*$window_size-1]]}'
 ),
 
 -- 计算平均压差，并按照充电时间排序
@@ -76,7 +84,6 @@ charge_statistics as
 (
   select
     t1.vin,
-    '${args[$[2*$window_size-2]]}' as  last_charge_time,
     t1.vol_diff as vol_diff,   -- 压差
     t1.charge_start_time as charge_start_time, -- 充电开始时间
     t2.timeDiff as timeDiff    --  时间差
@@ -90,17 +97,60 @@ charge_statistics as
   join charge_time as t2
   on t1.vin = t2.vin
 )
+--  前10次充电并且发生预警的计算结果
+insert into table ${db}.charge_vol_diff_exp
+select
+  tmp.vin,
+  tmp.startTime,
+  tmp.endTime,
+  tmp.vol_diff,
+  tmp.timeDiff
+from
+  (select
+    vin,
+    date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss') as startTime,  -- 最近10次充电中最后一次充电的开始时间
+    date_format('${args[$[2*$window_size-1]]}', 'yyyy-MM-dd HH:mm:ss') as endTime,    -- 最近10次充电中最后一次充电的结束时间
+    vol_diff,  -- 压差数组
+    timeDiff,  -- 时间间隔
+    ${db}.charge_vol_diff_exp(vol_diff,charge_start_time) as iswarning
+  from charge_statistics)  tmp
+where tmp.iswarning = '1';
 
--- 将压差数组和时差数组输入自定义函数，输出是否预警，并写入记录
+-- 写入预警信息表
+insert into table ${db}.battery_warning_info_es
+select
+  a.vin,
+  b.vehicleType,
+  b.enterprise,
+  b.licensePlate,
+  b.batteryType
+  '1',         --  预警等级为1
+  p.vin,
+  w.startTime,
+  w.endTime,
+  '充电压差扩大',
+  '充电压差扩大',
+  null,
+  null,
+  null
+from (select vin,startTime,endTime,vol_diff,timeDiff from ${db}.charge_vol_diff_exp where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss')) as w
+join ${db}.vehicle_base_info as b
+on w.vin = b.vin
+join charge_province p on w.vin = p.vin;
 
-insert into table ${db}.charge_vol_day_diff_es
+
+-- 将拟合直线写入es表格
+insert into table ${db}.charge_vol_diff_exp_es
 select
   vin,
-  date_format(last_charge_time,'yyyy-MM-dd HH:mm:ss'),  --最近10次充电中最后一次充电的开始时间
+  startTime,
+  endTime,
   vol_diff,
-  timeDiff,
-  ${db}.charge_vol_diff_exp(vol_diff,charge_start_time)
-from charge_statistics
+  timeDiff
+from ${db}.charge_vol_diff_exp
+where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss');
+
+
 "
 
 hive  -e "${sql}"
