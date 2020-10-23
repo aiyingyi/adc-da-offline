@@ -43,17 +43,6 @@ charge_data as   -- 最近10次有效充电为且充电数据帧soc > 0.8 的数
 (
  ${charge_data_sql}
 ),
--- 计算出最后一次充电的省份信息
-charge_province as
-(
-  select
-    get_json_object(data,'$.vin') as vin,
-    get_json_object(data,'$.province') as province
-  from ${db}.ods_preprocess_vehicle_data
-  where dt = date_format('${args[$[2*$window_size-1]]}','yyyy-MM-dd')
-  and msgTime = '${args[$[2*$window_size-1]]}'
-),
-
 -- 计算平均压差，并按照充电时间排序
 charge_info as
 (
@@ -119,12 +108,12 @@ where tmp.iswarning = '1';
 -- 写入预警信息表
 insert into table ${db}.battery_warning_info_es
 select
-  a.vin,
-  b.vehicleType,
-  b.enterprise,
+  w.vin,
+  p.vehicleType,
+  p.enterprise,
   b.licensePlate,
-  b.batteryType
-  '1',         --  预警等级为1
+  b.battery_type,
+  '1',               --  预警等级为1
   p.vin,
   w.startTime,
   w.endTime,
@@ -133,14 +122,25 @@ select
   null,
   null,
   null
-from (select vin,startTime,endTime,vol_diff,timeDiff from ${db}.charge_vol_diff_exp where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss')) as w
-join ${db}.vehicle_base_info as b
+from (select vin,startTime,endTime,vol_diff,timeDiff from ${db}.charge_vol_diff_exp where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss') and vin = '${vin}') as w
+join (select vin,licensePlate,battery_type from ${db}.vehicle_base_info where vin  = '${vin}') as b
 on w.vin = b.vin
-join charge_province p on w.vin = p.vin;
-
+join (
+  -- 计算出最后一次充电的省份信息
+  select
+    get_json_object(data,'$.vin') as vin,
+    get_json_object(data,'$.province') as province,
+    get_json_object(data,'$.vehicleType') as vehicleType,
+    get_json_object(data,'$.enterprise') as enterprise
+  from ${db}.ods_preprocess_vehicle_data
+  where dt = date_format('${args[$[2*$window_size-1]]}','yyyy-MM-dd')
+  and get_json_object(data,'$.msgTime') = '${args[$[2*$window_size-1]]}'
+  and get_json_object(data,'$.vin') = '${vin}'
+) as p
+on w.vin = p.vin;
 
 -- 将拟合直线写入es表格
-insert into table ${db}.charge_vol_diff_exp_es
+insert into table ${db}.charge_vol_day_diff_es
 select
   vin,
   startTime,
@@ -148,8 +148,8 @@ select
   vol_diff,
   timeDiff
 from ${db}.charge_vol_diff_exp
-where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss');
-
+where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss')
+and vin = '${vin}';
 
 "
 
