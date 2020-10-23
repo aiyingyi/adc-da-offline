@@ -113,8 +113,8 @@ select
   p.enterprise,
   b.licensePlate,
   b.battery_type,
-  '1',               --  预警等级为1
-  p.vin,
+  '1',
+  p.province,
   w.startTime,
   w.endTime,
   '充电压差扩大',
