@@ -86,8 +86,8 @@ charge_statistics as
   join charge_time as t2
   on t1.vin = t2.vin
 )
---  前10次充电并且发生预警的计算结果
-insert into table ${db}.charge_vol_diff_exp
+--  前10次充电并且发生预警的计算结果存入到es
+insert into table ${db}.charge_vol_day_diff_es
 select
   tmp.vin,
   tmp.startTime,
@@ -97,8 +97,8 @@ select
 from
   (select
     vin,
-    date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss') as startTime,  -- 最近10次充电中最后一次充电的开始时间
-    date_format('${args[$[2*$window_size-1]]}', 'yyyy-MM-dd HH:mm:ss') as endTime,    -- 最近10次充电中最后一次充电的结束时间
+    '${args[$[2*$window_size-2]]}'  as startTime,  -- 最近10次充电中最后一次充电的开始时间
+    '${args[$[2*$window_size-1]]}'  as endTime,    -- 最近10次充电中最后一次充电的结束时间
     vol_diff,  -- 压差数组
     timeDiff,  -- 时间间隔
     ${db}.charge_vol_diff_exp(vol_diff,charge_start_time) as iswarning
@@ -119,10 +119,10 @@ select
   w.endTime,
   '充电压差扩大',
   '充电压差扩大',
-  null,
+  '1',
   null,
   null
-from (select vin,startTime,endTime,vol_diff,timeDiff from ${db}.charge_vol_diff_exp where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss') and vin = '${vin}') as w
+from (select vin,startTime,endTime from ${db}.charge_vol_day_diff_es  where startTime = '${args[$[2*$window_size-2]]}' and vin = '${vin}') as w
 join (select vin,licensePlate,battery_type from ${db}.vehicle_base_info where vin  = '${vin}') as b
 on w.vin = b.vin
 join (
@@ -138,19 +138,6 @@ join (
   and get_json_object(data,'$.vin') = '${vin}'
 ) as p
 on w.vin = p.vin;
-
--- 将拟合直线写入es表格
-insert into table ${db}.charge_vol_day_diff_es
-select
-  vin,
-  startTime,
-  endTime,
-  vol_diff,
-  timeDiff
-from ${db}.charge_vol_diff_exp
-where startTime = date_format('${args[$[2*$window_size-2]]}', 'yyyy-MM-dd HH:mm:ss')
-and vin = '${vin}';
-
 "
 
 hive  -e "${sql}"

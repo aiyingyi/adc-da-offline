@@ -549,18 +549,6 @@ values ("单体压差过大", "单体压差过大", "1"),
        ("温度梯度化", "温度梯度化", "3"),
        ("BMS采样异常", "BMS采样异常", "3");
 
--- 创建充电压差扩大预警表
--- 其实这张表以省略，就是需要更改一下es索引的日期类型
-create external table charge_vol_diff_exp
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    vol_diff  array<double>,
-    timeDiff  array<int>
-) row format delimited fields terminated by '\t'
-    location '/warningplatform.db/ads/charge_vol_diff_exp';
-
 -- 创建充电压差扩大模型es映射表，保存计算出来的拟合直线点
 create external table charge_vol_day_diff_es
 (
@@ -583,7 +571,6 @@ create external table cell_vol_highdis_es
     vin       string,
     startTime string,
     endTime   string,
-    isWarning string,
     volAvg    array<double>,
     volStd    array<double>
 
@@ -591,7 +578,7 @@ create external table cell_vol_highdis_es
     location '/warningplatform.db/ads/connection_impedance_es'
     TBLPROPERTIES ('es.resource' = 'connection_impedance_es/connection_impedance_es',
         'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning,volAvg:volAvg,volStd:volStd',
+                'vin:vin,startTime:startTime,endTime:endTime,volAvg:volAvg,volStd:volStd',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
@@ -602,77 +589,14 @@ create external table capacity_anomaly_es
     chargeStart    string,
     chargeEnd      string,
     disChargeStart string,
-    disChargeEnd   string,
-    isWarning      string
+    disChargeEnd   string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/capacity_anomaly_es'
     TBLPROPERTIES ('es.resource' = 'capacity_anomaly/capacity_anomaly',
         'es.mapping.names' =
-                'isWarning:isWarning,disChargeEnd:disChargeEnd,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,disChargeStart:disChargeStart',
+                'disChargeEnd:disChargeEnd,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,disChargeStart:disChargeStart',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
 
--- 连接阻抗大模型es映射表
-create external table connection_impedance_es
-(
-    vin             string,
-    chargeEndTime   string,
-    chargeStartTime string,
-    isWarning       string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/connection_impedance_es'
-    TBLPROPERTIES ('es.resource' = 'connection_impedance/connection_impedance',
-        'es.mapping.names' =
-                'vin:vin,chargeEndTime:chargeEndTime,chargeStartTime:chargeStartTime,isWarning:isWarning',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );
 
--- 单体电压波动性差异大
-create external table cell_vol_fluctuation_es
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    isWarning string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/cell_vol_fluctuation_es'
-    TBLPROPERTIES ('es.resource' = 'cell_vol_fluctuation/cell_vol_fluctuation',
-        'es.mapping.names' =
-                'isWarning:isWarning,startTime:startTime,vin:vin,endTime:endTime',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );
-
--- 绝缘电阻突降模型es映射表
-create external table resistance_reduce_es
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    isWarning string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/resistance_reduce_es'
-    TBLPROPERTIES ('es.resource' = 'resistance_reduce/resistance_reduce',
-        'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );
-
--- bms检测异常es映射表
-create external table bms_sampling_es
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    isWarning string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/bms_sampling_es'
-    TBLPROPERTIES ('es.resource' = 'bms_sampling/bms_sampling',
-        'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );
