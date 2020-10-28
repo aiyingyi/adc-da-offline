@@ -138,6 +138,8 @@ public class ChargeAndStartupMonitor {
          */
 
         chargeStream.keyBy(data -> data.getVin()).addSink(new ChargeSinkFunction(2, shellConfig));
+
+
         /**
          * 电芯自放电大模型算法 判断车辆是否静置半天
          */

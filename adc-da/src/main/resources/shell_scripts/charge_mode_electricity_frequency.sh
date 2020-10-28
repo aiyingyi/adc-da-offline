@@ -2,6 +2,9 @@
 
 db=warningplatform
 
+# 计算充电方式，电量和频次计算
+
+
 # 充电开始，结束时间
 start_time=$1
 end_time=$2
@@ -10,6 +13,7 @@ vin=$3
 # 定义快充和慢充
 slowcharge=0
 quickcharge=1
+
 # 定义充电状态
 charge=1
 
@@ -119,7 +123,7 @@ select
     date_format('${end_time},'yyyy-MM-dd HH:mm:ss'),
     data1.chargeStartSOC,
     data1.chargeEndSOC,
-    cme.chargeElectricity,
+    round(cme.chargeElectricity,1),  -- 保留一位小数
     cme.chargeType,
     fre.max_frequency,
     fre.min_frequency
