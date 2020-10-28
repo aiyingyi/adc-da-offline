@@ -4,11 +4,18 @@
 # 每天执行一次
 db=warningplatform
 
-# 获取当前日期
+# 获取明天日期,提前创建分区
+tomorrow=`date -d "-1 day ago" "+%Y-%m-%d"`
+
+# 获取昨天日期
 do_date=`date -d "1 day ago" "+%Y-%m-%d"`
 
 # 计算之前应该导入前一天的数据到dwd_preprocess_vehicle_data中
 sql="
+
+-- 为原始数据表添加分区,注意：项目首次启动的时候要先添加当天的分区
+alter table ${db}.ods_preprocess_vehicle_data add partition(dt='${tomorrow}');
+
 insert into table ${db}.dwd_preprocess_vehicle_data partition(dt='${do_date}')
 select
     get_json_object(data,'$.vin'),
