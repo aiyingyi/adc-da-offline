@@ -55,8 +55,7 @@ with seq as
                   join end1 on end1.vin = begin1.vin
          where begin1.dt < end1.dt
      )
-
--- hive中的join只能是等值连接，因此不能使用left semi  join  左半连接
+-- hive中的join只能是等值连接，因此不能使用left semi join  左半连接
 
 select test.*
 from test

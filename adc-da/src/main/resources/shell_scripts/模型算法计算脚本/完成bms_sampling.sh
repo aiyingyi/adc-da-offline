@@ -79,7 +79,7 @@ select
   '${endTime}',
   'BMS采样异常',
   'BMS采样异常',
-  null,
+  '1',
   null,
   null
 from  (select vin from res where iswarning = '1' ) as r
