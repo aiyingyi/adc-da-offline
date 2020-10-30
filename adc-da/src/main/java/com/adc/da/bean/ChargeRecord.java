@@ -13,13 +13,16 @@ public class ChargeRecord {
     private long endTime;
     private double startSoc;
     private double endSoc;
+    private double odo;
 
-    public ChargeRecord(String vin, long startTime, long endTime, double startSoc, double endSoc) {
+
+    public ChargeRecord(String vin, long startTime, long endTime, double startSoc, double endSoc, double odo) {
         this.vin = vin;
         this.startTime = startTime;
         this.endTime = endTime;
         this.startSoc = startSoc;
         this.endSoc = endSoc;
+        this.odo = odo;
     }
 
     @Override
@@ -30,6 +33,7 @@ public class ChargeRecord {
                 ", endTime=" + endTime +
                 ", startSoc=" + startSoc +
                 ", endSoc=" + endSoc +
+                ", odo=" + odo +
                 '}';
     }
 }

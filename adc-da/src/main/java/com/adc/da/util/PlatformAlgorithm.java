@@ -1,9 +1,7 @@
 package com.adc.da.util;
 
-import com.adc.da.util.MatlabUtil;
 
 import java.text.ParseException;
-import java.util.Arrays;
 
 public class PlatformAlgorithm {
 
@@ -17,15 +15,15 @@ public class PlatformAlgorithm {
      */
     public int highDisPersionEarlyWarning(double[][] batteryCellVoltage, int th1, int th2) {
 
-        /* 行列转换->求平均值->行列转换*/
+        /* 行列转换->求平均值->行列转换            每行求一个平均值（每行代表一组电压值）*/
         double[][] meanValue = MatlabUtil.unpiovt(MatlabUtil.mean(MatlabUtil.unpiovt(batteryCellVoltage), 1));
-        /* 减去平均获取差值*/
+        /* 减去平均获取差值            每行电压值减去每行的平均值*/
         double[][] Vdet = MatlabUtil.sub(batteryCellVoltage, meanValue);
-        /* 获取数据的行数*/
-        int columnLenght = batteryCellVoltage[0].length;
-        double[][] x = new double[1][columnLenght];
-        double[][] y = new double[1][columnLenght];
-        for (int column = 0; column < columnLenght; column++) {
+        /* 获取数据的列数*/
+        int columnLength = batteryCellVoltage[0].length;
+        double[][] x = new double[1][columnLength];
+        double[][] y = new double[1][columnLength];
+        for (int column = 0; column < columnLength; column++) {
             x[0][column] = MatlabUtil.abs(MatlabUtil.mean(MatlabUtil.column(Vdet, column), 1))[0][0];
             y[0][column] = MatlabUtil.abs(MatlabUtil.std(MatlabUtil.column(Vdet, column), 0, 1))[0][0];
         }
@@ -43,34 +41,52 @@ public class PlatformAlgorithm {
 
 
     /**
-     * 模型二：单体电压波动性差异大模型算法
+     * 模型一：单体电压离散度高预警  返回预警的电池单体编号
      *
-     * @param max_v
-     * @param min_v
-     * @param th
+     * @param batteryCellVoltage 所有单体电压-二维数组
+     * @param th1
+     * @param th2
      * @return
      */
-    public int vJumpConsist(double[] max_v, double[] min_v, double th) {
+    public int[] highDisPersionEarlyWarningCellNumber(double[][] batteryCellVoltage, int th1, int th2) {
 
-        /* 求差分->求绝对值->求和*/
-        double xx = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(max_v)));   /* 最高电压 曲线斜率 绝对值 和*/
-        double yy = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(min_v)));   /* 最低电压 曲线斜率 绝对值 和*/
-        double[] zz = MatlabUtil.squareBrackets(MatlabUtil.abs(MatlabUtil.diff(max_v)), MatlabUtil.abs(MatlabUtil.diff(min_v)));
-        if ((xx > yy ? xx : yy) > 0 && MatlabUtil.mean(zz) > 0.005) {
-            if (((xx < yy ? xx : yy) / (xx > yy ? xx : yy)) < th) {
-                return 1;   /* 预警*/
-            } else {
-                return 0;   /* 不预警*/
-            }
-        } else {
-            return 0;      /* 不预警*/
+        /* 行列转换->求平均值->行列转换            每行求一个平均值（每行代表一组电压值）*/
+        double[][] meanValue = MatlabUtil.unpiovt(MatlabUtil.mean(MatlabUtil.unpiovt(batteryCellVoltage), 1));
+        /* 减去平均获取差值            每行电压值减去每行的平均值*/
+        double[][] Vdet = MatlabUtil.sub(batteryCellVoltage, meanValue);
+        /* 获取数据的列数*/
+        int columnLength = batteryCellVoltage[0].length;
+        double[][] x = new double[1][columnLength];
+        double[][] y = new double[1][columnLength];
+        for (int column = 0; column < columnLength; column++) {
+            x[0][column] = MatlabUtil.abs(MatlabUtil.mean(MatlabUtil.column(Vdet, column), 1))[0][0];
+            y[0][column] = MatlabUtil.abs(MatlabUtil.std(MatlabUtil.column(Vdet, column), 0, 1))[0][0];
         }
+        double[][] xidx;
+        double[][] yidx;
+        xidx = MatlabUtil.boxoutlier(x, th1);
+        yidx = MatlabUtil.boxoutlier(x, th2);
+        if (!MatlabUtil.isEmpty(xidx) || !MatlabUtil.isEmpty(yidx)) {
+            int xidxRowLength = xidx.length;
+            int yidxRowLength = yidx.length;
+            int[] result = new int[xidxRowLength + yidxRowLength];
+            for (int i = 0; i < xidxRowLength; i++) {
+                result[i] = (int) xidx[i][0];
+            }
+            for (int j = 0; j < yidxRowLength; j++) {
+                result[xidxRowLength + j] = (int) yidx[j][0];
+            }
+            return result;
+        } else {
+            return null;
+        }
+
 
     }
 
 
     /**
-     * 模型二：单体电压波动性差异大模型算法
+     * 模型二：单体电压波动性差异大模型算法（二维数据参数）
      *
      * @param max_v
      * @param min_v
@@ -94,6 +110,34 @@ public class PlatformAlgorithm {
         }
 
     }
+
+
+    /**
+     * 模型二：单体电压波动性差异大模型算法（一维数据参数）
+     *
+     * @param max_v
+     * @param min_v
+     * @param th
+     * @return
+     */
+    public int vJumpConsist(double[] max_v, double[] min_v, double th) {
+
+        /* 求差分->求绝对值->求和*/
+        double xx = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(max_v)));   /* 最高电压 曲线斜率 绝对值 和*/
+        double yy = MatlabUtil.sum(MatlabUtil.abs(MatlabUtil.diff(min_v)));   /* 最低电压 曲线斜率 绝对值 和*/
+        double[] zz = MatlabUtil.squareBrackets(MatlabUtil.abs(MatlabUtil.diff(max_v)), MatlabUtil.abs(MatlabUtil.diff(min_v)));
+        if ((xx > yy ? xx : yy) > 0 && MatlabUtil.mean(zz) > 0.005) {
+            if (MathUtil.divideDouble((xx < yy ? xx : yy), (xx > yy ? xx : yy)) < th) {
+                return 1;   /* 预警*/
+            } else {
+                return 0;   /* 不预警*/
+            }
+        } else {
+            return 0;      /* 不预警*/
+        }
+
+    }
+
 
     /**
      * 模型三：一维数据-绝缘突降预警
@@ -143,7 +187,7 @@ public class PlatformAlgorithm {
 
 
     /**
-     * 模型四：电芯自放电大模型算法  (后边预警结果是自己写的，matlab中只给了预警的的输出)
+     * 模型四：电芯自放电大模型算法  (后边预警结果是自己写的，matlab中只给了预警的的输出)  ：二维数据
      *
      * @param dates       日期
      * @param odo         累计里程
@@ -176,25 +220,89 @@ public class PlatformAlgorithm {
 
     }
 
+
+    /**
+     * 模型四：电芯自放电大模型算法  (后边预警结果是自己写的，matlab中只给了预警的的输出) :一维数据
+     *
+     * @param dates       日期
+     * @param odo         累计里程
+     * @param soc         soc
+     * @param vel         车速
+     * @param cellVoltage 单体电压
+     * @return
+     */
+    public int selfDischargeBig(String[] dates, double[] odo, double[] soc, double[] vel, double[][] cellVoltage) throws ParseException {
+
+        double[] dateDet = MatlabUtil.dateDiff(dates);   /* 计算日期之间相差的天数*/
+        int[] idx = MatlabUtil.selfDischargeBigFind(dateDet, 0.5);   /* 获取日期之差大于0.5天数据位置*/
+        int warningFlag = 0;   /* 0:不预警   1:预警*/
+        /* 循环遍历行*/
+        for (int i = 0; i < idx.length; i++) {
+            int idxi = idx[i];
+            int idxj = idx[i] - 1;
+            if (odo[idxi] == odo[idxj] && (soc[idxi] - soc[idxj]) >= -5 && (soc[idxi] - soc[idxj]) <= 5
+                    && vel[idxi] == 0 && vel[idxj] == 0) {
+                double[] x = MatlabUtil.divide(MatlabUtil.sub(MatlabUtil.singleRow(cellVoltage, idxj), MatlabUtil.singleRow(cellVoltage, idxi)), MatlabUtil.singleDateSub(dates[idxi], dates[idxj]));
+                double multiplier = 1000;
+                x = MatlabUtil.multiplication(x, multiplier);
+                if (MatlabUtil.max(x) > (MathUtil.addDouble(MatlabUtil.mean(x), MathUtil.multiplyDouble(6, MatlabUtil.std(x)))) && MatlabUtil.max(x) > 30) {         /* 为行向量和列向量时支持*/
+                    warningFlag = 1;
+                    break;
+                }
+            }
+        }
+        return warningFlag;
+
+    }
+
+
+    /**
+     * 模型四：电芯自放电大模型算法  (后边预警结果是自己写的，matlab中只给了预警的的输出) :一维数据
+     *
+     * @param dt          日期
+     * @param cellVoltage 单体电压
+     * @return
+     */
+    public int selfDischargeBig(long[] dt, double[][] cellVoltage) throws ParseException {
+
+        int warningFlag = 0;   /* 0:不预警   1:预警*/
+
+        double timeDiff = (dt[1] - dt[0]) / (1000 * 60 * 60 * 24.0);
+
+        double[] x = MatlabUtil.divide(MatlabUtil.sub(MatlabUtil.singleRow(cellVoltage, 0), MatlabUtil.singleRow(cellVoltage, 1)), timeDiff);
+        double multiplier = 1000;
+        x = MatlabUtil.multiplication(x, multiplier);
+        if (MatlabUtil.max(x) > (MathUtil.addDouble(MatlabUtil.mean(x), MathUtil.multiplyDouble(6, MatlabUtil.std(x)))) && MatlabUtil.max(x) > 30) {         /* 为行向量和列向量时支持*/
+            warningFlag = 1;
+
+        }
+        return warningFlag;
+
+    }
+
+
     /**
      * 模型七：充电压差扩大模型算法
      *
      * @param voltageDifference 电压差：mV为单位（10个电压值）
      * @param time              字符串类型
+     * @param th1               斜率（判断）
+     * @param th2               压差值（判断）
      * @return
      */
-    public int chargeDifferentialVoltageExpansion(double[] voltageDifference, String[] time) {
+    public int chargeDifferentialVoltageExpansion(double[] voltageDifference, String[] time, double th1, double th2) {
 
         double[] x = MatlabUtil.dateDiff(time);    /* 日期相差天数：线形图X坐标*/
         double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
         double[] ab = MatlabUtil.linearRegression(x, y);   /* y=ax+b 返回a、b的值*/
-        if (ab[0] > 0.05 && (MatlabUtil.max(x) - MatlabUtil.min(x)) > 40) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
+        if (ab[0] > th1 && (MatlabUtil.max(x) - MatlabUtil.min(x)) > th2) {   /* 直线斜率大于0.05，且最高压差与最低压差之间差异大于40mV.*/
             return 1;   /* 预警*/
         } else {
             return 0;   /* 不预警*/
         }
 
     }
+
 
     /**
      * 模型七：拟合直线x轴、y轴交点
@@ -208,7 +316,7 @@ public class PlatformAlgorithm {
         double[] x = MatlabUtil.dateDiff(time);    /* 日期相差天数：线形图X坐标*/
         double[] y = voltageDifference;            /* 压差：线形图Y坐标*/
         double[] ab = MatlabUtil.linearRegression(x, y);   /* y=ax+b 返回a、b的值*/
-        double xValue = -(ab[1] / ab[0]);
+        double xValue = -MathUtil.divideDouble(ab[1], ab[0]);
         double yValue = ab[1];
         double[] result = new double[]{xValue, yValue};
         return result;
@@ -228,7 +336,7 @@ public class PlatformAlgorithm {
      */
     public int highConnectionImpedance(double[] vdet, double[] I, double[] soc, double rth1, double rth2) {
 
-        double[] Rdet = MatlabUtil.divide(vdet, I);                                  /* 单位是mΩ*/
+        double[] Rdet = MatlabUtil.divide(vdet, MatlabUtil.abs(I));                                  /* 单位是mΩ*/
         if (Rdet.length > 50) {
             double[] idx = MatlabUtil.reduceFind(I, -5);                    /* 获取电流小于-5A的元素的位置*/
             double rdetMean = MatlabUtil.mean(MatlabUtil.arraySpot(Rdet, idx));         /* 获取电阻平均值*/
@@ -270,8 +378,9 @@ public class PlatformAlgorithm {
 
     }
 
+
     /**
-     * 模型九：BMS采样异常
+     * 模型九：BMS采样异常(支持充电、放电)
      *
      * @param vdet    压差平均值
      * @param vMaxNum 最高电压单体编号
@@ -300,6 +409,7 @@ public class PlatformAlgorithm {
 
     }
 
+
     /**
      * 模型十：容量异常
      *
@@ -321,20 +431,20 @@ public class PlatformAlgorithm {
         int vMaxChNumIndex = 0;   /* 数组索引*/
         for (int i = 0; i < vChRowLength; i++) {
             double[] temporary = MatlabUtil.getIndexRow(vCh, i);
-            Arrays.sort(temporary);                      /* 从小到大排序*/
-            int temporaryLength = temporary.length;
-            for (int j = temporaryLength - th1; j < temporaryLength; j++) {
-                vMaxChNum[vMaxChNumIndex] = temporary[j];         /* 获取电芯编号*/
+            int[] index = MatlabUtil.getIndexBySort(temporary, false);                     /* 从小到大排序返回索引*/
+            int indexLength = index.length;
+            for (int j = indexLength - th1; j < indexLength; j++) {
+                vMaxChNum[vMaxChNumIndex] = index[j];         /* 获取电芯编号*/
                 vMaxChNumIndex++;
             }
         }
         /* 获取指定位置的电芯编号（单体电压最低）*/
         int vMinDisChNumIndex = 0;
         for (int i = 0; i < vDisChRwoLength; i++) {
-            double[] temporary = MatlabUtil.getIndexRow(vCh, i);
-            Arrays.sort(temporary);                      /* 从小到大排序*/
+            double[] temporary = MatlabUtil.getIndexRow(vDisCh, i);
+            int[] index = MatlabUtil.getIndexBySort(temporary, false);                     /* 从小到大排序返回索引*/
             for (int j = 0; j < th1; j++) {
-                vMinDisChNum[vMinDisChNumIndex] = temporary[j];         /* 获取电芯编号*/
+                vMinDisChNum[vMinDisChNumIndex] = index[j];         /* 获取电芯编号*/
                 vMinDisChNumIndex++;
             }
         }
@@ -342,7 +452,7 @@ public class PlatformAlgorithm {
         double[][] vMinDisChTab = MatlabUtil.tabulate(vMinDisChNum);    /* 电芯编号分布统计*/
         if (MatlabUtil.max(MatlabUtil.indexColumn(vMaxChTab, 3)) > th2) {
             if (MatlabUtil.max(MatlabUtil.indexColumn(vMinDisChTab, 3)) > th3) {
-                if (Math.abs(MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMaxChTab, 3)) - MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMinDisChTab, 3))) == 1) {
+                if (MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMaxChTab, 3)) == MatlabUtil.maxValueIndex(MatlabUtil.indexColumn(vMinDisChTab, 3))) {
                     return 1;  /* 预警：电芯容量异常*/
                 } else {
                     return 0;  /* 不预警*/

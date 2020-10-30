@@ -60,7 +60,8 @@ ini_data as
   from
       (select
         vin,
-        chargeCapacity
+        chargeCapacity,
+        chargeStart
       from ${db}.battery_attenuation_es
       where vin = '${vin}'
       and chargeStart < cast('${start_time}' as bigint)
@@ -77,8 +78,9 @@ last_data as
   from (
       select
         vin,
-        chargeCapacity
-      from from ${db}.battery_attenuation_es
+        chargeCapacity,
+        chargeStart
+      from  ${db}.battery_attenuation_es
       where vin = '${vin}'
       order by chargeStart desc
       limit 5
@@ -90,7 +92,7 @@ attenuation_data as
 (
   select
     ini_data.vin,
-    concat(cast( ((last_data.avg_last_chargeCapacity/ini_data.avg_ini_chargeCapacity)*100) as string),'%')  as attenuation_value
+    concat(cast( abs((last_data.avg_last_chargeCapacity/ini_data.avg_ini_chargeCapacity)*100) as string),'%')  as attenuation_value
   from ini_data join last_data on ini_data.vin = last_data.vin
 ),
 -- 获取车辆的第一次充电数据
@@ -98,33 +100,30 @@ first_charge as
 (
   select
     vin,
-    chargeCapacity
+    chargeCapacity,
+    chargeStart
   from  ${db}.battery_attenuation_es
   where vin = '${vin}'
   order by chargeStart asc
   limit 1
-),
-
-
+)
 -- 添加衰减值,将充电记录插入到es索引中，并判断是否预警
 insert into table ${db}.battery_attenuation_es
 select
-  vin,
-  cast('${charge_start}' as bigint),
-  cast('${charge_end}' as bigint),
+  ch.vin,
+  cast('${start_time}' as bigint),
+  cast('${end_time}' as bigint),
   cast('${odo}' as double),
-  chargeCapacity,
-  ${db}.battery_attenuation(cast('${odo}' as double),chargeCapacity)
-from charge_electricity;
-
-
-
-
-
+  ch.chargeCapacity,
+  ad.attenuation_value,
+  if(ch.chargeCapacity/fc.chargeCapacity * 100 > '${th}','0','1')
+from charge_electricity as ch join attenuation_data as ad
+on ch.vin = ad.vin
+join first_charge as fc
+on ch.vin = fc.vin;
 
 
 -- 下面是找出连续几次发生预警的且满足条件的充电记录
-
 with
 seq as   -- 对充电按照时间进行降序编号
 (

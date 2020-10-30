@@ -2,6 +2,7 @@ package com.adc.da.functions;
 
 import ch.ethz.ssh2.Connection;
 import com.adc.da.bean.ChargeRecord;
+import com.adc.da.bean.OdsData;
 import com.adc.da.util.ShellUtil;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
@@ -21,7 +22,7 @@ import java.util.Properties;
  * 4) 连接阻抗大模型算法
  */
 
-public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
+public class ChargeSinkFunction extends RichSinkFunction<OdsData[]> {
 
     // 充电压差扩大模型的充电次数窗口大小
     private int windowSize = 0;
@@ -57,20 +58,20 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
     }
 
     @Override
-    public void invoke(ChargeRecord value, SinkFunction.Context context) throws Exception {
+    public void invoke(OdsData[] value, SinkFunction.Context context) throws Exception {
 
         // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
-        ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value.getStartTime() + " " + value.getEndTime() + " " + value.getVin());
+        ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getVin());
         // 2. 单体电压离散度高
-        ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
+        ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
         // 3. 连接阻抗大模型算法
-        ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value.getVin() + " " + value.getStartTime() + " " + value.getEndTime());
+        ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
         // 4. TODO 电池包衰减预警模型
-        if (value.getEndSoc() - value.getStartSoc() > 40) {
-            // ShellUtil.exec(conn) );
+        if (value[1].getSoc() - value[0].getSoc() > 40) {
+            ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
         }
         // 5.充电压差扩大模型
-        if (value.getStartSoc() <= 80 && value.getEndSoc() >= 80) {
+        if (value[0].getSoc() <= 80 && value[1].getSoc() >= 80) {
             if (chargeTimes.value() == null) {
                 // 初始化状态，不可以在open()中初始化
                 chargeTimes.update(1);
@@ -83,8 +84,8 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
 
             // 相当于一个循环队列，
             int index = (chargeTimes.value() % windowSize + 1) * 2 - 1;
-            arr[index - 1] = value.getStartTime();
-            arr[index] = value.getEndTime();
+            arr[index - 1] = value[0].getMsgTime();
+            arr[index] = value[1].getMsgTime();
             // 状态更新
             chargeStartAndEnd.update(arr);
             // 假如充电次数超过了windowSize次
@@ -97,7 +98,7 @@ public class ChargeSinkFunction extends RichSinkFunction<ChargeRecord> {
                 for (long time : timeArray) {
                     shellArgs = shellArgs + " " + time + " ";
                 }
-                shellArgs = shellArgs + value.getVin();
+                shellArgs = shellArgs + value[0].getVin();
                 // 传入执行脚本的路径和时间参数,以及vin码
                 ShellUtil.exec(conn, shellConfig.getProperty("chargeVolDiffExtendModulePath") + shellArgs);
             }

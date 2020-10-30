@@ -10,7 +10,7 @@ import java.util.Arrays;
 @Data
 public class OdsData {
     private String vin;
-    private Long msgTime;
+    private long msgTime;
     private double speed;
 
     private String startupStatus;  // 启动状态
@@ -19,6 +19,12 @@ public class OdsData {
     private double soc;
     private double odo;
     private double[] cellVoltage;
+
+    private String vehicleType;
+    private String enterprise;
+    private String licensePlate;
+    private String province;
+
 
     @Override
     public String toString() {
@@ -32,6 +38,10 @@ public class OdsData {
                 ", soc=" + soc +
                 ", odo=" + odo +
                 ", cellVoltage=" + Arrays.toString(cellVoltage) +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", enterprise='" + enterprise + '\'' +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", province='" + province + '\'' +
                 '}';
     }
 }

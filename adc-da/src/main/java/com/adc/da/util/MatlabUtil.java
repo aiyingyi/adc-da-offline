@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.adc.da.util.MathUtil;
+
 public class MatlabUtil {
 
 
@@ -20,11 +22,10 @@ public class MatlabUtil {
     public static double[][] boxoutlier(double[][] x, int flag) {
 
         double[][] result = new double[0][];
-
         double Q1 = prctile(x, 25);
         double Q3 = prctile(x, 75);
-        double Q0 = Q1 - flag * (Q3 - Q1);
-        double Q4 = Q3 + flag * (Q3 - Q1);
+        double Q0 = MathUtil.subtractDouble(Q1, flag * MathUtil.subtractDouble(Q3, Q1));
+        double Q4 = MathUtil.addDouble(Q3, flag * MathUtil.subtractDouble(Q3, Q1));
         result = boxoutlierFind(x, Q0, Q4);
 
         return result;
@@ -44,10 +45,10 @@ public class MatlabUtil {
         double[] result = new double[n];
         result[0] = value[0];
         for (int i = 1; i < n - 1; i++) {
-            if (i <= win) {
+            if (i < win) {
                 result[i] = median(matrixStartStop(value, 0, 2 * i), 1);
-            } else if (i > n - win - 1) {
-                result[i] = median(matrixStartStop(value, 2 * i - n - 1, n - 1), 1);
+            } else if (i >= n - win) {
+                result[i] = median(matrixStartStop(value, 2 * i - n + 1, n - 1), 1);
             } else {
                 result[i] = median(matrixStartStop(value, i - win, i + win), 1);
             }
@@ -137,6 +138,7 @@ public class MatlabUtil {
 
     /**
      * 求和
+     *
      * @param value
      * @return
      */
@@ -144,8 +146,9 @@ public class MatlabUtil {
 
         double result = 0;
         int valueLength = value.length;
-        for (int i=0; i<valueLength; i++){
-            result += value[i];
+        for (int i = 0; i < valueLength; i++) {
+//            result += value[i];
+            result = MathUtil.addDouble(result, value[i]);  /* 解决精度丢失问题*/
         }
         return result;
 
@@ -206,9 +209,11 @@ public class MatlabUtil {
         double totalValue = 0;
         /* 循环遍历列*/
         for (int i = 0; i < valueLength; i++) {
-            totalValue += value[i];
+//            totalValue += value[i];
+            totalValue = MathUtil.addDouble(totalValue, value[i]);
         }
-        result = totalValue / valueLength;
+//        result = totalValue / valueLength;
+        result = MathUtil.divideDouble(totalValue, valueLength);
         return result;
 
     }
@@ -275,17 +280,21 @@ public class MatlabUtil {
             double totalValue = 0;
             /* 循环遍历列*/
             for (int column = 0; column < columnLength; column++) {
-                totalValue += value[0][column];
+//                totalValue += value[0][column];
+                totalValue = MathUtil.addDouble(totalValue, value[0][column]);
             }
-            result[0][0] = totalValue / columnLength;
+//            result[0][0] = totalValue / columnLength;
+            result[0][0] = MathUtil.divideDouble(totalValue, columnLength);
         } else if (rowLength > 1 && columnLength == 1) {     /* 当数据为列向量时*/
             result = new double[1][1];
             double totalValue = 0;
             /* 循环遍历行*/
             for (int row = 0; row < rowLength; row++) {
-                totalValue += value[row][0];
+//                totalValue += value[row][0];
+                totalValue = MathUtil.addDouble(totalValue, value[row][0]);
             }
-            result[0][0] = totalValue / rowLength;
+//            result[0][0] = totalValue / rowLength;
+            result[0][0] = MathUtil.divideDouble(totalValue, rowLength);
         } else if (rowLength > 1 && columnLength > 1) {      /* 当数据为矩阵时*/
             if (dim == 1) {                           /* 列，竖着取平均值*/
                 result = new double[1][columnLength];
@@ -294,9 +303,11 @@ public class MatlabUtil {
                     double columnTotalValue = 0;/* 列值求和*/
                     /* 循环遍历行*/
                     for (int row = 0; row < rowLength; row++) {
-                        columnTotalValue += value[row][column];/* 列值求和*/
+//                        columnTotalValue += value[row][column];/* 列值求和*/
+                        columnTotalValue = MathUtil.addDouble(columnTotalValue, value[row][column]);
                     }
-                    result[0][column] = columnTotalValue / rowLength;/* 求平均值*/
+//                    result[0][column] = columnTotalValue / rowLength;/* 求平均值*/
+                    result[0][column] = MathUtil.divideDouble(columnTotalValue, rowLength);
                 }
             } else if (dim == 2) {                  /* 行，横着取平均值*/
                 result = new double[rowLength][1];
@@ -305,9 +316,11 @@ public class MatlabUtil {
                     double rowTotalValue = 0;/* 列值求和*/
                     /* 循环遍历列*/
                     for (int column = 0; column < columnLength; column++) {
-                        rowTotalValue += value[row][column];/* 列值求和*/
+//                        rowTotalValue += value[row][column];/* 列值求和*/
+                        rowTotalValue = MathUtil.addDouble(rowTotalValue, value[row][column]);
                     }
-                    result[row][0] = rowTotalValue / columnLength;/* 求平均值*/
+//                    result[row][0] = rowTotalValue / columnLength;/* 求平均值*/
+                    result[row][0] = MathUtil.divideDouble(rowTotalValue, columnLength);
                 }
             }
 
@@ -328,7 +341,7 @@ public class MatlabUtil {
         int valueLength = value.length;
         double[] result = new double[valueLength - 1];
         for (int i = 0; i < valueLength - 1; i++) {
-            result[i] = value[i + 1] - value[i];
+            result[i] = MathUtil.subtractDouble(value[i + 1], value[i]);
         }
         return result;
 
@@ -531,10 +544,11 @@ public class MatlabUtil {
     public static double[] abs(double[] value) {
 
         int valueLength = value.length;
+        double[] result = new double[valueLength];
         for (int i = 0; i < valueLength; i++) {
-            value[i] = Math.abs(value[i]);
+            result[i] = Math.abs(value[i]);
         }
-        return value;
+        return result;
 
     }
 
@@ -649,7 +663,7 @@ public class MatlabUtil {
 
 
     /**
-     * 减法-两个矩阵相减
+     * 减法-两个矩阵相减   ：二维数据
      *
      * @param minuend    被减数
      * @param subtrahend 减数
@@ -669,18 +683,21 @@ public class MatlabUtil {
         if (minuendRowLength == 1 && minuendColumnLength > 1) {                                                           /* minuend为行向量 */
             if (subtrahendRowLength == 1 && subtrahendColumnLength > 1 && minuendColumnLength == subtrahendColumnLength) {              /* subtrahend为行向量-矩阵维度必须一致（列数一致）*/
                 for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                    result[0][column] = minuend[0][column] - subtrahend[0][column];
+//                    result[0][column] = minuend[0][column] - subtrahend[0][column];
+                    result[0][column] = MathUtil.subtractDouble(minuend[0][column], subtrahend[0][column]);    /* 减法*/
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength == 1) {                                                      /* subtrahend为列向量*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[0][column] - subtrahend[row][0];
+//                        result[row][column] = minuend[0][column] - subtrahend[row][0];
+                        result[row][column] = MathUtil.subtractDouble(minuend[0][column], subtrahend[row][0]);    /* 减法*/
                     }
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength > 1 && minuendColumnLength == subtrahendColumnLength) {      /* subtrahend为矩阵-矩阵维度必须一致（列数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[0][column] - subtrahend[row][column];
+//                        result[row][column] = minuend[0][column] - subtrahend[row][column];
+                        result[row][column] = MathUtil.subtractDouble(minuend[0][column], subtrahend[row][column]);  /* 减法*/
                     }
                 }
             } else {                                                                                                       /* 矩阵维度不一致*/
@@ -690,17 +707,20 @@ public class MatlabUtil {
             if (subtrahendRowLength == 1 && subtrahendColumnLength > 1) {                                                             /* subtrahend为行向量*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[row][0] - subtrahend[0][column];
+//                        result[row][column] = minuend[row][0] - subtrahend[0][column];
+                        result[row][column] = MathUtil.subtractDouble(minuend[row][0], subtrahend[0][column]);   /* 减法*/
                     }
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength == 1 && minuendRowLength == subtrahendRowLength) {            /* subtrahend为列向量-矩阵维度必须一致（行数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {
-                    result[row][0] = minuend[row][0] - subtrahend[row][0];
+//                    result[row][0] = minuend[row][0] - subtrahend[row][0];
+                    result[row][0] = MathUtil.subtractDouble(minuend[row][0], subtrahend[row][0]);         /* 减法*/
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength > 1 && minuendRowLength == subtrahendRowLength) {             /* subtrahend为矩阵-矩阵维度必须一致（行数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[row][0] - subtrahend[0][column];
+//                        result[row][column] = minuend[row][0] - subtrahend[0][column];
+                        result[row][column] = MathUtil.subtractDouble(minuend[row][0], subtrahend[0][column]);      /* 减法*/
                     }
                 }
             } else {                                                                                                       /* 矩阵维度不一致*/
@@ -711,19 +731,22 @@ public class MatlabUtil {
             if (subtrahendRowLength == 1 && subtrahendColumnLength > 1 && minuendColumnLength == subtrahendColumnLength) {             /* subtrahend为行向量-矩阵维度必须一致（列数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[row][column] - subtrahend[0][column];
+//                        result[row][column] = minuend[row][column] - subtrahend[0][column];
+                        result[row][column] = MathUtil.subtractDouble(minuend[row][column], subtrahend[0][column]);   /* 减法*/
                     }
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength == 1 && minuendRowLength == subtrahendRowLength) {             /* subtrahend为列向量-矩阵维度必须一致（行数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[row][column] - subtrahend[row][0];
+//                        result[row][column] = minuend[row][column] - subtrahend[row][0];
+                        result[row][column] = MathUtil.subtractDouble(minuend[row][column], subtrahend[row][0]);       /* 减法*/
                     }
                 }
             } else if (subtrahendRowLength > 1 && subtrahendColumnLength > 1 && minuendRowLength == subtrahendRowLength && minuendColumnLength == subtrahendColumnLength) {   /* subtrahend为矩阵-矩阵维度必须一致（行数、列数一致）*/
                 for (int row = 0; row < maxRowLength; row++) {   //循环遍历行
                     for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
-                        result[row][column] = minuend[row][column] - subtrahend[row][column];
+//                        result[row][column] = minuend[row][column] - subtrahend[row][column];
+                        result[row][column] = MathUtil.subtractDouble(minuend[row][column], subtrahend[row][column]);  /* 减法*/
                     }
                 }
             } else {                                                                                                       /* 矩阵维度不一致*/
@@ -737,11 +760,33 @@ public class MatlabUtil {
 
 
     /**
+     * 减法-两个矩阵相减  :一维数据
+     *
+     * @param minuend    被减数
+     * @param subtrahend 减数
+     * @return
+     */
+    public static double[] sub(double[] minuend, double[] subtrahend) {
+
+        int minuendColumnLength = minuend.length; /* 被减数矩阵的列数*/
+        int subtrahendColumnLength = subtrahend.length; /* 减数矩阵的列数*/
+        int maxColumnLength = subtrahendColumnLength > minuendColumnLength ? subtrahendColumnLength : minuendColumnLength; /* 获取列数最大值*/
+        double[] result = new double[maxColumnLength]; /* 减法返回值*/
+
+        for (int column = 0; column < maxColumnLength; column++) {   //循环遍历列
+            result[column] = MathUtil.subtractDouble(minuend[column], subtrahend[column]);    /* 减法*/
+        }
+        return result;
+
+    }
+
+
+    /**
      * 两个日期相减获取 相差的天数（double）
      *
      * @param minuendTime    被减数
      * @param subtrahendTime 减数
-     * @return
+     * @return 二维数据
      */
     public static double[][] dateSub(String minuendTime, String subtrahendTime) throws ParseException {
 
@@ -751,8 +796,26 @@ public class MatlabUtil {
         double[][] subDate = new double[1][1];
         subDate[0][0] = (minuendDate.getTime() - subtrahendDate.getTime()) / (24 * 3600 * 1000);
         return subDate;
+    }
+
+    /**
+     * 两个日期相减获取 相差的天数(double)
+     *
+     * @param minuendTime    被减数
+     * @param subtrahendTime 减数
+     * @return 一维数据
+     */
+    public static double singleDateSub(String minuendTime, String subtrahendTime) throws ParseException {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date minuendDate = simpleDateFormat.parse(minuendTime);
+        Date subtrahendDate = simpleDateFormat.parse(subtrahendTime);
+//        subDate[0] = (minuendDate.getTime() - subtrahendDate.getTime()) / (24 * 3600 * 1000);
+        double subDate = MathUtil.divideDouble(MathUtil.subtractDouble(minuendDate.getTime(), subtrahendDate.getTime()), 24 * 3600 * 1000);
+        return subDate;
 
     }
+
 
     /**
      * 乘法
@@ -856,6 +919,28 @@ public class MatlabUtil {
                 }
             }
         }
+        return result;
+
+
+    }
+
+
+    /**
+     * 乘法
+     *
+     * @param multiplicand 被乘数
+     * @param multiplier   乘数
+     * @return
+     */
+    public static double[] multiplication(double[] multiplicand, double multiplier) {
+
+        int multiplicandLength = multiplicand.length;
+        double[] result = new double[multiplicandLength]; /* 减法返回值*/
+
+        for (int column = 0; column < multiplicandLength; column++) {   //循环遍历列
+            result[column] = multiplicand[column] * multiplier;
+        }
+
         return result;
 
 
@@ -983,7 +1068,29 @@ public class MatlabUtil {
         double[] result = new double[maxLength]; /* 结果值*/
 
         for (int row = 0; row < maxLength; row++) {
-            result[row] = dividend[row] / divisor[row];
+//            result[row] = dividend[row] / divisor[row];
+            result[row] = MathUtil.divideDouble(dividend[row], divisor[row], 4);
+        }
+
+        return result;
+
+    }
+
+
+    /**
+     * 除法
+     *
+     * @param dividend 被除数
+     * @param divisor  除数
+     * @return
+     */
+    public static double[] divide(double[] dividend, double divisor) {
+
+        int dividendLength = dividend.length;
+        double[] result = new double[dividendLength]; /* 结果值*/
+
+        for (int i = 0; i < dividendLength; i++) {
+            result[i] = dividend[i] / divisor;
         }
 
         return result;
@@ -1039,6 +1146,28 @@ public class MatlabUtil {
 
 
     /**
+     * 求标准偏差   默认每列求一个标准偏差
+     *
+     * @param value
+     * @return
+     */
+    public static double std(double[] value) {
+
+        int valueLength = value.length;   /* 数量*/
+        double result; /* 返回值*/
+
+        double average = mean(value); /* 获取平均值*/
+        double d = 0;
+        for (int column = 0; column < valueLength; column++) {
+            d += (value[column] - average) * (value[column] - average);
+        }
+        result = Math.sqrt(d / (valueLength - 1));  /* 标准方差计算公式*/
+        return result;
+
+    }
+
+
+    /**
      * 求标准偏差（当数据为行向量或列向量时）   默认格式std(value, 0, 1)
      *
      * @param value 向量或矩阵
@@ -1064,8 +1193,10 @@ public class MatlabUtil {
                 double d = 0;
                 for (int column = 0; column < columnLength; column++) {
                     d += (value[0][column] - average) * (value[0][column] - average);
+//                    d = MathUtil.addDouble(d, Math.pow(MathUtil.subtractDouble(value[0][column], average), 2));
                 }
                 result[0][0] = Math.sqrt(d / (flag == 0 ? columnLength - 1 : columnLength));  /* 标准方差计算公式*/
+//                result[0][0] = Math.sqrt(MathUtil.divideDouble(d, (flag == 0 ? columnLength - 1 : columnLength)));
             } else {
                 return null;
             }
@@ -1075,9 +1206,13 @@ public class MatlabUtil {
                 double average = mean(value, 0)[0][0]; /* 获取列平均值*/
                 double d = 0;
                 for (int row = 0; row < rowLength; row++) {
-                    d += (value[row][0] - average) * (value[row][0] - average);
+//                    d += (value[row][0] - average) * (value[row][0] - average);
+                    d = MathUtil.addDouble(d, Math.pow(MathUtil.subtractDouble(value[row][0], average), 2));
                 }
-                result[0][0] = Math.sqrt(d / (flag == 0 ? rowLength - 1 : rowLength));  /* 标准方差计算公式*/
+//                result[0][0] = Math.sqrt(d / (flag == 0 ? rowLength - 1 : rowLength));  /* 标准方差计算公式*/
+                double c = MathUtil.divideDouble(d, rowLength - 1);
+                double m = Math.sqrt(c);
+                result[0][0] = Math.sqrt(MathUtil.divideDouble(d, (flag == 0 ? rowLength - 1 : rowLength)));
             } else if (dim == 2) {                                     /* 按照行分*/
                 result = new double[3][1];
                 for (int row = 0; row < rowLength; row++) {
@@ -1091,9 +1226,11 @@ public class MatlabUtil {
                 for (int column = 0; column < columnLength; column++) {   /* 循环遍历各列，求每列的标准偏差*/
                     double d = 0;
                     for (int row = 0; row < rowLength; row++) {
-                        d += (value[row][column] - average[0][column]) * (value[row][column] - average[0][column]);
+//                        d += (value[row][column] - average[0][column]) * (value[row][column] - average[0][column]);
+                        d = MathUtil.addDouble(d, Math.pow(MathUtil.subtractDouble(value[row][column], average[0][column]), 2));
                     }
-                    result[0][column] = Math.sqrt(d / (flag == 0 ? rowLength - 1 : rowLength));  /* 标准方差计算公式*/
+//                    result[0][column] = Math.sqrt(d / (flag == 0 ? rowLength - 1 : rowLength));  /* 标准方差计算公式*/
+                    result[0][column] = Math.sqrt(MathUtil.divideDouble(d, (flag == 0 ? rowLength - 1 : rowLength)));
                 }
             } else if (dim == 2) {   /* 按照行分*/
                 result = new double[rowLength][1];
@@ -1101,9 +1238,11 @@ public class MatlabUtil {
                 for (int row = 0; row < rowLength; row++) {
                     double d = 0;
                     for (int column = 0; column < columnLength; column++) {
-                        d += (value[row][column] - average[row][0]) * (value[row][column] - average[row][0]);
+//                        d += (value[row][column] - average[row][0]) * (value[row][column] - average[row][0]);
+                        d = MathUtil.addDouble(d, Math.pow(MathUtil.subtractDouble(value[row][column], average[row][0]), 2));
                     }
-                    result[row][0] = Math.sqrt(d / (flag == 0 ? columnLength - 1 : columnLength));  /* 标准方差计算公式*/
+//                    result[row][0] = Math.sqrt(d / (flag == 0 ? columnLength - 1 : columnLength));  /* 标准方差计算公式*/
+                    result[row][0] = Math.sqrt(MathUtil.divideDouble(d, (flag == 0 ? columnLength - 1 : columnLength)));
                 }
             }
         }
@@ -1131,10 +1270,10 @@ public class MatlabUtil {
 
 
     /**
-     * 获取矩阵数组指定列的列向量
+     * 获取矩阵数组指定行的行向量
      *
      * @param row
-     * @return
+     * @return 二维数据
      */
     public static double[][] row(double[][] value, int row) {
 
@@ -1142,6 +1281,24 @@ public class MatlabUtil {
         double[][] result = new double[1][columnLength];  /* 返回值*/
         for (int column = 0; column < columnLength; column++) {
             result[0][column] = value[row][column];
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 获取矩阵数组指定行的行向量
+     *
+     * @param row
+     * @return 一维数据
+     */
+    public static double[] singleRow(double[][] value, int row) {
+
+        int columnLength = value[0].length;
+        double[] result = new double[columnLength];  /* 返回值*/
+        for (int column = 0; column < columnLength; column++) {
+            result[column] = value[row][column];
         }
         return result;
 
@@ -1229,14 +1386,14 @@ public class MatlabUtil {
      * 获取数组中指定位置的数据
      *
      * @param value
-     * @param spot
+     * @param spot  数值默认从1开始，需要减1
      * @return
      */
     public static double[] arraySpot(double[] value, double[] spot) {
 
         double[] result = new double[spot.length];
         for (int i = 0; i < spot.length; i++) {
-            result[i] = value[(int) spot[i]];
+            result[i] = value[(int) spot[i] - 1];
         }
         return result;
 
@@ -1256,9 +1413,9 @@ public class MatlabUtil {
         double result;
         value = sort(value);
         if (valueLength % 2 == 0) {
-            result = (value[valueLength / 2] + value[valueLength / 2 + 1]) / (double) 2;
+            result = MathUtil.divideDouble(MathUtil.addDouble(value[valueLength / 2 - 1], value[valueLength / 2]), 2);
         } else {
-            result = value[valueLength / 2 + 1];
+            result = value[valueLength / 2];
         }
         return result;
 
@@ -1346,7 +1503,7 @@ public class MatlabUtil {
             }
         } else if (dim == 2) {                                   /* 按行排序*/
             for (int row = 0; row < rowLength; row++) {
-                double[] temporary = new double[rowLength];
+                double[] temporary = new double[columnLength];
                 for (int column = 0; column < columnLength; column++) {
                     temporary[column] = value[0][column];
                 }
@@ -1362,7 +1519,48 @@ public class MatlabUtil {
     }
 
     /**
-     * 中括号 -暂时只支持两个列向量组合
+     * 矩阵进行排序
+     *
+     * @param value
+     * @param dim   1：每列按照从小到大排序   2：每行按照从小到大排序
+     * @return
+     */
+    public static double[][] ascSort(double[][] value, int dim) {
+
+        int rowLength = value.length;
+        int columnLength = value[0].length;
+        double[][] result = new double[rowLength][columnLength];
+        if (dim == 1) {                                           /* 按列排序*/
+            for (int column = 0; column < columnLength; column++) {          /* 遍历列*/
+                double[] temporary = new double[rowLength];
+                for (int row = 0; row < rowLength; row++) {
+                    temporary[row] = value[row][0];                       /* 获取列数组*/
+                }
+                Arrays.sort(temporary);                                 /* 排序（从小到大）*/
+                int j = 0;
+                for (int i = 0; i < temporary.length; i++) {
+                    result[j++][column] = temporary[i];                /* 将排序好的数组赋值给结果*/
+                }
+            }
+        } else if (dim == 2) {                                   /* 按行排序*/
+            for (int row = 0; row < rowLength; row++) {
+                double[] temporary = new double[columnLength];
+                for (int column = 0; column < columnLength; column++) {
+                    temporary[column] = value[0][column];
+                }
+                Arrays.sort(temporary);
+                int j = 0;
+                for (int i = 0; i < temporary.length; i++) {
+                    result[row][j++] = temporary[i];
+                }
+            }
+        }
+        return result;
+
+    }
+
+    /**
+     * 中括号 -暂时只支持两个行向量组合成一个行向量
      *
      * @param value1
      * @param value2
@@ -1377,7 +1575,7 @@ public class MatlabUtil {
             result[i] = value1[i];
         }
         for (int i = 0; i < value2Length; i++) {
-            result[value1Length + i] = value2[i];
+            result[i + value1Length] = value2[i];
         }
         return result;
 
@@ -1435,26 +1633,45 @@ public class MatlabUtil {
     public static double prctile(double[][] x, int p) {
 
         int columnLength = x[0].length;
+        x = ascSort(x, 2);
         double result = 0; /* 结果值*/
-        if (p == 25 || p == 75) {             /* 1/4、3/4 位置*/
-            double position;
+        if (columnLength == 1) {
+            result = x[0][0];
+        } else if (columnLength == 2) {
             if (p == 25) {
-                /* Q1所在的位置*/
-                position = (columnLength + 1) / (double) 4;
-            } else {
-                /* Q3所在的位置*/
-                position = (3 * (columnLength + 1)) / (double) 4;
+                result = x[0][0];
+            } else if (p == 75) {
+                result = x[0][1];
+            } else if (p == 50) {
+                result = MathUtil.divideDouble(MathUtil.addDouble(x[0][0], x[0][1]), 2);
             }
-            double frontPosition = Math.floor(position);  /* 前一个位置*/
-            double backPosition = Math.ceil(position);    /* 后一个位置*/
-            result = (double) (0.25 * x[0][(int) frontPosition] + 0.75 * x[0][(int) backPosition]);
-        } else if (p == 50) {                 /* 中位*/
-            if (columnLength % 2 == 0) {       /* 数组数量为偶数时*/
-                result = (x[0][columnLength / 2 - 1] + x[0][columnLength / 2 + 1]) / 2;
-            } else {                     /* 数组数量为奇数时*/
-                result = x[0][columnLength / 2];
+        } else if (columnLength > 2) {
+            if (p == 25 || p == 75) {             /* 1/4、3/4 位置*/
+                double position;
+                if (p == 25) {
+                    /* Q1所在的位置*/
+                    position = (columnLength + 1) / (double) 4;
+                } else {
+                    /* Q3所在的位置*/
+                    position = (3 * (columnLength + 1)) / (double) 4;
+                }
+                double frontPosition = Math.floor(position) - 1;  /* 前一个位置*/
+                double backPosition = Math.ceil(position) - 1;    /* 后一个位置*/
+                if (p == 25) {
+                    result = (double) (0.25 * x[0][(int) frontPosition] + 0.75 * x[0][(int) backPosition]);
+                } else {
+                    result = (double) (0.75 * x[0][(int) frontPosition] + 0.25 * x[0][(int) backPosition]);
+                }
+
+            } else if (p == 50) {                 /* 中位*/
+                if (columnLength % 2 == 0) {       /* 数组数量为偶数时*/
+                    result = (x[0][columnLength / 2 - 1] + x[0][columnLength / 2 + 1]) / 2;
+                } else {                     /* 数组数量为奇数时*/
+                    result = x[0][columnLength / 2];
+                }
             }
         }
+
         return result;
 
     }
@@ -1497,13 +1714,13 @@ public class MatlabUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int length = dates.length;
         double[] result = new double[length];
-        result[0] = 0;
 
         try {
+            result[0] = 0;
             for (int i = 0; i < length - 1; i++) {
                 Date date = simpleDateFormat.parse(dates[i]);
                 Date afterDate = simpleDateFormat.parse(dates[i + 1]);
-                result[i + 1] = (afterDate.getTime() - date.getTime()) / (24 * 60 * 60 * 1000);    /* 获取相差的天数*/
+                result[i + 1] = MathUtil.divideDouble(MathUtil.subtractDouble(afterDate.getTime(), date.getTime()), 24 * 60 * 60 * 1000, 4);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1523,19 +1740,19 @@ public class MatlabUtil {
 
         double xSum = 0, ySum = 0;   /* x的多项和、y的多项和*/
         for (int i = 0; i < x.length; i++) {
-            xSum += x[i];
-            ySum += y[i];
+            xSum = MathUtil.addDouble(xSum, x[i]);
+            ySum = MathUtil.addDouble(ySum, y[i]);
         }
-        double xMean = xSum / x.length;
-        double yMean = ySum / y.length;
+        double xMean = MathUtil.divideDouble(xSum, x.length);    /* 求平均值*/
+        double yMean = MathUtil.divideDouble(ySum, y.length);    /* 求平均值*/
         double num = 0;            /*多项式和【(x-x的均值)*(y-y的均值)】*/
         double den = 0;           /*多项式和【(x-x的均值)*(x-x的均值)】*/
         for (int i = 0; i < x.length; i++) {
-            num += (x[i] - xMean) * (y[i] - yMean);
-            den += (x[i] - xMean) * (x[i] - xMean);
+            num = MathUtil.addDouble(num, MathUtil.multiplyDouble(MathUtil.subtractDouble(x[i], xMean), MathUtil.subtractDouble(y[i], yMean)));
+            den = MathUtil.addDouble(den, MathUtil.multiplyDouble(MathUtil.subtractDouble(x[i], xMean), MathUtil.subtractDouble(x[i], xMean)));
         }
-        double a = num / den;
-        double b = yMean - a * xMean;
+        double a = MathUtil.divideDouble(num, den, 4);
+        double b = MathUtil.subtractDouble(yMean, MathUtil.multiplyDouble(a, xMean));
         double[] result = new double[]{a, b};
         return result;
 
@@ -1566,7 +1783,7 @@ public class MatlabUtil {
             result[i - 1][0] = i;   /* value数据值*/
             if (count > 0) {        /* value数据出现时*/
                 result[i - 1][1] = count;                                             /* value数据出现的频次*/
-                result[i - 1][2] = ((double) count / (double) valueLength) * (double) 100;  /* value数据出现的频率*/
+                result[i - 1][2] = MathUtil.multiplyDouble(MathUtil.divideDouble(count, valueLength), 100);
             } else {               /* value数据未出现时*/
                 result[i - 1][1] = 0;
                 result[i - 1][2] = 0;
@@ -1666,18 +1883,28 @@ public class MatlabUtil {
      */
     public static double[][] boxoutlierFind(double[][] x, double condition1, double condition2) {
 
-        int rowLength = x.length;   /* 获取列数*/
-        double[][] result = new double[rowLength][1];           /* 返回值*/
+        int rowLength = x.length;   /* 获取行数*/
+        int columnLength = x[0].length;  /* 获取列数*/
+        double[][] result = new double[rowLength][1];           /* 返回值(未去掉多余的长度)*/
         int resultRow = 0;
-        /* 循环遍历列*/
-        for (int row = 0; row < rowLength; row++) {
-            double cellValue = x[row][0];
-            if (cellValue < condition1 || cellValue > condition2) {
-                result[resultRow][0] = row + 1;
-                resultRow++;
+        for (int column = 0; column < columnLength; column++) {
+            for (int row = 0; row < rowLength; row++) {
+                double cellValue = x[row][column];
+                if (cellValue < condition1 || cellValue > condition2) {
+                    result[resultRow][0] = column * rowLength + row + 1;
+                    resultRow++;
+                }
             }
         }
-        return result;
+        if (resultRow == 0) {
+            return null;
+        } else {
+            double[][] newResult = new double[resultRow][1];
+            for (int i = 0; i < resultRow; i++) {
+                newResult[i][0] = result[i][0];
+            }
+            return newResult;
+        }
 
     }
 
@@ -1799,8 +2026,44 @@ public class MatlabUtil {
 
     }
 
+
     /**
-     * 模型四算法中的find()函数   获取元素的位置
+     * 一维数据：模型四算法中的find()函数   获取元素的位置
+     *
+     * @param x
+     * @param condition1 大于等于condition1元素的位置
+     * @return
+     */
+    public static int[] selfDischargeBigFind(double[] x, double condition1) {
+
+        int xLength = x.length;
+        int[] result = new int[xLength];
+        boolean flag = false;  /* 标识结果是否没有值  false:没有值*/
+        int length = 0; /* result动态长度*/
+
+        for (int i = 0; i < xLength; i++) {
+            if (x[i] >= condition1) {
+                result[length++] = i + 1;
+                flag = true;
+            }
+        }
+        /* 去除长度多余的数据(为0的数据)*/
+        int[] temp = new int[length];
+        for (int i = 0; i < length; i++) {
+            temp[i] = result[i];
+        }
+        result = temp;
+
+        if (flag == false) {
+            result = null;
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 二维数据：模型四算法中的find()函数   获取元素的位置
      *
      * @param x
      * @param condition1 大于等于condition1元素的位置
@@ -1862,6 +2125,54 @@ public class MatlabUtil {
             result = null;
         }
         return result;
+
+    }
+
+
+    /**
+     * 将数据按照从小到大排序 输出数据所在位置的索引index
+     *
+     * @param arr
+     * @param desc
+     * @return
+     */
+    public static int[] getIndexBySort(double[] arr, boolean desc) {
+
+        double temp;
+        int index;
+        int k = arr.length;
+        int[] Index = new int[k];
+        for (int i = 0; i < k; i++) {
+            Index[i] = i + 1;
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (desc) {
+                    if (arr[j] < arr[j + 1]) {
+                        temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+
+                        index = Index[j];
+                        Index[j] = Index[j + 1];
+                        Index[j + 1] = index;
+                    }
+                } else {
+                    if (arr[j] > arr[j + 1]) {
+                        temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+
+                        index = Index[j];
+                        Index[j] = Index[j + 1];
+                        Index[j + 1] = index;
+                    }
+                }
+            }
+        }
+        return Index;
+
 
     }
 

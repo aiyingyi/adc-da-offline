@@ -602,17 +602,18 @@ create external table capacity_anomaly_es
 -- 电池包衰减预警模型索引,衰减值由后端去计算
 create external table battery_attenuation_es
 (
-    vin            string,
-    chargeStart    bigint,
-    chargeEnd      bigint,
-    odo            double,
-    chargeCapacity double,
-    iswarning      string
+    vin              string,
+    chargeStart      bigint,
+    chargeEnd        bigint,
+    odo              double,
+    chargeCapacity   double,
+    attenuationValue STRING,
+    iswarning        string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/battery_attenuation_es'
     TBLPROPERTIES ('es.resource' = 'battery_attenuation/battery_attenuation',
         'es.mapping.names' =
-                'vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,odo:odo,chargeCapacity:chargeCapacity,iswarning:iswarning',
+                'attenuationValue:attenuationValue,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,odo:odo,chargeCapacity:chargeCapacity,iswarning:iswarning',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );

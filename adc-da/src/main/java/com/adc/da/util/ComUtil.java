@@ -61,8 +61,4 @@ public class ComUtil {
         return env;
     }
 
-
-    public static void main(String[] args) {
-
-    }
 }
