@@ -17,9 +17,8 @@ import java.util.Properties;
  * 1. 充电压差扩大模型算法调用（10次充电）
  * 2. 充电完成后调用:
  * 1) 电池包衰减预警模型
- * 2) 单体电池离散度高(充电、行驶结束后)
- * 3) 执行充电方式,电量以及最大最低电压单体频次脚本
- * 4) 连接阻抗大模型算法
+ * 2) 执行充电方式,电量以及最大最低电压单体频次脚本
+ * 3) 连接阻抗大模型算法
  */
 
 public class ChargeSinkFunction extends RichSinkFunction<OdsData[]> {
@@ -62,15 +61,14 @@ public class ChargeSinkFunction extends RichSinkFunction<OdsData[]> {
 
         // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
         ShellUtil.exec(conn, shellConfig.getProperty("chargeStyleElectricityFrequencyPath") + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getVin());
-        // 2. 单体电压离散度高
-        ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-        // 3. 连接阻抗大模型算法
+
+        // 2. 连接阻抗大模型算法
         ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-        // 4. TODO 电池包衰减预警模型
+        // 3. 电池包衰减预警模型
         if (value[1].getSoc() - value[0].getSoc() > 40) {
             ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
         }
-        // 5.充电压差扩大模型
+        // 4.充电压差扩大预警模型
         if (value[0].getSoc() <= 80 && value[1].getSoc() >= 80) {
             if (chargeTimes.value() == null) {
                 // 初始化状态，不可以在open()中初始化
@@ -81,7 +79,6 @@ public class ChargeSinkFunction extends RichSinkFunction<OdsData[]> {
             }
             // 获取之前10次的充电时间
             long[] arr = chargeStartAndEnd.value();
-
             // 相当于一个循环队列，
             int index = (chargeTimes.value() % windowSize + 1) * 2 - 1;
             arr[index - 1] = value[0].getMsgTime();

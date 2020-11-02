@@ -1,7 +1,6 @@
 package com.adc.da.app;
 
-import com.adc.da.bean.ChargeRecord;
-import com.adc.da.bean.EventInfo;
+import ch.ethz.ssh2.Connection;
 import com.adc.da.bean.OdsData;
 import com.adc.da.bean.chargeAndDisChargeInfo;
 import com.adc.da.functions.ChargeSinkFunction;
@@ -16,6 +15,7 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFilterFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.cep.CEP;
@@ -28,7 +28,9 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
+import org.apache.jasper.tagplugins.jstl.core.Out;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -39,7 +41,7 @@ import java.util.Properties;
 /**
  * 监控充电,放电,静置状态和行驶结束，触发计算
  */
-public class ChargeAndStartupMonitor0000000 {
+public class TestChargeAndStartupMonitor {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = ComUtil.initEnvironment();
@@ -50,8 +52,8 @@ public class ChargeAndStartupMonitor0000000 {
         Properties shellConfig = ComUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = ComUtil.loadProperties("config/odsTopic.properties");
         // 创建数据源,提取水位线并设置WaterMark的延时
-        //KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
-        KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
+        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
+            //KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
             @Override
             public OdsData map(String data) {
                 OdsData ods = new OdsData();
@@ -69,12 +71,10 @@ public class ChargeAndStartupMonitor0000000 {
                 String cellVoltage = obj.getString("cellVoltage");
                 double[] vols = Arrays.stream(cellVoltage.substring(1, cellVoltage.length() - 2).split(",")).mapToDouble(vol -> Double.parseDouble(vol)).toArray();
                 ods.setCellVoltage(vols);
-
                 ods.setVehicleType(obj.getString("vehicleType"));
                 ods.setEnterprise(obj.getString("enterprise"));
                 ods.setLicensePlate(obj.getString("licensePlate"));
                 ods.setProvince(obj.getString("province"));
-
                 return ods;
             }
         }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(6))
@@ -129,9 +129,7 @@ public class ChargeAndStartupMonitor0000000 {
         Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-
                 return data.getSpeed() <= 0 ? true : false;
-
             }
         }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
             @Override
@@ -159,17 +157,29 @@ public class ChargeAndStartupMonitor0000000 {
         });
 
         // 合并充电和行驶状态
-
         SingleOutputStreamOperator<OdsData[]> chargeAndRunStream = chargeStream.connect(runStream).process(new CoProcessFunction<OdsData[], OdsData[], OdsData[]>() {
             @Override
             public void processElement1(OdsData[] value, Context ctx, Collector<OdsData[]> out) throws Exception {
                 out.collect(value);
-
             }
 
             @Override
             public void processElement2(OdsData[] value, Context ctx, Collector<OdsData[]> out) throws Exception {
                 out.collect(value);
+            }
+        });
+        chargeAndRunStream.keyBy(odsData -> odsData[0].getVin()).addSink(new ShellRichSink<OdsData[]>(shellConfig) {
+            @Override
+            public void invoke(OdsData[] value, Context context) throws Exception {
+
+                // 单体电压离散度高模型
+                ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+                // 绝缘电阻突降
+                ShellUtil.exec(conn, shellConfig.getProperty("resistance_reduce") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+                // bms采样异常
+                ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+                // todo 模组电压离群
+
             }
         });
 
@@ -178,12 +188,11 @@ public class ChargeAndStartupMonitor0000000 {
          * 1. 充电压差扩大模型算法调用（10次充电）
          * 2. 充电完成后调用:
          *  1) 电池包衰减预警模型
-         *  2) 单体电池离散度高(充电、行驶结束后)
-         *  3) 执行充电方式，电量以及最大最低电压单体频次脚本
+         *  2) 执行充电方式，电量以及最大最低电压单体频次脚本
+         *  3) 连接阻抗大模型算法
          */
 
         chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
-
         /**
          * 电芯自放电大模型算法 判断车辆是否静置半天
          */
@@ -227,9 +236,8 @@ public class ChargeAndStartupMonitor0000000 {
             }
         });
 
-        // todo sink到es还有一部分未完成
+        // todo sink到es还有一部分未完成：电池类型数据源,风险等级变化
         staticStream.keyBy(data -> data[0].getVin()).addSink(HighSelfDischargeEsSink.getEsSink());
-
 
         /**
          * 放电状态匹配：上一次充电完成-下次充电开始的时间
@@ -270,7 +278,6 @@ public class ChargeAndStartupMonitor0000000 {
         /**
          * 一次充放电循环状态匹配
          */
-
         Pattern<OdsData, OdsData> circlePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
@@ -331,6 +338,9 @@ public class ChargeAndStartupMonitor0000000 {
                 ShellUtil.exec(conn, shellConfig.getProperty("capacity_anomaly") + " " + value.getVin() + " " + value.getChargeStartTime() + " " + value.getChargeEndTime() + " " + value.getDisChargeStartTime() + " " + value.getDisChargeEndTime());
             }
         });
+
+
+
         env.execute("ChargeAndStartupMonitor");
     }
 }

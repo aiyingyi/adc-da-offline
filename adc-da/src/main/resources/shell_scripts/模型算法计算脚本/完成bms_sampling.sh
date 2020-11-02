@@ -6,8 +6,8 @@ db=warningplatform
 
 # 脚本参数：vin,startTime,endTime
 vin=$1
-endTime=$3
 startTime=$2
+endTime=$3
 
 # 不需要传入工况参数，根据平均压差判断是充电还是放电
 
