@@ -299,9 +299,13 @@ create external table vehicle_base_info
 (
     vin           string,
     delivery_time string comment '出厂时间',
-    licensePlate  string
+    battery_type  string comment '电池类型',
+    licensePlate  string,
+    unit          STRING,
+    company       string
 ) row format delimited fields terminated by '\t'
     location '/warningplatform.db/dwd/vehicle_base_info';
+
 -- 车辆最初使用时间
 create external table vehicle_initial
 (
@@ -519,20 +523,45 @@ create external table warning_boxplot_perday_es
         'es.port' = '9200'
         );
 
--- 创建充电压差扩大模型es映射表
+-- 创建预警类型与风险等级关系表
+-- 貌似用不着
+create external table warning_risk_rank
+(
+    warning_type     string,
+    loseEfficacyType string,
+    risk_rank        string
+) row format delimited fields terminated by '\t'
+    location '/warningplatform.db/dwd/warning_risk_rank';
+insert into table warning_risk_rank
+values ("单体压差过大", "单体压差过大", "1"),
+       ("温升速率过大", "温升速率过大", "1"),
+       ("温度过高", "温度过高", "1"),
+       ("充电压差扩大", "充电压差扩大", "1"),
+       ("单体电压波动性差异大", "单体电压波动性差异大", "1"),
+       ("绝缘电阻突降", "绝缘电阻突降", "1"),
+       ("模组电压离群", "模组电压离群", "1"),
+       ("电芯自放电大", "电芯自放电大", "2"),
+       ("连接阻抗大", "连接阻抗大", "2"),
+       ("单体内阻或者容量异常", "单体内阻或者容量异常", "2"),
+       ("绝缘电阻突降", "绝缘电阻突降", "2"),
+       ("电池包欠压", "电池包欠压", "3"),
+       ("单体电压离散度高", "单体电压离散度高", "3"),
+       ("温度梯度化", "温度梯度化", "3"),
+       ("BMS采样异常", "BMS采样异常", "3");
 
+-- 创建充电压差扩大模型es映射表，保存计算出来的拟合直线点
 create external table charge_vol_day_diff_es
 (
     vin       string,
-    dt        string,
+    startTime string,
+    endTime   string,
     volDiff   array<double>,
-    dayDiff   array<int>,
-    isWarning string
+    dayDiff   array<int>
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/charge_vol_day_diff_es'
     TBLPROPERTIES ('es.resource' = 'charge_vol_day_diff/charge_vol_day_diff',
         'es.mapping.names' =
-                'vin:vin,dt:dt,volDiff:volDiff,dayDiff:dayDiff,isWarning:isWarning',
+                'vin:vin,dt:dt,volDiff:volDiff,dayDiff:dayDiff,startTime:startTime,endTime:endTime',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
@@ -542,15 +571,14 @@ create external table cell_vol_highdis_es
     vin       string,
     startTime string,
     endTime   string,
-    isWarning string,
     volAvg    array<double>,
     volStd    array<double>
 
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/connection_impedance_es'
-    TBLPROPERTIES ('es.resource' = 'connection_impedance_es/connection_impedance_es',
+    location '/warningplatform.db/ads/cell_vol_highdis_es'
+    TBLPROPERTIES ('es.resource' = 'cell_vol_highdis/cell_vol_highdis',
         'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning,volAvg:volAvg,volStd:volStd',
+                'vin:vin,startTime:startTime,endTime:endTime,volAvg:volAvg,volStd:volStd',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
@@ -561,77 +589,50 @@ create external table capacity_anomaly_es
     chargeStart    string,
     chargeEnd      string,
     disChargeStart string,
-    disChargeEnd   string,
-    isWarning      string
+    disChargeEnd   string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/capacity_anomaly_es'
     TBLPROPERTIES ('es.resource' = 'capacity_anomaly/capacity_anomaly',
         'es.mapping.names' =
-                'isWarning:isWarning,disChargeEnd:disChargeEnd,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,disChargeStart:disChargeStart',
+                'disChargeEnd:disChargeEnd,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,disChargeStart:disChargeStart',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
 
--- 连接阻抗大模型es映射表
-create external table connection_impedance_es
+-- 电池包衰减预警模型索引,衰减值由后端去计算
+create external table battery_attenuation_es
 (
-    vin             string,
-    chargeEndTime   string,
-    chargeStartTime string,
-    isWarning       string
+    vin              string,
+    chargeStart      bigint,
+    chargeEnd        bigint,
+    odo              double,
+    chargeCapacity   double,
+    attenuationValue STRING,
+    iswarning        string
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/connection_impedance_es'
-    TBLPROPERTIES ('es.resource' = 'connection_impedance/connection_impedance',
+    location '/warningplatform.db/ads/battery_attenuation_es'
+    TBLPROPERTIES ('es.resource' = 'battery_attenuation/battery_attenuation',
         'es.mapping.names' =
-                'vin:vin,chargeEndTime:chargeEndTime,chargeStartTime:chargeStartTime,isWarning:isWarning',
+                'attenuationValue:attenuationValue,vin:vin,chargeStart:chargeStart,chargeEnd:chargeEnd,odo:odo,chargeCapacity:chargeCapacity,iswarning:iswarning',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
 
--- 单体电压波动性差异大
-create external table cell_vol_fluctuation_es
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    isWarning string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/cell_vol_fluctuation_es'
-    TBLPROPERTIES ('es.resource' = 'cell_vol_fluctuation/cell_vol_fluctuation',
-        'es.mapping.names' =
-                'isWarning:isWarning,startTime:startTime,vin:vin,endTime:endTime',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );
-
--- 绝缘电阻突降模型es映射表
-create external table resistance_reduce_es
+-- 模组电压离群预警索引，记录每次预警的模组电压方差，平均值
+create external table module_vol_highdis_es
 (
     vin       string,
     startTime string,
     endTime   string,
-    isWarning string
+    volAvg    array<double>,
+    volStd    array<double>
+
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/resistance_reduce_es'
-    TBLPROPERTIES ('es.resource' = 'resistance_reduce/resistance_reduce',
+    location '/warningplatform.db/ads/module_vol_highdis_es'
+    TBLPROPERTIES ('es.resource' = 'module_vol_highdis/module_vol_highdis',
         'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning',
+                'vin:vin,startTime:startTime,endTime:endTime,volAvg:volAvg,volStd:volStd',
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
 
--- bms检测异常es映射表
-create external table bms_sampling_es
-(
-    vin       string,
-    startTime string,
-    endTime   string,
-    isWarning string
-) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
-    location '/warningplatform.db/ads/bms_sampling_es'
-    TBLPROPERTIES ('es.resource' = 'bms_sampling/bms_sampling',
-        'es.mapping.names' =
-                'vin:vin,startTime:startTime,endTime:endTime,isWarning:isWarning',
-        'es.nodes' = '192.168.11.29',
-        'es.port' = '9200'
-        );

@@ -20,7 +20,7 @@ ods_data as
     select
         get_json_object(data,'$.vin') vin,
         get_json_object(data,'$.msgTime') msgTime,
-        get_json_object(data,'$.cellVoltage') cellVoltage,
+        get_json_object(data,'$.cellVoltage') cellVoltage
     from ${db}.ods_preprocess_vehicle_data
     where dt >= date_format('${startTime}','yyyy-MM-dd')
     and   dt <= date_format('${endTime}','yyyy-MM-dd')

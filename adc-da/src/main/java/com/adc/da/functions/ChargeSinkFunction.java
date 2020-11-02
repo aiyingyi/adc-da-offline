@@ -64,10 +64,12 @@ public class ChargeSinkFunction extends RichSinkFunction<OdsData[]> {
 
         // 2. 连接阻抗大模型算法
         ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+
         // 3. 电池包衰减预警模型
         if (value[1].getSoc() - value[0].getSoc() > 40) {
             ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
         }
+
         // 4.充电压差扩大预警模型
         if (value[0].getSoc() <= 80 && value[1].getSoc() >= 80) {
             if (chargeTimes.value() == null) {

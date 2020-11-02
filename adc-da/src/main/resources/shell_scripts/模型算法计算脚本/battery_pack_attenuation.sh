@@ -231,5 +231,6 @@ join    -- 从充电记录里面获取到省份等信息
   ) as c
 on t.vin = c.vin and t.endTime = c.chargeEndTime
 join vehicle_base on vehicle_base.vin = t.vin
+
 "
 hive  -e "${sql}"
