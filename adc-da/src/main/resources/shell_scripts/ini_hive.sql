@@ -234,7 +234,9 @@ create external table dwd_preprocess_vehicle_data
     vehicleType                  string,
     enterprise                   string,
     totalCurrent                 double,
-    soc                          double
+    soc                          double,
+    totalVoltage                 double,
+    differenceTemperature        double
 ) partitioned by (dt string)
     row format delimited fields terminated by '\t'
         collection items terminated by ','
@@ -635,4 +637,30 @@ create external table module_vol_highdis_es
         'es.nodes' = '192.168.11.29',
         'es.port' = '9200'
         );
+
+--  电池包数据离群统计es映射表
+create external table outlier_statistic_perweek_es
+(
+    enterprise   string,
+    province     string,
+    volDiff      bigint,
+    totalVol     bigint,
+    temp         bigint,
+    tempDiff     bigint,
+    resistance   bigint,
+    totalCurrent bigint,
+    tempRate     bigint,
+    dt           string
+) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+    location '/warningplatform.db/ads/outlier_statistic_perweek_es'
+    TBLPROPERTIES ('es.resource' = 'outlier_statistic_perweek/outlier_statistic_perweek',
+        'es.mapping.names' =
+                'enterprise:enterprise,province:province,volDiff:volDiff,totalVol:totalVol,temp:temp,tempDiff:tempDiff,resistance:resistance,totalCurrent:totalCurrent,tempRate:tempRate',
+        'es.nodes' = '192.168.11.29',
+        'es.port' = '9200'
+        );
+
+
+
+
 
