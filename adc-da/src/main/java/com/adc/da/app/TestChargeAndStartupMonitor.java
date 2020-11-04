@@ -36,9 +36,8 @@ import java.util.Properties;
 
 
 /**
- * 监控充电,放电,静置状态和行驶结束，触发计算
+ * 监控充电,放电,充放电循环,静置状态和行驶状态结束,然后触发计算
  */
-
 public class TestChargeAndStartupMonitor {
     public static void main(String[] args) throws Exception {
 
@@ -50,7 +49,7 @@ public class TestChargeAndStartupMonitor {
         Properties shellConfig = ComUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = ComUtil.loadProperties("config/odsTopic.properties");
         // 创建数据源,提取水位线并设置WaterMark的延时
-        //KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
+        // KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
         KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
             @Override
             public OdsData map(String data) {
@@ -191,6 +190,7 @@ public class TestChargeAndStartupMonitor {
          */
 
         chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
+
         /**
          * 电芯自放电大模型算法 判断车辆是否静置半天
          */
@@ -234,7 +234,7 @@ public class TestChargeAndStartupMonitor {
             }
         });
 
-        // todo sink到es还有一部分未完成：电池类型数据源,风险等级变化
+        // todo sink到es还有一部分未完成：电池类型数据源,风险等级变化,
         staticStream.keyBy(data -> data[0].getVin()).addSink(HighSelfDischargeEsSink.getEsSink());
 
         /**

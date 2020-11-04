@@ -63,7 +63,7 @@ charge_mode_electricity  as
   select
     vin,
     case when avg(totalCurrent)>= 30  or max(totalCurrent) >=70 then '${quickcharge}' else '${slowcharge}' end as  chargeType,
-    sum(timeDiff/(1000*60*60 ) * totalCurrent) as chargeElectricity
+    sum(timeDiff/(1000*60*60.0 ) * totalCurrent) as chargeElectricity
   from  preprocess_vehicle_data1
   group by vin
 ),
