@@ -6,6 +6,10 @@ db=warningplatform
 # 指定算法计算的窗口大小(充电次数)
 window_size=10
 
+# 预警斜率和压差的边界值
+th1=0.5
+th2=40
+
 # 将脚本参数放入到数组里面，包含20个时间戳以及vin码
 _index=0
 for i in "$@"
@@ -101,7 +105,7 @@ from
     '${args[$[2*$window_size-1]]}'  as endTime,    -- 最近10次充电中最后一次充电的结束时间
     vol_diff,  -- 压差数组
     timeDiff,  -- 时间间隔
-    ${db}.charge_vol_diff_exp(vol_diff,charge_start_time) as iswarning
+    ${db}.charge_vol_diff_exp(vol_diff,charge_start_time,cast('${th1}' as double),cast('${th2}' as double)) as iswarning
   from charge_statistics)  tmp
 where tmp.iswarning = '1';
 

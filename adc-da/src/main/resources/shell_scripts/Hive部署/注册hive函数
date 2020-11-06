@@ -1,0 +1,16 @@
+
+# 将hive udf jar包上传到hdfs
+hadoop fs -put /opt/module/hive_jar/hiveFunctions-1.0-SNAPSHOT.jar  //warningplatform.db/
+
+# 注册函数
+
+use warningplatform;
+
+create function warningplatform.vol_avg_std  as 'com.adc.da.udf.AvgVolAndStd' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.bms_sampling  as 'com.adc.da.udf.BmsSamplingUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.capacity_anomaly  as 'com.adc.da.udf.CapacityAnomalyUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.cell_vol_highdis  as 'com.adc.da.udf.CellVolHighDisUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.charge_vol_diff_exp  as 'com.adc.da.udf.ChargeVolDiffExpUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.conn_impedance  as 'com.adc.da.udf.ConnectionImpedanceUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.r_reduce  as 'com.adc.da.udf.ResistanceRreduceUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';
+create function warningplatform.vol_fluctuation  as 'com.adc.da.udf.VolFluctuationUdf' using jar 'hdfs:/warningplatform.db/hiveFunctions-1.0-SNAPSHOT.jar';

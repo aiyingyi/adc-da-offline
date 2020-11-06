@@ -1,13 +1,12 @@
 package com.adc.da.udf;
 
 import com.adc.da.algorithm.PlatformAlgorithm;
-import com.adc.da.util.HiveUtils;
-import jodd.util.ArraysUtil;
-import org.apache.commons.lang.ArrayUtils;
+
 import org.apache.hadoop.hive.ql.exec.UDF;
 
+
 import java.util.ArrayList;
-import java.util.function.ToIntFunction;
+
 
 /**
  * 连接阻抗大模型算法udf函数
@@ -17,8 +16,15 @@ public class BmsSamplingUdf extends UDF {
 
     public String evaluate(ArrayList<Integer> maxNum, ArrayList<Integer> minNum, double vdet, int th1, int th2) {
 
-        int[] max = ArrayUtils.toPrimitive((Integer[]) maxNum.toArray());
-        int[] min = ArrayUtils.toPrimitive((Integer[]) minNum.toArray());
+        int[] max = new int[maxNum.size()];
+        for (int i = 0; i < maxNum.size(); i++) {
+            max[i] = maxNum.get(i).intValue();
+        }
+
+        int[] min = new int[minNum.size()];
+        for (int i = 0; i < minNum.size(); i++) {
+            min[i] = minNum.get(i).intValue();
+        }
 
         return new PlatformAlgorithm().bmsSamplingAnomaly(vdet, max, min, th1, th2) + "";
     }

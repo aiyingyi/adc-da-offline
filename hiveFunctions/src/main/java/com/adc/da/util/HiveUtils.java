@@ -14,7 +14,7 @@ public class HiveUtils {
 
         double arr[] = new double[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            arr[i] = list.get(i);
+            arr[i] = list.get(i).doubleValue();
         }
         return arr;
     }
@@ -27,20 +27,18 @@ public class HiveUtils {
      */
     public static double[][] parseVol(ArrayList<String> cellVol) {
 
-        double[][] vols = new double[cellVol.size()][96];
+        int cellNum = cellVol.get(0).substring(1, cellVol.get(0).length() - 1).split(",").length;
+        double[][] vols = new double[cellVol.size()][cellNum];
+
         // 将字符串解析成数组
         for (int i = 0; i < cellVol.size(); i++) {
             String[] strs = cellVol.get(i).substring(1, cellVol.get(i).length() - 1).split(",");
-            Stream<Double> doubleStream = Arrays.stream(strs).map(new Function<String, Double>() {
-                @Override
-                public Double apply(String s) {
-                    return new Double(s);
-                }
-            });
-            double[] voltage = HiveUtils.listToArray(doubleStream.collect(Collectors.toList()));
+            double[] voltage = new double[strs.length];
+            for (int i1 = 0; i1 < strs.length; i1++) {
+                voltage[i] = Double.parseDouble(strs[i]);
+            }
             vols[i] = voltage;
         }
         return vols;
-
     }
 }

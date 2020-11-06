@@ -10,6 +10,7 @@
     <modules>
         <module>adc-da</module>
         <module>hiveFunctions</module>
+        <module>OriDataParse</module>
     </modules>
     <packaging>pom</packaging>
 

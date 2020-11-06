@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * 单体内阻或者容量差异模型UDF  capacity_anomaly()
  */
 public class CapacityAnomalyUdf extends UDF {
-
     public String evaluate(ArrayList<String> chargeVol, ArrayList<String> disChargeVol, int th1, double th2, double th3) {
 
         // 充电电压

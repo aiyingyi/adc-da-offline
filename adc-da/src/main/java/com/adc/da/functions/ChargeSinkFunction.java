@@ -9,8 +9,8 @@ import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import scala.actors.threadpool.Arrays;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**

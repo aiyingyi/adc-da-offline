@@ -18,13 +18,13 @@ public class ChargeVolDiffExpUdf extends UDF {
      * 传入的列是数组类型，使用List去接收，而不是数组
      *
      * @param volDiff 充电压差数组
-     * @param time 充电时间
+     * @param time    充电时间
      * @return 0/1 表示是否发生预警
      */
-    public String evaluate(ArrayList<Double> volDiff, ArrayList<String> time) {
+    public String evaluate(ArrayList<Double> volDiff, ArrayList<String> time, double th1, double th2) {
         if (volDiff == null || time == null) {
             return null;
         }
-        return new PlatformAlgorithm().chargeDifferentialVoltageExpansion(HiveUtils.listToArray(volDiff), (String[])time.toArray()) + "";
+        return new PlatformAlgorithm().chargeDifferentialVoltageExpansion(HiveUtils.listToArray(volDiff), (String[]) time.toArray(), th1, th2) + "";
     }
 }

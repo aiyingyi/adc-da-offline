@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="历史数据素索引更改未完成(soc)">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/scala_compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/OriDataParse/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/FileParse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da-offline.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/adc-da.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/注册hive函数" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hiveFunctions/hiveFunctions.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/Test3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/TestChargeAndStartupMonitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/functions/ChargeSinkFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/functions/ChargeSinkFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ini_hive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/BmsSamplingUdf.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/BmsSamplingUdf.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/CapacityAnomalyUdf.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/CapacityAnomalyUdf.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/util/HiveUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/util/HiveUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="ErrorTreeViewConfiguration">
+    <option name="hideInfoMessages" value="true" />
+    <option name="HIDE_INFO_MESSAGES" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Package Object" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev_new" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\programs\LocalRepository" />
+        <option name="mavenHome" value="D:/programs/apache-maven-3.2.2" />
+        <option name="userSettingsFile" value="D:\programs\apache-maven-3.2.2\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+        <option name="jdkForImporter" value="1.8" />
+        <option name="vmOptionsForImporter" value="-Xmx2048m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1iDorRvfxO3zPRCPO1UbzsGuhAA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="E:/ADCPWB-DOC/ADCPWB-SYSTEM" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\util" />
+      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\util" />
+      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\algorithm" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\algorithm" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.adc.da.udf" />
+      <recent name="com.adc.da.app" />
+      <recent name="com.adc.da.functions" />
+      <recent name="com.adc.da.bean" />
+      <recent name="com.adc.da.util" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\Hive部署" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\模型算法计算脚本" />
+      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\algorithm" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="Hive" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.FileParse">
+    <configuration name="BmsSamplingUdf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.udf.BmsSamplingUdf" />
+      <module name="hiveFunctions" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.udf.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileParse" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.app.FileParse" />
+      <module name="OriDataParse" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.app.Test3" />
+      <module name="adc-da" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestUdf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.udf.TestUdf" />
+      <module name="hiveFunctions" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.udf.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scala REPL" type="ScalaScriptConsoleRunConfiguration" factoryName="Scala Console" temporary="true" show_console_on_std_err="false" show_console_on_std_out="false">
+      <module name="adc-da-offline" />
+      <option name="allowRunningInParallel" value="false" />
+      <option name="javaOptions" value="-Djline.terminal=NONE" />
+      <option name="myConsoleArgs" value="" />
+      <option name="workingDirectory" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.FileParse" />
+        <item itemvalue="Application.TestUdf" />
+        <item itemvalue="Application.BmsSamplingUdf" />
+        <item itemvalue="Application.Test3" />
+        <item itemvalue="Scala REPL.Scala REPL" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="E:/" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="" />
+      <created>1601451721933</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1601451721933</updated>
+      <workItem from="1601451724515" duration="5092000" />
+      <workItem from="1602201750784" duration="79582000" />
+      <workItem from="1602569291864" duration="61393000" />
+      <workItem from="1602749168357" duration="35718000" />
+      <workItem from="1603065088595" duration="54858000" />
+      <workItem from="1603181635703" duration="5886000" />
+      <workItem from="1603238848071" duration="64161000" />
+      <workItem from="1603430330921" duration="14643000" />
+      <workItem from="1603699865822" duration="1654000" />
+      <workItem from="1603843246043" duration="31928000" />
+      <workItem from="1603947957255" duration="12272000" />
+      <workItem from="1604016128127" duration="29183000" />
+      <workItem from="1604275408791" duration="21249000" />
+      <workItem from="1604306543665" duration="74978000" />
+    </task>
+    <task id="LOCAL-00001" summary="充电压差扩大模型">
+      <created>1601455317613</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1601455317613</updated>
+    </task>
+    <task id="LOCAL-00002" summary="充电压差扩大模型">
+      <created>1601457212297</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1601457212297</updated>
+    </task>
+    <task id="LOCAL-00003" summary="充电压差扩大模型">
+      <created>1601457930116</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1601457930116</updated>
+    </task>
+    <task id="LOCAL-00004" summary="充电压差扩大模型完成">
+      <created>1602211092325</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1602211092325</updated>
+    </task>
+    <task id="LOCAL-00005" summary="充电压差扩大模型完成">
+      <created>1602212297944</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1602212297944</updated>
+    </task>
+    <task id="LOCAL-00006" summary="充电压差扩大模型完成">
+      <created>1602237693309</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1602237693309</updated>
+    </task>
+    <task id="LOCAL-00007" summary="电池包衰减预警未完成">
+      <created>1602297998834</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1602297998834</updated>
+    </task>
+    <task id="LOCAL-00008" summary="电池包衰减预警未完成">
+      <created>1602321606731</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1602321606731</updated>
+    </task>
+    <task id="LOCAL-00009" summary="抗阻大_ssh连接问题">
+      <created>1602496686068</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1602496686068</updated>
+    </task>
+    <task id="LOCAL-00010" summary="连接抗阻大完成">
+      <created>1602571702733</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1602571702733</updated>
+    </task>
+    <task id="LOCAL-00011" summary="连接抗阻大完成">
+      <created>1602582574776</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1602582574776</updated>
+    </task>
+    <task id="LOCAL-00012" summary="绝缘电阻突降完成">
+      <created>1602665804748</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1602665804748</updated>
+    </task>
+    <task id="LOCAL-00013" summary="绝缘电阻突降完成">
+      <created>1602667965697</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1602667965697</updated>
+    </task>
+    <task id="LOCAL-00014" summary="单体电压离散度高">
+      <created>1602731674346</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1602731674346</updated>
+    </task>
+    <task id="LOCAL-00015" summary="单体电压波动性差异大">
+      <created>1602746644062</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1602746644062</updated>
+    </task>
+    <task id="LOCAL-00016" summary="充电完成检测">
+      <created>1602827850067</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1602827850067</updated>
+    </task>
+    <task id="LOCAL-00017" summary="充电完成检测">
+      <created>1602842300973</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1602842300973</updated>
+    </task>
+    <task id="LOCAL-00018" summary="离散度高">
+      <created>1603101861473</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1603101861473</updated>
+    </task>
+    <task id="LOCAL-00019" summary="静置模式/放电状态匹配">
+      <created>1603181437742</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1603181437742</updated>
+    </task>
+    <task id="LOCAL-00020" summary="充放电循环状态检测">
+      <created>1603187411564</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1603187411564</updated>
+    </task>
+    <task id="LOCAL-00021" summary="分支：预警模型修改索引">
+      <created>1603251703599</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1603251703599</updated>
+    </task>
+    <task id="LOCAL-00022" summary="车辆分类未完成">
+      <created>1603266841605</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1603266841605</updated>
+    </task>
+    <task id="LOCAL-00023" summary="四分位数_预警索引,历史数据素索引更改">
+      <created>1603273346650</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1603273346650</updated>
+    </task>
+    <task id="LOCAL-00024" summary="充电压差扩大模型完成,历史数据素索引更改未完成">
+      <created>1603357733727</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1603357733727</updated>
+    </task>
+    <task id="LOCAL-00025" summary="充电压差扩大模型完成,历史数据素索引更改未完成">
+      <created>1603420126957</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1603420126957</updated>
+    </task>
+    <task id="LOCAL-00026" summary="历史数据素索引更改未完成">
+      <created>1603433651798</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1603433651798</updated>
+    </task>
+    <task id="LOCAL-00027" summary="历史数据素索引更改未完成,ods手动添加分区">
+      <created>1603446810393</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1603446810393</updated>
+    </task>
+    <task id="LOCAL-00028" summary="历史数据素索引更改未完成(soc)">
+      <created>1603844366300</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1603844366300</updated>
+    </task>
+    <task id="LOCAL-00029" summary="历史数据素索引更改未完成(soc)">
+      <created>1603878768438</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1603878768438</updated>
+    </task>
+    <task id="LOCAL-00030" summary="历史数据素索引更改未完成(soc),flink更改">
+      <created>1604049024431</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1604049024431</updated>
+    </task>
+    <task id="LOCAL-00031" summary="历史数据素索引更改未完成(soc),flink更改">
+      <created>1604049038741</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1604049038741</updated>
+    </task>
+    <task id="LOCAL-00032" summary="历史数据素索引更改未完成(soc),模组电压">
+      <created>1604281719170</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1604281719170</updated>
+    </task>
+    <task id="LOCAL-00033" summary="历史数据素索引更改未完成(soc),离群数据统计未完成">
+      <created>1604308028792</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1604308028792</updated>
+    </task>
+    <task id="LOCAL-00034" summary="历史数据素索引更改未完成(soc),离群数据统计未完成">
+      <created>1604310406509</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1604310406509</updated>
+    </task>
+    <task id="LOCAL-00035" summary="历史数据素索引更改未完成(soc)">
+      <created>1604385286341</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1604385286341</updated>
+    </task>
+    <task id="LOCAL-00036" summary="历史数据素索引更改未完成(soc)电量累加计算">
+      <created>1604483162621</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1604483162621</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="充电压差扩大模型" />
+    <MESSAGE value="充电压差扩大模型完成" />
+    <MESSAGE value="电池包衰减预警未完成" />
+    <MESSAGE value="抗阻大_ssh连接问题" />
+    <MESSAGE value="连接抗阻大完成" />
+    <MESSAGE value="绝缘电阻突降完成" />
+    <MESSAGE value="单体电压离散度高" />
+    <MESSAGE value="单体电压波动性差异大" />
+    <MESSAGE value="充电完成检测" />
+    <MESSAGE value="离散度高" />
+    <MESSAGE value="静置模式/放电状态匹配" />
+    <MESSAGE value="充放电循环状态检测" />
+    <MESSAGE value="分支：预警模型修改索引" />
+    <MESSAGE value="车辆分类未完成" />
+    <MESSAGE value="四分位数_预警索引,历史数据素索引更改" />
+    <MESSAGE value="充电压差扩大模型完成,历史数据素索引更改未完成" />
+    <MESSAGE value="历史数据素索引更改未完成" />
+    <MESSAGE value="历史数据素索引更改未完成,ods手动添加分区" />
+    <MESSAGE value="历史数据素索引更改未完成(soc),flink更改" />
+    <MESSAGE value="历史数据素索引更改未完成(soc),模组电压" />
+    <MESSAGE value="历史数据素索引更改未完成(soc),离群数据统计未完成" />
+    <MESSAGE value="历史数据素索引更改未完成(soc)" />
+    <MESSAGE value="历史数据素索引更改未完成(soc)电量累加计算" />
+    <option name="LAST_COMMIT_MESSAGE" value="历史数据素索引更改未完成(soc)电量累加计算" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="361" y="74" key="#Project_Structure" timestamp="1604634285552">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="74" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1604634285552" />
+    <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603256812163">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1603256812163" />
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604633196947">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1604633196947" />
+    <state x="515" y="332" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1601452429083">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="515" y="332" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog/0.0.1536.824@0.0.1536.824" timestamp="1601452429083" />
+    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1604483661464">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1604483661464" />
+    <state x="391" y="93" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1602657672302">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="391" y="93" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog/0.0.1536.824@0.0.1536.824" timestamp="1602657672302" />
+    <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1602727857330">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
+    <state x="367" y="6" key="CommitChangelistDialog2" timestamp="1604483161938">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="367" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1604483161938" />
+    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1604545025298">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1604545025298" />
+    <state width="1493" height="435" key="GridCell.Tab.0.bottom" timestamp="1604641375990">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="435" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1604641375990" />
+    <state width="1493" height="435" key="GridCell.Tab.0.center" timestamp="1604641375990">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="435" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1604641375990" />
+    <state width="1493" height="435" key="GridCell.Tab.0.left" timestamp="1604641375989">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="435" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1604641375989" />
+    <state width="1493" height="435" key="GridCell.Tab.0.right" timestamp="1604641375990">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="435" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1604641375990" />
+    <state width="1493" height="252" key="GridCell.Tab.1.bottom" timestamp="1602749095471">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="252" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1602749095471" />
+    <state width="1493" height="252" key="GridCell.Tab.1.center" timestamp="1602749095470">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="252" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1602749095470" />
+    <state width="1493" height="252" key="GridCell.Tab.1.left" timestamp="1602749095470">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="252" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1602749095470" />
+    <state width="1493" height="252" key="GridCell.Tab.1.right" timestamp="1602749095470">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="252" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1602749095470" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1604542450414">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1604542450414" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1604483179829">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1604483179829" />
+    <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824@0.0.1536.824" timestamp="1603159852245" />
+    <state x="457" y="167" width="621" height="490" key="find.popup" timestamp="1604555213940">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="457" y="167" width="621" height="490" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1604555213940" />
+    <state x="178" y="116" key="new project wizard" timestamp="1604634261991">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
+    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1604555313775">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1604555313775" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1602817193395">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1602817193395" />
+  </component>
+</project>
