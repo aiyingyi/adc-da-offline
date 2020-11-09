@@ -6,12 +6,13 @@ hive.exec.dynamic.partition.modet=nonstrict
 2. 开启动态分区
 hive-site.xml 的 Hive 服务高级配置代码段（安全阀）
 hive.exec.dynamic.partition=true
-3.自定义udf函数，上传不带依赖的jar包上传到aux路径中。
-注册永久函数
-create function add_prefix
-as 'com.test.AddPrefix'
-using jar 'hdfs:///wh/test/addPrefix.jar'
+3.自定义udf 并注册永久函数
 将jar包上传到hdfs
+create function add_prefix as 'com.test.AddPrefix' using jar 'hdfs:///wh/test/addPrefix.jar'
+、
+
+
+
 
 --出现问题
 1. Hiveserver2 总是异常退出

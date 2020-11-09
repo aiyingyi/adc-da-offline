@@ -128,14 +128,14 @@ public class FileParse {
 
     public static void sendToKafak(File file, KafkaProducer<String, String> producer) {
 
-
         File[] fs = file.listFiles();
         for (File f : fs) {
             if (f.isDirectory())    //若是目录，则递归打印该目录下的文件
                 sendToKafak(f, producer);
             if (f.isFile()) {
                 List<Map<String, String>> res = parseVehicleData(f);
-                res.forEach(record -> producer.send(new ProducerRecord<String, String>("data", 0,"0001", record.toString())));
+                //res.forEach(record -> producer.send(new ProducerRecord<String, String>("data", 0, "0001", record.toString())));
+                res.forEach(data-> System.out.println(data));
             }
         }
     }
@@ -152,7 +152,8 @@ public class FileParse {
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        sendToKafak(new File("E:\\软件安装\\原始数据\\数据"), producer);
+        sendToKafak(new File("C:\\Users\\13099\\Desktop\\1"), producer);
+        //sendToKafak(new File("E:\\软件安装\\原始数据\\数据"), producer);
         producer.close();
 
 
