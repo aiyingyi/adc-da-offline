@@ -135,7 +135,8 @@ public class FileParse {
                 sendToKafak(f, producer);
             if (f.isFile()) {
                 List<Map<String, String>> res = parseVehicleData(f);
-                res.forEach(record -> producer.send(new ProducerRecord<String, String>("data", 0,"0001", record.toString())));
+                //res.forEach(record -> producer.send(new ProducerRecord<String, String>("data", 0,"0001", record.toString())));
+                res.forEach(record -> System.out.println(record));
             }
         }
     }
@@ -152,7 +153,8 @@ public class FileParse {
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        sendToKafak(new File("E:\\软件安装\\原始数据\\数据"), producer);
+        //sendToKafak(new File("E:\\软件安装\\原始数据\\数据"), producer);
+        sendToKafak(new File("C:\\Users\\13099\\Desktop\\1"), producer);
         producer.close();
 
 
