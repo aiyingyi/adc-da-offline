@@ -6,7 +6,8 @@ import com.adc.da.functions.ChargeSinkFunction;
 import com.adc.da.functions.EventFilterFunction;
 import com.adc.da.functions.HighSelfDischargeEsSink;
 import com.adc.da.functions.ShellRichSink;
-import com.adc.da.util.ComUtil;
+
+import com.adc.da.util.CommonUtil;
 import com.adc.da.util.ShellUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -41,13 +42,13 @@ import java.util.Properties;
 public class ChargeAndStartupMonitor {
     public static void main(String[] args) throws Exception {
 
-        StreamExecutionEnvironment env = ComUtil.initEnvironment();
+        StreamExecutionEnvironment env = CommonUtil.initEnvironment();
         // 设置并行度
         env.setParallelism(1);
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
-        Properties shellConfig = ComUtil.loadProperties("config/shell.properties");
-        Properties odsDataConfig = ComUtil.loadProperties("config/odsTopic.properties");
+        Properties shellConfig = CommonUtil.loadProperties("config/shell.properties");
+        Properties odsDataConfig = CommonUtil.loadProperties("config/odsTopic.properties");
         // 创建数据源,提取水位线并设置WaterMark的延时
         // KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
         KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {

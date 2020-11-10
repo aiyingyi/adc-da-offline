@@ -1,20 +1,29 @@
 package com.adc.da.app;
 
 
-import com.adc.da.util.ComUtil;
+import com.adc.da.util.CommonUtil;
+import com.alibaba.fastjson.JSON;
 import org.apache.avro.data.Json;
 import org.apache.flink.api.common.functions.MapFunction;
+
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.apache.flink.streaming.api.functions.windowing.ProcessAllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
+
+import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkKafkaPartitioner;
 import org.apache.flink.util.Collector;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * flink 批处理，用于文件合并排序并发送给kafka
@@ -22,8 +31,17 @@ import java.util.Map;
 public class SortFile2Kafka {
     public static void main(String[] args) throws Exception {
 
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "192.168.11.35:9092");
+        props.put("zookeeper.connect", "192.168.11.35:2181");
+        props.put("acks", "all");
+        props.put("retries", 1);//重试次数
+        props.put("batch.size", 5000);//批次大小
+        props.put("buffer.memory", 33554432);//RecordAccumulator缓冲区大小
+
+
         // 获取文件路径
-        String sourcePath = "C:\\Users\\13099\\Desktop\\1\\11.xlsx";//args[0];
+        String sourcePath = "C:\\Users\\13099\\Desktop\\2";//args[0];
 
         // Todo 定义源文件和平台数据映射字段值    如何在用户配置后获取数据
         String[] attName = new String[]{"VIN", "报文时间", "车速", "车辆状态", "运行模式", "累计里程", "档位", "充电状态",
@@ -35,10 +53,10 @@ public class SortFile2Kafka {
 
         // 获取数据的条数，用来开启一个计数窗口
         long recordSize = FileParse.getRecordSize(new File(sourcePath));
-        StreamExecutionEnvironment env = ComUtil.initEnvironment();
+        StreamExecutionEnvironment env = CommonUtil.initEnvironment();
         env.setParallelism(1);
         // 从数据源获取数据
-        SingleOutputStreamOperator<Map<String, String>> dataSource = env.addSource(new TestExcelSource(sourcePath, attName, dataName));
+        SingleOutputStreamOperator<Map<String, String>> dataSource = env.addSource(new ExcelSource(sourcePath, attName, dataName));
 
         SingleOutputStreamOperator<Object> resStream = dataSource.map(new MapFunction<Map<String, String>, Map<String, String>>() {
             @Override
@@ -67,7 +85,7 @@ public class SortFile2Kafka {
                 }
                 return data;
             }
-        }).countWindowAll(recordSize).process(new ProcessAllWindowFunction<Map<String, String>, Object, GlobalWindow>() {
+        }).setParallelism(8).countWindowAll(recordSize).process(new ProcessAllWindowFunction<Map<String, String>, Object, GlobalWindow>() {
             @Override
             public void process(Context context, Iterable<Map<String, String>> elements, Collector<Object> out) throws Exception {
                 // 将元素放入list中进行排序,
@@ -80,23 +98,51 @@ public class SortFile2Kafka {
                 list.forEach(data -> out.collect(data));
             }
         }).setParallelism(1);
-        //resStream.map(data -> Json.toString(data)).writeAsText("C:\\Users\\13099\\Desktop\\1.txt");
-        resStream.map(data -> Json.toString(data)).print();
 
-        env.execute("");
+        //写入文件
+        //resStream.map(data -> Json.toString(data)).writeAsText("C:\\Users\\13099\\Desktop\\1.txt").setParallelism(1);
+
+
+        SingleOutputStreamOperator<String> jsonStream = resStream.map(data -> Json.toString(data));
+
+        // 不指定分区去写入kafka
+        //jsonStream.addSink(new FlinkKafkaProducer010<>("kafka35:9092", "data", new SimpleStringSchema())).setParallelism(1);
+
+
+        // 根据vin码Hash去获得分区
+        jsonStream.addSink(new FlinkKafkaProducer010<>("data", new SimpleStringSchema(), props, new FlinkKafkaPartitioner<String>() {
+            @Override
+            public int partition(String s, byte[] bytes, byte[] bytes1, String s2, int[] ints) {
+                int partition = -1;
+                try {
+                    byte[] digest = MessageDigest.getInstance("md5").digest(JSON.parseObject(s).getString("vin").getBytes());
+                    int digestNum = CommonUtil.byteArrayToInt(digest);
+                    if (digestNum < 0) {
+                        digestNum = -digestNum;
+                    }
+                    partition = digestNum % ints.length;
+
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                return partition;
+            }
+        })).setParallelism(1);
+
+        env.execute("SortFile2Kafka");
     }
 }
 
 /**
  * 自定义excel source
  */
-class TestExcelSource extends RichSourceFunction<Map<String, String>> {
+class ExcelSource extends RichSourceFunction<Map<String, String>> {
 
     private String filePath;
     private String[] attName;
     private String[] dataName;
 
-    public TestExcelSource(String filePath, String[] attName, String[] dataName) {
+    public ExcelSource(String filePath, String[] attName, String[] dataName) {
         this.filePath = filePath;
         this.attName = attName;
         this.dataName = dataName;
