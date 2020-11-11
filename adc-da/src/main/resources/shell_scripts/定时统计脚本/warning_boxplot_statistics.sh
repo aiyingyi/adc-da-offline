@@ -58,7 +58,7 @@ vehicle_data as
         (select        -- 获取上个月的车辆分类
             vin,
             classification
-        from  ${db}.vehicle_classification
+        from  ${db}.vehicle_classification_es
         where dt = '${last_month}'
         ) as c
     on dwd_data.vin = c.vin
@@ -371,7 +371,7 @@ select
   round(b.unch_resistance,1),
   date_format(date_add(next_day('${do_date}','MO'),-14),'yyyy-MM-dd')
 from
-    (select enterprise,vin,classification from  ${db}.vehicle_classification
+    (select enterprise,vin,classification from  ${db}.vehicle_classification_es
     where dt = '${last_month}' ) as c
 left  join  box_plot as b
 on c.enterprise = b.enterprise

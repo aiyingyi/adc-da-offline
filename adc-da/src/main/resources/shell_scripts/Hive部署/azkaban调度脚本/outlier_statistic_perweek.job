@@ -1,0 +1,3 @@
+#outlier_statistic_perweek.job
+type=command
+command=sh /opt/module/offline/outlier_statistic_perweek.sh

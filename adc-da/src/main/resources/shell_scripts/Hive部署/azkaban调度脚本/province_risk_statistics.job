@@ -1,0 +1,3 @@
+#province_risk_statistics.job
+type=command
+command=sh /opt/module/offline/province_risk_statistics.sh

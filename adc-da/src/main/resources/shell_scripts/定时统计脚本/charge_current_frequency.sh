@@ -2,9 +2,16 @@
 
 db=warningplatform
 
-# 获取昨天以及前天的日期，充电时间以结束时间为准
+# 获取昨天以及前天的日期，充电时间以结束时间为准,每天执行一次
+
 yesterday=`date -d "1 day ago" "+%Y-%m-%d"`
 before_yesterday=`date -d "2 day ago" "+%Y-%m-%d"`
+
+
+if [[ -n "$1" ]]; then
+    yesterday="$1"
+    before_yesterday=`date -d "1 day ago ${yesterday}" "+%Y-%m-%d"`
+fi
 
 # 定义充电状态
 uncharge=0

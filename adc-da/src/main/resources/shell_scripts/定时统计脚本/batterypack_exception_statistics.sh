@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# 每周执行一次
 
 # named_struct 会把整数直接当成int类型，从而不能插入double类型中
 
@@ -10,6 +11,9 @@ coefficient=1.5
 # 获取当前日期
 do_date=`date  "+%Y-%m-%d %H:%M:%S"`
 
+if [[ -n "$1" ]]; then
+    do_date="$1"
+fi
 
 # 计算之前应该导入前一天的数据到dwd_preprocess_vehicle_data中
 # 首先执行 ods_to_dwd_preprocess.sh 脚本，将前一天的数据导入到dwd层

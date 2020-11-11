@@ -1,0 +1,3 @@
+#failure_statistics_perhour.job
+type=command
+command=sh /opt/module/offline/failure_statistics_perhour.sh

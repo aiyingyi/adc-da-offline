@@ -1,0 +1,3 @@
+#vehicle_classification_boxplot.job
+type=command
+command=sh /opt/module/offline/vehicle_classification_boxplot.sh

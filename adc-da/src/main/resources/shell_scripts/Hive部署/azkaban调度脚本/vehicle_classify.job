@@ -1,0 +1,3 @@
+#vehicle_classify.job
+type=command
+command=sh /opt/module/offline/vehicle_classify.sh

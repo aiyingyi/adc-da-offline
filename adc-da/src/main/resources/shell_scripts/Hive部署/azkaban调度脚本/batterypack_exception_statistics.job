@@ -1,0 +1,9 @@
+# batterypack_exception_statistics.job
+type=command
+command=sh /opt/module/offline/batterypack_exception_statistics.sh
+
+
+
+
+
+

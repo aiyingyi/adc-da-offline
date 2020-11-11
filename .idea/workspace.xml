@@ -2,31 +2,54 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/batterypack_exception_statistics.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_current_frequency.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_mode_electricity_frequency.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perday.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perhour.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/impala即席查询sql.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_current_frequency.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_vol_cell_frequency_data.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ods_to_dwd_preprocess.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/outlier_statistic_perweek.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/province_risk_statistics.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/risk_level_statistics.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classification_boxplot.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classify.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_boxplot_statistics.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perday.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perhour.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/batterypack_exception_statistics.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/failure_statistics_perday.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/failure_statistics_perhour.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/outlier_statistic_perweek.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/province_risk_statistics.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/risk_level_statistics.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/vehicle_classification_boxplot.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/vehicle_classify.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/warning_boxplot_statistics.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/warning_statistics_perday.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/warning_statistics_perhour.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/依赖于ods/charge_current_frequency.job" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/azkaban调度脚本/依赖于ods/ods_to_dwd_preprocess.job" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perday.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perday.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perhour.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perhour.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ods_to_dwd_preprocess.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/outlier_statistic_perweek.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/outlier_statistic_perweek.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/province_risk_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/province_risk_statistics.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/risk_level_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/risk_level_statistics.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classification_boxplot.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classification_boxplot.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/batterypack_exception_statistics.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/charge_current_frequency.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/charge_mode_electricity_frequency.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/charge_mode_electricity_frequency.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perday.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perhour.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/impala即席查询sql.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/impala即席查询sql.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ini_current_frequency.txt" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ini_current_frequency.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ini_vol_cell_frequency_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ini_vol_cell_frequency_data.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ods_to_dwd_preprocess.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/outlier_statistic_perweek.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/province_risk_statistics.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/risk_level_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/risk_level_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classification_boxplot.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classify.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/warning_boxplot_statistics.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/warning_statistics_perday.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/warning_statistics_perhour.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/batterypack_exception_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/batterypack_exception_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_current_frequency.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/charge_current_frequency.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_mode_electricity_frequency.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perday.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/failure_statistics_perday.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perhour.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/failure_statistics_perhour.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/impala即席查询sql.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_current_frequency.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_vol_cell_frequency_data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/outlier_statistic_perweek.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/outlier_statistic_perweek.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/province_risk_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/province_risk_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/risk_level_statistics.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classification_boxplot.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/vehicle_classification_boxplot.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classify.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/vehicle_classify.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_boxplot_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_boxplot_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perday.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_statistics_perday.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perhour.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_statistics_perhour.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,18 +126,19 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/adc-da/src/main/resources/测试脚本" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\Hive部署" />
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts" />
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\模型算法计算脚本" />
-      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\algorithm" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\测试脚本" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\app" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\util" />
+      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\util" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.adc.da.app" />
@@ -123,11 +147,11 @@
       <recent name="com.adc.da.functions" />
       <recent name="com.adc.da.util" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\测试脚本" />
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\app" />
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\util" />
-      <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\util" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\定时统计脚本" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\Hive部署" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts" />
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts\模型算法计算脚本" />
       <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\algorithm" />
     </key>
   </component>
@@ -256,7 +280,8 @@
       <workItem from="1604275408791" duration="21249000" />
       <workItem from="1604306543665" duration="87097000" />
       <workItem from="1604879815098" duration="10302000" />
-      <workItem from="1604891719833" duration="54698000" />
+      <workItem from="1604891719833" duration="55678000" />
+      <workItem from="1605071536190" duration="3843000" />
     </task>
     <task id="LOCAL-00001" summary="充电压差扩大模型">
       <created>1601455317613</created>
@@ -552,7 +577,21 @@
       <option name="project" value="LOCAL" />
       <updated>1605002947370</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="azkaban脚本编写">
+      <created>1605064938893</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1605064938893</updated>
+    </task>
+    <task id="LOCAL-00044" summary="azkaban脚本编写">
+      <created>1605065011316</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1605065011316</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -560,7 +599,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="充电压差扩大模型完成" />
     <MESSAGE value="电池包衰减预警未完成" />
     <MESSAGE value="抗阻大_ssh连接问题" />
     <MESSAGE value="连接抗阻大完成" />
@@ -585,7 +623,8 @@
     <MESSAGE value="解析excel" />
     <MESSAGE value="文件合并排序" />
     <MESSAGE value="文件合并排序完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="文件合并排序完成" />
+    <MESSAGE value="azkaban脚本编写" />
+    <option name="LAST_COMMIT_MESSAGE" value="azkaban脚本编写" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="74" key="#Project_Structure" timestamp="1604914627298">
@@ -616,54 +655,54 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="367" y="5" key="CommitChangelistDialog2" timestamp="1605064937930">
+    <state x="367" y="5" key="CommitChangelistDialog2" timestamp="1605065010726">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="367" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605064937930" />
+    <state x="367" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605065010726" />
     <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1604909692469">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1604909692469" />
-    <state width="1493" height="352" key="GridCell.Tab.0.bottom" timestamp="1605064959744">
+    <state width="1493" height="114" key="GridCell.Tab.0.bottom" timestamp="1605071499595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="352" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605064959744" />
-    <state width="1493" height="352" key="GridCell.Tab.0.center" timestamp="1605064959744">
+    <state width="1493" height="114" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605071499595" />
+    <state width="1493" height="114" key="GridCell.Tab.0.center" timestamp="1605071499595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="352" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605064959744" />
-    <state width="1493" height="352" key="GridCell.Tab.0.left" timestamp="1605064959743">
+    <state width="1493" height="114" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605071499595" />
+    <state width="1493" height="114" key="GridCell.Tab.0.left" timestamp="1605071499595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="352" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605064959743" />
-    <state width="1493" height="352" key="GridCell.Tab.0.right" timestamp="1605064959744">
+    <state width="1493" height="114" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605071499595" />
+    <state width="1493" height="114" key="GridCell.Tab.0.right" timestamp="1605071499595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="352" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605064959744" />
-    <state width="1493" height="2" key="GridCell.Tab.1.bottom" timestamp="1604966494242">
+    <state width="1493" height="114" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605071499595" />
+    <state width="1493" height="2" key="GridCell.Tab.1.bottom" timestamp="1605071499589">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1604966494242" />
-    <state width="1493" height="2" key="GridCell.Tab.1.center" timestamp="1604966494242">
+    <state width="1493" height="2" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605071499589" />
+    <state width="1493" height="2" key="GridCell.Tab.1.center" timestamp="1605071499589">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1604966494242" />
-    <state width="1493" height="2" key="GridCell.Tab.1.left" timestamp="1604966494242">
+    <state width="1493" height="2" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1605071499589" />
+    <state width="1493" height="2" key="GridCell.Tab.1.left" timestamp="1605071499589">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1604966494242" />
-    <state width="1493" height="2" key="GridCell.Tab.1.right" timestamp="1604966494242">
+    <state width="1493" height="2" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1605071499589" />
+    <state width="1493" height="2" key="GridCell.Tab.1.right" timestamp="1605071499589">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1604966494242" />
+    <state width="1493" height="2" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1605071499589" />
     <state x="179" y="0" key="SettingsEditor" timestamp="1604995044461">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1604995044461" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605053275762">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605065025107">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605053275762" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605065025107" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -676,10 +715,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1605062981613">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1605074536504">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605062981613" />
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605074536504" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1602817193395">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

@@ -1,0 +1,4 @@
+#charge_current_frequency.job
+type=command
+dependencies=ods_to_dwd_preprocess
+command=sh /opt/module/offline/charge_current_frequency.sh
