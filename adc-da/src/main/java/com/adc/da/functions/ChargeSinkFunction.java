@@ -1,7 +1,6 @@
 package com.adc.da.functions;
 
 import ch.ethz.ssh2.Connection;
-import com.adc.da.bean.ChargeRecord;
 import com.adc.da.bean.OdsData;
 import com.adc.da.util.ShellUtil;
 import org.apache.flink.api.common.state.ValueState;

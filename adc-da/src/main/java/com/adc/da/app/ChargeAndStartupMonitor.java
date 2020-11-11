@@ -15,6 +15,7 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFilterFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.cep.CEP;
@@ -27,6 +28,7 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
 
 import java.time.Duration;
@@ -43,15 +45,20 @@ public class ChargeAndStartupMonitor {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = CommonUtil.initEnvironment();
-        // 设置并行度
-        env.setParallelism(1);
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+
 
         Properties shellConfig = CommonUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = CommonUtil.loadProperties("config/odsTopic.properties");
+
+        // 设置并行度
+        //env.setParallelism(Integer.parseInt(shellConfig.get("monitor_parallelism").toString()));
+
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+
+
         // 创建数据源,提取水位线并设置WaterMark的延时
-        // KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
-        KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
+        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
+            //KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
             @Override
             public OdsData map(String data) {
                 OdsData ods = new OdsData();

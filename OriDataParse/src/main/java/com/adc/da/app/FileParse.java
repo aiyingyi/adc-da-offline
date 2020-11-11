@@ -1,12 +1,16 @@
 package com.adc.da.app;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections4.Put;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.xml.transform.Source;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,6 +20,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FileParse {
+    public static double[] str2DouleArr(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = str.substring(1, str.length() - 1);
+        String[] split = str.split(",");
+
+        double[] res = new double[split.length];
+        for (int i = 0; i < split.length; i++) {
+            res[i] = Double.parseDouble(split[i]);
+        }
+        return res;
+    }
+
 
     /**
      * 将日期转换成时间戳
@@ -42,8 +60,8 @@ public class FileParse {
      * @param dataName      json中的字段名称
      * @throws Exception
      */
-    public static List<Map<String, String>> readExcle(File file, String[] attributeName, String[] dataName) throws Exception {
-        List<Map<String, String>> list = new ArrayList<>();
+    public static List<Map<String, Object>> readExcle(File file, String[] attributeName, String[] dataName) throws Exception {
+        List<Map<String, Object>> list = new ArrayList<>();
 
         try {
             //创建工作簿
@@ -69,7 +87,7 @@ public class FileParse {
             }
             for (int row = 1; row <= maxRow; row++) {
                 XSSFRow sheetRow = sheet.getRow(row);
-                Map<String, String> map = new HashMap<>();
+                Map<String, Object> map = new HashMap<>();
                 for (int att = 0; att < attributeName.length; att++) {
                     map.put(dataName[att], sheetRow.getCell(location[att]).toString());
                 }
@@ -83,7 +101,7 @@ public class FileParse {
 
 
     // 对读取的原始数据进行解析
-    public static List<Map<String, String>> parseVehicleData(File file) {
+    public static List<Map<String, Object>> parseVehicleData(File file) {
         String[] attName = new String[]{"VIN", "报文时间", "车速", "车辆状态", "运行模式", "累计里程", "档位", "充电状态",
                 "加速踏板行程值", "制动踏板状态", "总电压", "总电流", "SOC", "绝缘电阻", "定位状态", "纬度", "经度",
                 "通用报警标志", "单体电池总数", "可充电储能温度探针个数", "单体电池电压", "可充电储能装置温度数据"};
@@ -91,11 +109,11 @@ public class FileParse {
                 "totalVoltage", "totalCurrent", "soc", "insulationResistance", "positionStatus", "longitude", "latitude", "failure", "cellNum", "probeNum",
                 "cellVoltage", "probeTemperature"};
         try {
-            List<Map<String, String>> list = readExcle(file, attName, dataName);
-            List<Map<String, String>> res = list.stream().map(new Function<Map<String, String>, Map<String, String>>() {
+            List<Map<String, Object>> list = readExcle(file, attName, dataName);
+            List<Map<String, Object>> res = list.stream().map(new Function<Map<String, Object>, Map<String, Object>>() {
                 @Override
-                public Map<String, String> apply(Map<String, String> data) {
-                    data.put("msgTime", dateToStamp(data.get("msgTime")));
+                public Map<String, Object> apply(Map<String, Object> data) {
+                    data.put("msgTime", dateToStamp(data.get("msgTime").toString()));
                     // 对数据进行清洗
                     if ("启动".equals(data.get("startupStatus"))) {
                         data.put("startupStatus", "1");
@@ -116,7 +134,15 @@ public class FileParse {
                     if ("停车档".equals(data.get("gearStatus"))) {
                         data.put("positionStatus", "1");
                     }
+
+                    double[] probeTemperature = str2DouleArr(data.get("probeTemperature").toString());
+                    double[] cellVoltage = str2DouleArr(data.get("cellVoltage").toString());
+
+                    data.put("probeTemperature", probeTemperature);
+                    data.put("cellVoltage", cellVoltage);
+
                     return data;
+
                 }
             }).collect(Collectors.toList());
             return res;
@@ -128,15 +154,17 @@ public class FileParse {
 
     public static void sendToKafak(File file, KafkaProducer<String, String> producer) {
 
-
         File[] fs = file.listFiles();
         for (File f : fs) {
             if (f.isDirectory())    //若是目录，则递归打印该目录下的文件
                 sendToKafak(f, producer);
             if (f.isFile()) {
-                List<Map<String, String>> res = parseVehicleData(f);
-                //res.forEach(record -> producer.send(new ProducerRecord<String, String>("data", 0,"0001", record.toString())));
-                res.forEach(record -> System.out.println(record));
+                List<Map<String, Object>> res = parseVehicleData(f);
+
+
+                res.forEach(record -> {
+                    producer.send(new ProducerRecord<String, String>("data", "0001", new JSONObject(record).toJSONString()));
+                });
             }
         }
     }
@@ -154,7 +182,7 @@ public class FileParse {
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
         //sendToKafak(new File("E:\\软件安装\\原始数据\\数据"), producer);
-        sendToKafak(new File("C:\\Users\\13099\\Desktop\\1"), producer);
+        sendToKafak(new File("C:\\Users\\13099\\Desktop\\2"), producer);
         producer.close();
 
 

@@ -39,6 +39,7 @@ select
     sum(tmp.r3),
     date_format('${do_date}','yyyy-MM-dd HH:mm:ss')
 from tmp
+group by tmp.enterprise;
 "
 hive -e  "${sql}"
 

@@ -49,7 +49,7 @@ select
     vin,
     failureType,
     total,
-    dt,
+    dt
 from ${db}.failure_statistics_perhour
 where day='${day}';
 "

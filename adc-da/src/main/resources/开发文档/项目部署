@@ -1,3 +1,7 @@
 1. shell脚本在执行前先修改   set ff=unix,直接使用dos2unix进行批处理
 2. 调整Linux服务器ssh连接的最大个数
-3.
+
+
+
+flink 程序提交
+bin/flink  run  -m yarn-cluster -c com.adc.da.app.ChargeAndStartupMonitor  /opt/app/adc-da-1.0-SNAPSHOT-jar-with-dependencies.jar

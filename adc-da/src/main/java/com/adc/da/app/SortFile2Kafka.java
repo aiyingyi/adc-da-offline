@@ -3,7 +3,8 @@ package com.adc.da.app;
 
 import com.adc.da.util.CommonUtil;
 import com.alibaba.fastjson.JSON;
-import org.apache.avro.data.Json;
+import com.alibaba.fastjson.JSONObject;
+
 import org.apache.flink.api.common.functions.MapFunction;
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -18,6 +19,7 @@ import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkKafkaPartiti
 import org.apache.flink.util.Collector;
 
 import java.io.File;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -56,13 +58,13 @@ public class SortFile2Kafka {
         StreamExecutionEnvironment env = CommonUtil.initEnvironment();
         env.setParallelism(1);
         // 从数据源获取数据
-        SingleOutputStreamOperator<Map<String, String>> dataSource = env.addSource(new ExcelSource(sourcePath, attName, dataName));
+        SingleOutputStreamOperator<Map<String, Object>> dataSource = env.addSource(new ExcelSource(sourcePath, attName, dataName));
 
-        SingleOutputStreamOperator<Object> resStream = dataSource.map(new MapFunction<Map<String, String>, Map<String, String>>() {
+        SingleOutputStreamOperator<Map<String, Object>> resStream = dataSource.map(new MapFunction<Map<String, Object>, Map<String, Object>>() {
             @Override
-            public Map<String, String> map(Map<String, String> data) throws Exception {
+            public Map<String, Object> map(Map<String, Object> data) throws Exception {
                 // 将时间转换成时间戳
-                data.put("msgTime", FileParse.dateToStamp(data.get("msgTime")));
+                data.put("msgTime", FileParse.dateToStamp(data.get("msgTime").toString()));
                 // 对数据进行清洗
                 if ("启动".equals(data.get("startupStatus"))) {
                     data.put("startupStatus", "1");
@@ -83,34 +85,43 @@ public class SortFile2Kafka {
                 if ("停车档".equals(data.get("gearStatus"))) {
                     data.put("positionStatus", "1");
                 }
+
+                double[] probeTemperature = FileParse.str2DouleArr(data.get("probeTemperature").toString());
+                double[] cellVoltage = FileParse.str2DouleArr(data.get("cellVoltage").toString());
+
+                data.put("probeTemperature", probeTemperature);
+                data.put("cellVoltage", cellVoltage);
                 return data;
             }
-        }).setParallelism(8).countWindowAll(recordSize).process(new ProcessAllWindowFunction<Map<String, String>, Object, GlobalWindow>() {
+        }).setParallelism(8).countWindowAll(recordSize).process(new ProcessAllWindowFunction<Map<String, Object>, Map<String, Object>, GlobalWindow>() {
             @Override
-            public void process(Context context, Iterable<Map<String, String>> elements, Collector<Object> out) throws Exception {
+            public void process(Context context, Iterable<Map<String, Object>> elements, Collector<Map<String, Object>> out) throws Exception {
                 // 将元素放入list中进行排序,
-                List<Map<String, String>> list = new ArrayList<>();
-                for (Map<String, String> element : elements) {
+                List<Map<String, Object>> list = new ArrayList<>();
+                for (Map<String, Object> element : elements) {
                     list.add(element);
                 }
-                list.sort((o1, o2) -> (int) (Long.parseLong(o1.get("msgTime")) - Long.parseLong(o2.get("msgTime"))));
+                list.sort((o1, o2) -> (int) (Long.parseLong(o1.get("msgTime").toString()) - Long.parseLong(o2.get("msgTime").toString())));
                 // 将排好序的数据写出
                 list.forEach(data -> out.collect(data));
             }
         }).setParallelism(1);
 
-        //写入文件
-        //resStream.map(data -> Json.toString(data)).writeAsText("C:\\Users\\13099\\Desktop\\1.txt").setParallelism(1);
+        SingleOutputStreamOperator<String> jsonStream = resStream.map(data -> new JSONObject(data).toJSONString());
 
 
-        SingleOutputStreamOperator<String> jsonStream = resStream.map(data -> Json.toString(data));
+        //jsonStream.print();
+
+
+        // 写入文件
+        //jsonStream.writeAsText("C:\\Users\\13099\\Desktop\\1.txt").setParallelism(1);
 
         // 不指定分区去写入kafka
-        //jsonStream.addSink(new FlinkKafkaProducer010<>("kafka35:9092", "data", new SimpleStringSchema())).setParallelism(1);
+        jsonStream.addSink(new FlinkKafkaProducer010<>("kafka35:9092", "data", new SimpleStringSchema())).setParallelism(1);
 
 
         // 根据vin码Hash去获得分区
-        jsonStream.addSink(new FlinkKafkaProducer010<>("data", new SimpleStringSchema(), props, new FlinkKafkaPartitioner<String>() {
+      /*  jsonStream.addSink(new FlinkKafkaProducer010<>("data", new SimpleStringSchema(), props, new FlinkKafkaPartitioner<String>() {
             @Override
             public int partition(String s, byte[] bytes, byte[] bytes1, String s2, int[] ints) {
                 int partition = -1;
@@ -127,7 +138,7 @@ public class SortFile2Kafka {
                 }
                 return partition;
             }
-        })).setParallelism(1);
+        })).setParallelism(1);*/
 
         env.execute("SortFile2Kafka");
     }
@@ -136,7 +147,7 @@ public class SortFile2Kafka {
 /**
  * 自定义excel source
  */
-class ExcelSource extends RichSourceFunction<Map<String, String>> {
+class ExcelSource extends RichSourceFunction<Map<String, Object>> {
 
     private String filePath;
     private String[] attName;
@@ -154,20 +165,20 @@ class ExcelSource extends RichSourceFunction<Map<String, String>> {
      * @param file
      * @param ctx
      */
-    public void parse(File file, SourceContext<Map<String, String>> ctx) throws Exception {
+    public void parse(File file, SourceContext<Map<String, Object>> ctx) throws Exception {
         if (file.isDirectory()) {
             File[] fs = file.listFiles();
             for (File f : fs) {
                 parse(f, ctx);
             }
         } else {
-            List<Map<String, String>> res = FileParse.readExcle(file, attName, dataName);
+            List<Map<String, Object>> res = FileParse.readExcle(file, attName, dataName);
             res.forEach(ele -> ctx.collect(ele));
         }
     }
 
     @Override
-    public void run(SourceContext<Map<String, String>> ctx) throws Exception {
+    public void run(SourceContext<Map<String, Object>> ctx) throws Exception {
         parse(new File(filePath), ctx);
     }
 

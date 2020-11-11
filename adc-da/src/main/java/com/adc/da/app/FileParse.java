@@ -19,6 +19,26 @@ import java.util.stream.Collectors;
 
 public class FileParse {
 
+
+    /**
+     * 将字符串转换成double数组
+     * @param str
+     * @return
+     */
+    public static double[] str2DouleArr(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = str.substring(1, str.length() - 1);
+        String[] split = str.split(",");
+
+        double[] res = new double[split.length];
+        for (int i = 0; i < split.length; i++) {
+            res[i] = Double.parseDouble(split[i]);
+        }
+        return res;
+    }
+
     /**
      * 将日期转换成时间戳
      *
@@ -90,9 +110,9 @@ public class FileParse {
      * @param dataName      json中的字段名称
      * @throws Exception
      */
-    public static List<Map<String, String>> readExcle(File file, String[] attributeName, String[] dataName) throws Exception {
+    public static List<Map<String, Object>> readExcle(File file, String[] attributeName, String[] dataName) throws Exception {
+        List<Map<String, Object>> list = new ArrayList<>();
 
-        List<Map<String, String>> list = new ArrayList<>();
         try {
             //创建工作簿
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(file);
@@ -117,7 +137,7 @@ public class FileParse {
             }
             for (int row = 1; row <= maxRow; row++) {
                 XSSFRow sheetRow = sheet.getRow(row);
-                Map<String, String> map = new HashMap<>();
+                Map<String, Object> map = new HashMap<>();
                 for (int att = 0; att < attributeName.length; att++) {
                     map.put(dataName[att], sheetRow.getCell(location[att]).toString());
                 }
@@ -128,6 +148,7 @@ public class FileParse {
         }
         return list;
     }
+
 
     public static void main2(String[] args) throws ParseException {
         Properties props = new Properties();

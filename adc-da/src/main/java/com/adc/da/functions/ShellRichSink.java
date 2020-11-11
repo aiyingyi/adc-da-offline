@@ -1,7 +1,6 @@
 package com.adc.da.functions;
 
 import ch.ethz.ssh2.Connection;
-import com.adc.da.bean.EventInfo;
 import com.adc.da.util.ShellUtil;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
