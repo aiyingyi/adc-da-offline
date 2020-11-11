@@ -16,10 +16,8 @@ if [[ -n "$1" ]]; then
     do_date=`date -d "1 day ago ${1}" "+%Y-%m-%d"`
 fi
 
-
 # 计算之前应该导入前一天的数据到dwd_preprocess_vehicle_data中
 sql="
-
 -- 为原始数据表添加分区,注意：项目首次启动的时候要先添加当天的分区
 alter table ${db}.ods_preprocess_vehicle_data add partition(dt='${tomorrow}');
 

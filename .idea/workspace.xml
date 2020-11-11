@@ -2,7 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/batterypack_exception_statistics.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_current_frequency.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/charge_mode_electricity_frequency.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perday.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/failure_statistics_perhour.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/impala即席查询sql.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_current_frequency.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ini_vol_cell_frequency_data.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/outlier_statistic_perweek.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/province_risk_statistics.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/risk_level_statistics.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classification_boxplot.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/vehicle_classify.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_boxplot_statistics.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perday.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/warning_statistics_perhour.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perday.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perday.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perhour.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/failure_statistics_perhour.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/outlier_statistic_perweek.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/outlier_statistic_perweek.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/province_risk_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/province_risk_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/risk_level_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/risk_level_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classification_boxplot.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/vehicle_classification_boxplot.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +103,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/adc-da/src/main/resources/测试脚本" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -100,11 +124,11 @@
       <recent name="com.adc.da.util" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\测试脚本" />
       <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\app" />
       <recent name="D:\workspace\adc-da-offline\adc-da\src\main\java\com\adc\da\util" />
       <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\util" />
       <recent name="D:\workspace\adc-da-offline\hiveFunctions\src\main\java\com\adc\da\algorithm" />
-      <recent name="D:\workspace\adc-da-offline\adc-da\src\main\resources\shell_scripts" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -232,7 +256,7 @@
       <workItem from="1604275408791" duration="21249000" />
       <workItem from="1604306543665" duration="87097000" />
       <workItem from="1604879815098" duration="10302000" />
-      <workItem from="1604891719833" duration="43316000" />
+      <workItem from="1604891719833" duration="54698000" />
     </task>
     <task id="LOCAL-00001" summary="充电压差扩大模型">
       <created>1601455317613</created>
@@ -521,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605001135464</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="文件合并排序完成">
+      <created>1605002947370</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1605002947370</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -585,10 +616,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="367" y="5" key="CommitChangelistDialog2" timestamp="1605001134555">
+    <state x="367" y="5" key="CommitChangelistDialog2" timestamp="1605002946682">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="367" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605001134555" />
+    <state x="367" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605002946682" />
     <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1604909692469">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -629,10 +660,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1604995044461" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1604994639571">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605053275762">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1604994639571" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605053275762" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -645,10 +676,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1605000887742">
+    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1605062981613">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605000887742" />
+    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605062981613" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1602817193395">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

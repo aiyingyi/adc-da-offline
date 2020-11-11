@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # 电池包数据离群统计
 
 # 1. 执行之前，执行数据导入脚本，将前一天的数据导入到dwd层
@@ -14,6 +15,7 @@ if [[ -n "$1" ]]; then
     startDate=`date  -d "7 days  ago ${1}" "+%Y-%m-%d %H:%M:%S"`
     endDate=`date  -d "1 days  ago ${1}" "+%Y-%m-%d %H:%M:%S"`
 fi
+
 
 sql="
 with

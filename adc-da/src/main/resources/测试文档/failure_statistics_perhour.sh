@@ -3,17 +3,13 @@
 db=warningplatform
 
 # 获取前一小时时间
-
-
 do_date=`date  "+%Y-%m-%d %H:%M:%S"`
-
 
 if [[ -n "$1" ]]; then
     do_date="$1"
 fi
 
 start_time=`date -d "1 hour ago ${do_date}" "+%Y-%m-%d %H:%M:%S"`
-
 day=`date -d "${start_time}" "+%Y-%m-%d"`
 
 # 1. 从es导入数据阶段

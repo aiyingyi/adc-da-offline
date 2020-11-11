@@ -13,7 +13,7 @@ do_date=`date -d "1 day ago" "+%Y-%m-%d %H:%M:%S"`
 
 
 if [[ -n "$1" ]]; then
-    do_date=`date -d "1 day ago ${1} "+%Y-%m-%d %H:%M:%S"`
+    do_date=`date -d "1 day ago ${1}" "+%Y-%m-%d %H:%M:%S"`
 fi
 
 # 计算之前应该导入前一天的数据到dwd_preprocess_vehicle_data中

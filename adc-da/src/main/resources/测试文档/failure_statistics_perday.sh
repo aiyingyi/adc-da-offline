@@ -2,11 +2,14 @@
 
 db=warningplatform
 
-
 start_time=`date -d "1 day ago" "+%Y-%m-%d %H:%M:%S"`
+
+
+if [[ -n "$1" ]]; then
+    start_time="$1"
+fi
+
 day=`date -d "${start_time}" "+%Y-%m-%d"`
-
-
 
 # 1. 从es导入数据阶段
 
