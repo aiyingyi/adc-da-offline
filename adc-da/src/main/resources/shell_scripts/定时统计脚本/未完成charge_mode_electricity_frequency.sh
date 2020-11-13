@@ -5,6 +5,8 @@ db=warningplatform
 # 计算充电方式，电量和频次计算
 
 
+#  时间戳需要变动
+
 # 充电开始，结束时间
 start_time=$1
 end_time=$2

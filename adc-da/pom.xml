@@ -11,12 +11,35 @@
 
     <artifactId>adc-da</artifactId>
 
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flink.version>1.11.2</flink.version>
+        <fastjson.version>1.2.47</fastjson.version>
         <scala.version>2.11</scala.version>
     </properties>
 
     <dependencies>
+
+
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_${scala.version}</artifactId>
+            <version>${flink.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-streaming-scala -->
         <dependency>
@@ -47,12 +70,6 @@
             <version>${flink.version}</version>
         </dependency>
 
-        <!--       添加flink table api 集成Hive的依赖-->
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-hive_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
 
 
 
@@ -79,26 +96,6 @@
             <artifactId>flink-csv</artifactId>
             <version>${flink.version}</version>
         </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-       <!-- <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.4.0</version>
-        </dependency>-->
 
         <dependency>
             <groupId>org.jvnet.hudson</groupId>
@@ -135,11 +132,11 @@
             <version>${flink.version}</version>
         </dependency>
 
-        <dependency>
+     <!--   <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-elasticsearch6_2.11</artifactId>
             <version>1.11.2</version>
-        </dependency>
+        </dependency>-->
 
 
         <dependency>
@@ -154,11 +151,6 @@
             <version>4.1.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.11_2.11</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
 
 
 

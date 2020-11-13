@@ -20,6 +20,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FileParse {
+
+
     public static double[] str2DouleArr(String str) {
         if (str == null) {
             return null;
@@ -121,9 +123,9 @@ public class FileParse {
                         data.put("startupStatus", "0");
                     }
                     if ("未充电状态".equals(data.get("chargeStatus"))) {
-                        data.put("chargeStatus", "1");
-                    } else {
                         data.put("chargeStatus", "0");
+                    } else {
+                        data.put("chargeStatus", "1");
                     }
                     if ("纯电".equals(data.get("runMode"))) {
                         data.put("runMode", "1");
@@ -131,18 +133,29 @@ public class FileParse {
                     if ("有效".equals(data.get("positionStatus"))) {
                         data.put("positionStatus", "1");
                     }
-                    if ("停车档".equals(data.get("gearStatus"))) {
-                        data.put("positionStatus", "1");
+                    if ("自动档".equals(data.get("gearStatus"))) {
+                        data.put("gearStatus", "1");
+                    } else {
+                        data.put("gearStatus", "1");
                     }
 
+                    data.put("soc", data.get("soc").toString().replaceAll("%", ""));
+                    /*
+                            LGJE13EA8HM612678
+                            LGJE13EA8HM612679
+                            LGJE13EA8HM612680
+                            LGJE13EA8HM612681
+                            LGJE13EA8HM612682
+                     */
+                    data.put("vin", "LGJE13EA8HM612679");
+
+                    String tmp = data.get("insulationResistance").toString().replaceAll("KΩ", "");
+                    data.put("insulationResistance", tmp);
                     double[] probeTemperature = str2DouleArr(data.get("probeTemperature").toString());
                     double[] cellVoltage = str2DouleArr(data.get("cellVoltage").toString());
-
                     data.put("probeTemperature", probeTemperature);
                     data.put("cellVoltage", cellVoltage);
-
                     return data;
-
                 }
             }).collect(Collectors.toList());
             return res;
@@ -153,17 +166,18 @@ public class FileParse {
     }
 
     public static void sendToKafak(File file, KafkaProducer<String, String> producer) {
-
         File[] fs = file.listFiles();
         for (File f : fs) {
             if (f.isDirectory())    //若是目录，则递归打印该目录下的文件
                 sendToKafak(f, producer);
             if (f.isFile()) {
+
                 List<Map<String, Object>> res = parseVehicleData(f);
-
-
                 res.forEach(record -> {
-                    producer.send(new ProducerRecord<String, String>("data", "0001", new JSONObject(record).toJSONString()));
+                    //System.out.println(new JSONObject(record).toJSONString());
+
+                    // 指定key,将同一辆车的数据发往同一个分区
+                    producer.send(new ProducerRecord<String, String>("data", record.get("vin").toString(), new JSONObject(record).toJSONString()));
                 });
             }
         }

@@ -43,7 +43,8 @@ public class SortFile2Kafka {
 
 
         // 获取文件路径
-        String sourcePath = "C:\\Users\\13099\\Desktop\\2";//args[0];
+        //String sourcePath = "C:\\Users\\13099\\Desktop\\2";//args[0];
+        String sourcePath = "C:\\Users\\13099\\Desktop\\2\\[LGJE13EA8HM612678]_2018-05-01_00-00-00_2018-05-01_23-59-59.xlsx";//args[0];
 
         // Todo 定义源文件和平台数据映射字段值    如何在用户配置后获取数据
         String[] attName = new String[]{"VIN", "报文时间", "车速", "车辆状态", "运行模式", "累计里程", "档位", "充电状态",
@@ -65,6 +66,8 @@ public class SortFile2Kafka {
             public Map<String, Object> map(Map<String, Object> data) throws Exception {
                 // 将时间转换成时间戳
                 data.put("msgTime", FileParse.dateToStamp(data.get("msgTime").toString()));
+                data.put("soc", data.get("soc").toString().replaceAll("%", ""));
+
                 // 对数据进行清洗
                 if ("启动".equals(data.get("startupStatus"))) {
                     data.put("startupStatus", "1");
@@ -72,9 +75,9 @@ public class SortFile2Kafka {
                     data.put("startupStatus", "0");
                 }
                 if ("未充电状态".equals(data.get("chargeStatus"))) {
-                    data.put("chargeStatus", "1");
-                } else {
                     data.put("chargeStatus", "0");
+                } else {
+                    data.put("chargeStatus", "1");
                 }
                 if ("纯电".equals(data.get("runMode"))) {
                     data.put("runMode", "1");
@@ -82,9 +85,14 @@ public class SortFile2Kafka {
                 if ("有效".equals(data.get("positionStatus"))) {
                     data.put("positionStatus", "1");
                 }
-                if ("停车档".equals(data.get("gearStatus"))) {
-                    data.put("positionStatus", "1");
+                if ("自动档".equals(data.get("gearStatus"))) {
+                    data.put("gearStatus", "1");
+                } else {
+                    data.put("gearStatus", "1");
                 }
+
+                String tmp = data.get("insulationResistance").toString().replaceAll("KΩ", "");
+                data.put("insulationResistance", tmp);
 
                 double[] probeTemperature = FileParse.str2DouleArr(data.get("probeTemperature").toString());
                 double[] cellVoltage = FileParse.str2DouleArr(data.get("cellVoltage").toString());
@@ -114,10 +122,10 @@ public class SortFile2Kafka {
 
 
         // 写入文件
-        //jsonStream.writeAsText("C:\\Users\\13099\\Desktop\\1.txt").setParallelism(1);
+        jsonStream.writeAsText("C:\\Users\\13099\\Desktop\\1.txt").setParallelism(1);
 
         // 不指定分区去写入kafka
-        jsonStream.addSink(new FlinkKafkaProducer010<>("kafka35:9092", "data", new SimpleStringSchema())).setParallelism(1);
+        //jsonStream.addSink(new FlinkKafkaProducer010<>("kafka35:9092", "data", new SimpleStringSchema())).setParallelism(1);
 
 
         // 根据vin码Hash去获得分区

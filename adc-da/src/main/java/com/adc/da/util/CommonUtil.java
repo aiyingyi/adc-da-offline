@@ -8,12 +8,31 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 /**
  * 通用工具类
  */
 public class CommonUtil {
+
+
+    /**
+     *
+     */
+    public static long dateToTimeStamp(String dt) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(dt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
+    }
 
     /**
      * byte[]转int
@@ -58,7 +77,7 @@ public class CommonUtil {
 
         //  设置状态后端与检查点
 
-        env.setStateBackend(new MemoryStateBackend());
+        /*env.setStateBackend(new MemoryStateBackend());
         //RocksDBStateBackend rocksDBStateBackend = new RocksDBStateBackend("hdfs://192.168.11.32:8020/flink-checkpoints", true);
         //rocksDBStateBackend.setDbStoragePath("file:///home/flink/rocksdb");
 
@@ -73,7 +92,7 @@ public class CommonUtil {
         env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
         env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500L);
         env.getCheckpointConfig().setTolerableCheckpointFailureNumber(3);
-        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 1000L));
+        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 1000L));*/
         return env;
     }
 

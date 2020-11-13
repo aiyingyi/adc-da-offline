@@ -28,6 +28,8 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
 
@@ -46,18 +48,18 @@ public class ChargeAndStartupMonitor {
 
         StreamExecutionEnvironment env = CommonUtil.initEnvironment();
 
-
         Properties shellConfig = CommonUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = CommonUtil.loadProperties("config/odsTopic.properties");
 
         // 设置并行度
-        //env.setParallelism(Integer.parseInt(shellConfig.get("monitor_parallelism").toString()));
+        env.setParallelism(Integer.parseInt(shellConfig.get("monitor_parallelism").toString()));
+
+        env.setParallelism(10);
 
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
-
         // 创建数据源,提取水位线并设置WaterMark的延时
-        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer011<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
+        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer<String>(odsDataConfig.getProperty("topic"), new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
             //KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
             @Override
             public OdsData map(String data) {
@@ -65,7 +67,7 @@ public class ChargeAndStartupMonitor {
                 JSONObject obj = JSON.parseObject(data, JSONObject.class);
                 double soc = Double.parseDouble(obj.getString("soc").substring(0, obj.getString("soc").length() - 1));
                 ods.setVin(obj.getString("vin"));
-                ods.setMsgTime(obj.getLong("msgTime"));
+                ods.setMsgTime(CommonUtil.dateToTimeStamp(obj.getString("msgTime")));
                 ods.setSpeed(obj.getDouble("speed"));
                 ods.setStartupStatus(obj.getString("startupStatus"));
                 ods.setGearStatus(obj.getString("gearStatus"));
@@ -82,7 +84,7 @@ public class ChargeAndStartupMonitor {
                 ods.setProvince(obj.getString("province"));
                 return ods;
             }
-        }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(6))
+        }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(60))
                 .withTimestampAssigner(new SerializableTimestampAssigner<OdsData>() {
                     @Override
                     public long extractTimestamp(OdsData odsData, long l) {
@@ -90,6 +92,10 @@ public class ChargeAndStartupMonitor {
                     }
                 })
         ).keyBy(data -> data.getVin());
+
+        dataStream.print();
+
+
 
         /**
          * 充电完成状态匹配
@@ -127,6 +133,8 @@ public class ChargeAndStartupMonitor {
             }
         });
 
+
+        chargeStream.print("charge----------------------------------");
 
         /**
          * 行驶工况匹配
@@ -181,8 +189,10 @@ public class ChargeAndStartupMonitor {
                 ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
                 // 绝缘电阻突降
                 ShellUtil.exec(conn, shellConfig.getProperty("resistance_reduce") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+
                 // bms采样异常
                 ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+
                 // 模组电压离群
                 ShellUtil.exec(conn, shellConfig.getProperty("module_vol_exception") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
 
@@ -221,6 +231,7 @@ public class ChargeAndStartupMonitor {
                 return false;
             }
         });
+
 
         // 获取静置状态的两端的两条数据
         SingleOutputStreamOperator<OdsData[]> staticStream = CEP.pattern(dataStream, staticPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
@@ -342,6 +353,8 @@ public class ChargeAndStartupMonitor {
                 ShellUtil.exec(conn, shellConfig.getProperty("capacity_anomaly") + " " + value.getVin() + " " + value.getChargeStartTime() + " " + value.getChargeEndTime() + " " + value.getDisChargeStartTime() + " " + value.getDisChargeEndTime());
             }
         });
+
+
         env.execute("ChargeAndStartupMonitor");
     }
 }
