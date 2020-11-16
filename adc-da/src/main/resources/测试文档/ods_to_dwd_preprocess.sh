@@ -4,7 +4,7 @@
 # 每天执行一次
 db=warningplatform
 
-
+# 修复分区  msck repair table table_name
 
 # 计算之前应该导入前一天的数据到dwd_preprocess_vehicle_data中
 sql="

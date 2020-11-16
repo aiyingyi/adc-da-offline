@@ -20,7 +20,7 @@ public class CommonUtil {
 
 
     /**
-     *
+     * 日期转成时间戳
      */
     public static long dateToTimeStamp(String dt) {
 
@@ -94,6 +94,10 @@ public class CommonUtil {
         env.getCheckpointConfig().setTolerableCheckpointFailureNumber(3);
         env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 1000L));*/
         return env;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(dateToTimeStamp("1525234121000"));
     }
 
 }

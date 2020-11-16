@@ -19,3 +19,5 @@ create function add_prefix as 'com.test.AddPrefix' using jar 'hdfs:///wh/test/ad
 HiveServer2 的 Java 堆栈大小（字节）
 调节HiveServer2内存大小
 2. UDF函数输入若是Array类型，使用ArrayList接收
+3. 修复分区
+msck repair table table_name
