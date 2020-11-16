@@ -86,7 +86,7 @@ select
   other_info.enterprise,
   vehicle_base.licensePlate,
   vehicle_base.battery_type,
-  '2',
+  '中风险',
   other_info.province,
   '${charge_start}',
   '${discharge_end}',

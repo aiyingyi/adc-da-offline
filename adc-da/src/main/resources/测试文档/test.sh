@@ -12,7 +12,6 @@ th2=40
 
 # 将脚本参数放入到数组里面，包含20个时间戳以及vin码
 _index=0
-_index=0
 for i in "$@"
 do
   args[_index]=$i

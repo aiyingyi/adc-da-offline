@@ -2,16 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/a.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/FileParse.java" beforeDir="false" afterPath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/FileParse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/Vehicle2Kafka.java" beforeDir="false" afterPath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/Vehicle2Kafka.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/battery_pack_attenuation.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/battery_pack_attenuation.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/bms_sampling.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/bms_sampling.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/capacity_anomaly.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/capacity_anomaly.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/cell_vol_fluctuation_highdiff.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/cell_vol_fluctuation_highdiff.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/cell_vol_highdis.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/cell_vol_highdis.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/开发文档/Hive设置" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/开发文档/Hive设置" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/未完成charge_vol_diff_expand_module.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/connection_impedance.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/connection_impedance.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/module_vol_exception.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/module_vol_exception.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/resistance_reduce.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/resistance_reduce.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/a.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/a.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -248,14 +250,8 @@
       <workItem from="1605234038481" duration="20263000" />
       <workItem from="1605259366019" duration="1846000" />
       <workItem from="1605484819848" duration="19730000" />
-      <workItem from="1605512141745" duration="11962000" />
-    </task>
-    <task id="LOCAL-00002" summary="充电压差扩大模型">
-      <created>1601457212297</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1601457212297</updated>
+      <workItem from="1605512141745" duration="12553000" />
+      <workItem from="1605537697478" duration="3661000" />
     </task>
     <task id="LOCAL-00003" summary="充电压差扩大模型">
       <created>1601457930116</created>
@@ -593,7 +589,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605510620289</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="时间戳修改">
+      <created>1605525735532</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1605525735532</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,30 +660,30 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605510619311">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605525734832">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605510619311" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605525734832" />
     <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1605237867662">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605237867662" />
-    <state width="1493" height="7" key="GridCell.Tab.0.bottom" timestamp="1605523517361">
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom" timestamp="1605537683298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="7" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605523517361" />
-    <state width="1493" height="7" key="GridCell.Tab.0.center" timestamp="1605523517361">
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605537683298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.center" timestamp="1605537683298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="7" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605523517361" />
-    <state width="1493" height="7" key="GridCell.Tab.0.left" timestamp="1605523517361">
+    <state width="1493" height="237" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605537683298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.left" timestamp="1605537683298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="7" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605523517361" />
-    <state width="1493" height="7" key="GridCell.Tab.0.right" timestamp="1605523517361">
+    <state width="1493" height="237" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605537683298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.right" timestamp="1605537683298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="7" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605523517361" />
+    <state width="1493" height="237" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605537683298" />
     <state width="1493" height="51" key="GridCell.Tab.1.bottom" timestamp="1605259342259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -701,10 +704,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605513662701" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605510633755">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605525749925">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605510633755" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605525749925" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

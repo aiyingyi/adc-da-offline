@@ -14,11 +14,15 @@ th2=40
 _index=0
 for i in "$@"
 do
-  args[_index]=$i
-  let _index++
+  if [ $_index -lt $[$#-1] ]
+  then
+    args[_index]=`date -d @$(($i/1000)) +'%Y-%m-%d %H:%M:%S'`
+    let _index++
+  else
+    vin=$i
+  fi
 done
 
-vin=${args[$[${#args[@]}-1]]}
 
 query_sql="
 select
@@ -68,7 +72,7 @@ charge_time as
     (
       select
         vin,
-        cast ((cast(charge_start_time as bigint)-cast('${1}' as bigint))/(1000*60*60*24) as int) as timeDiff
+        cast ((unix_timestamp(charge_start_time)-cast('${1}'/1000 as bigint))/(60*60*24) as int) as timeDiff
       from charge_info
     ) as tmp
   group by tmp.vin
@@ -84,7 +88,7 @@ charge_statistics as
     (select
         vin,
         collect_list(avg_vol_diff) as vol_diff,
-        collect_list(charge_start_time) as charge_start_time
+        collect_list(cast(unix_timestamp(charge_start_time)*1000 as string)) as charge_start_time
     from charge_info
     group by vin) as t1
   join charge_time as t2
@@ -117,7 +121,7 @@ select
   p.enterprise,
   b.licensePlate,
   b.battery_type,
-  '1',
+  '高风险',
   p.province,
   w.startTime,
   w.endTime,

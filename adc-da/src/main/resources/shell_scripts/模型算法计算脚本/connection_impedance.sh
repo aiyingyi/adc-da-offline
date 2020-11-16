@@ -8,8 +8,8 @@ rth1=8
 rth2=2
 # 脚本参数：vin,startTime,endTime
 vin=$1
-startTime=$2
-endTime=$3
+startTime=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+endTime=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 
 sql="
@@ -19,7 +19,7 @@ ods_data as    -- 从ods层解析数据
   select
     get_json_object(data,'$.vin') vin,
     get_json_object(data,'$.msgTime') msgTime,
-    cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100 soc,
+    cast (get_json_object(data,'$.soc') as double) soc,
     cast (get_json_object(data,'$.differenceCellVoltage') as double)*1000  differenceCellVoltage,
     cast (get_json_object(data,'$.totalCurrent') as double)  totalCurrent
   from ${db}.ods_preprocess_vehicle_data
@@ -70,13 +70,13 @@ select
   other_info.enterprise,
   vehicle_base.licensePlate,
   vehicle_base.battery_type,
-  '2',
+  '中风险',
   other_info.province,
   '${startTime}',
   '${endTime}',
   '连接阻抗大',
   '连接阻抗大',
-  null,
+  '1',
   null,
   null
 from  (select vin from res where iswarning = '1' ) as r

@@ -211,7 +211,7 @@ select
   c.enterprise,
   c.licensePlate,
   vehicle_base.battery_type,
-  '1',
+  '高风险',
   c.province,
   t.startTime,
   t.endTime,

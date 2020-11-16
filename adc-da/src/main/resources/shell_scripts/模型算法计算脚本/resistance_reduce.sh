@@ -6,8 +6,8 @@ db=warningplatform
 
 # 脚本参数：vin,startTime,endTime
 vin=$1
-startTime=$2
-endTime=$3
+startTime=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+endTime=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 th=300
 win=20
@@ -67,13 +67,13 @@ select
   other_info.enterprise,
   vehicle_base.licensePlate,
   vehicle_base.battery_type,
-  '2',
-  other_info.province,
+  '中风险',
+   other_info.province,
   '${startTime}',
   '${endTime}',
   '绝缘电阻突降',
   '绝缘电阻突降',
-  null,
+  '1',
   null,
   null
 from  (select vin from res where iswarning = '1' ) as r

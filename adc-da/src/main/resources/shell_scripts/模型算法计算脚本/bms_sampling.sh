@@ -74,7 +74,7 @@ select
   other_info.enterprise,
   vehicle_base.licensePlate,
   vehicle_base.battery_type,
-  '3',
+  '低风险',
   other_info.province,
   '${startTime}',
   '${endTime}',
