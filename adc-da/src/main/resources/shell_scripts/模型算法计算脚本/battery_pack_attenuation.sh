@@ -2,10 +2,13 @@
 
 db=warningplatform
 # 电池包衰减预警模型,充电完成而且soc增量大于40%,执行一次
-vin=$1
 
-start_time=$2
-end_time=$3
+vin=$1
+# 时间戳形式,将时间戳变成日期类型
+start_time=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+
+
+end_time=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 # soc以整数形式
 start_soc=$4
@@ -23,9 +26,9 @@ ods_data as
   select
       get_json_object(data,'$.vin') vin,
       get_json_object(data,'$.province') province,
-      cast(get_json_object(data,'$.msgTime') as bigint) msgTime,
+      cast(unix_timestamp(get_json_object(data,'$.msgTime')) as bigint) msgTime,
       cast(get_json_object(data,'$.totalCurrent') as double)  totalCurrent,
-      cast(substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100  soc
+      cast(get_json_object(data,'$.soc') as double)  soc
   from ${db}.ods_preprocess_vehicle_data
   where dt>=date_format('${start_time}','yyyy-MM-dd')
   and dt<=date_format('${end_time}','yyyy-MM-dd')      --根据日期分区查找数据
@@ -47,7 +50,7 @@ charge_electricity  as
 (
   select
     vin,
-    sum(timeDiff/(1000*60*60 ) * totalCurrent)/('${end_soc}'-'${start_soc}')  as chargeCapacity   -- 充电容量
+    sum(timeDiff/(60*60 ) * totalCurrent)/(${end_soc}-${start_soc})  as chargeCapacity   -- 充电容量
   from  charge_data
   group by vin
 ),
@@ -64,7 +67,7 @@ ini_data as
         chargeStart
       from ${db}.battery_attenuation_es
       where vin = '${vin}'
-      and chargeStart < cast('${start_time}' as bigint)
+      and chargeStart < '${start_time}'
       order by chargeStart asc
       limit 5) as tmp1
   group by tmp1.vin
@@ -111,8 +114,8 @@ first_charge as
 insert into table ${db}.battery_attenuation_es
 select
   ch.vin,
-  cast('${start_time}' as bigint),
-  cast('${end_time}' as bigint),
+  '${start_time}',
+  '${end_time}',
   cast('${odo}' as double),
   ch.chargeCapacity,
   ad.attenuation_value,

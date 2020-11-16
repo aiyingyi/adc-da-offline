@@ -5,11 +5,10 @@ db=warningplatform
 # 计算充电方式，电量和频次计算
 
 
-#  时间戳需要变动
-
+# 传过来的是毫秒的时间戳，需要将其转换成日期
 # 充电开始，结束时间
-start_time=$1
-end_time=$2
+start_time=`date -d @$(($1/1000)) +'%Y-%m-%d %H:%M:%S'`
+end_time=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
 vin=$3
 
 # 定义快充和慢充
@@ -54,7 +53,8 @@ preprocess_vehicle_data1 as
     maxCellVoltageNum,
     minCellVoltageNum,
     totalCurrent,
-    msgTime-lag(msgTime,1,msgTime)  over(partition by vin order by msgTime asc ) as timeDiff,  -- 获取时间差,第一行取0
+-- msgTime-lag(msgTime,1,msgTime)  over(partition by vin order by msgTime asc ) as timeDiff,
+    unix_timestamp(msgTime)-lag(unix_timestamp(msgTime),1,unix_timestamp(msgTime))  over(partition by vin order by msgTime asc ) as timeDiff,  -- 获取时间差,第一行取0
     min(soc) over(partition by vin) as chargeStartSOC,  -- 开始SOC
     max(soc) over(partition by vin) as chargeEndSOC     -- 结束SOC
   from preprocess_vehicle_data0
@@ -65,7 +65,7 @@ charge_mode_electricity  as
   select
     vin,
     case when avg(totalCurrent)>= 30  or max(totalCurrent) >=70 then '${quickcharge}' else '${slowcharge}' end as  chargeType,
-    sum(timeDiff/(1000*60*60.0 ) * totalCurrent) as chargeElectricity
+    sum(timeDiff/(60*60.0 ) * totalCurrent) as chargeElectricity
   from  preprocess_vehicle_data1
   group by vin
 ),
@@ -122,7 +122,7 @@ select
     data1.vin,
     base.licensePlate,
     date_format('${start_time}','yyyy-MM-dd HH:mm:ss'),
-    date_format('${end_time},'yyyy-MM-dd HH:mm:ss'),
+    date_format('${end_time}','yyyy-MM-dd HH:mm:ss'),
     data1.chargeStartSOC,
     data1.chargeEndSOC,
     round(cme.chargeElectricity,1),  -- 保留一位小数

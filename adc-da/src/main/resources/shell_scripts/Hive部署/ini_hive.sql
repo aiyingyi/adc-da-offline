@@ -605,8 +605,8 @@ create external table capacity_anomaly_es
 create external table battery_attenuation_es
 (
     vin              string,
-    chargeStart      bigint,
-    chargeEnd        bigint,
+    chargeStart      String,
+    chargeEnd        String,
     odo              double,
     chargeCapacity   double,
     attenuationValue STRING,

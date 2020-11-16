@@ -64,7 +64,6 @@ select
     cast (get_json_object(data,'$.differenceTemperature') as double),
     dt
 from ${db}.ods_preprocess_vehicle_data
-where dt > '2018-05-01'
 "
 hive -e  "${sql}"
 

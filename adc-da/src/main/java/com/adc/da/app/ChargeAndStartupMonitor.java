@@ -144,20 +144,16 @@ public class ChargeAndStartupMonitor {
         Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() > 0 && "1".equals(data.getStartupStatus()) ? true : false;
+                return data.getSpeed() > 0 || "1".equals(data.getStartupStatus()) ? true : false;
             }
         }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-
-
                 OdsData run = context.getEventsForPattern("run").iterator().next();
-
-                if((run.getMsgTime()-data.getMsgTime()/(1000*60*3600.0)) >= 2){
-
+                if ((run.getMsgTime() - data.getMsgTime() / (1000 * 60 * 3600.0)) >= 2) {
+                    return data.getSpeed() <= 0 || !("1".equals(data.getStartupStatus())) ? true : false;
                 }
-
-                return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus()))? true : false;
+                return false;
             }
         }).times(1);
 

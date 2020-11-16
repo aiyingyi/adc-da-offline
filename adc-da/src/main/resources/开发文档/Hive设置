@@ -21,3 +21,11 @@ HiveServer2 的 Java 堆栈大小（字节）
 2. UDF函数输入若是Array类型，使用ArrayList接收
 3. 修复分区
 msck repair table table_name
+
+
+将时间戳转换成时间
+4. hive  select from_unixtime(cast('1525109352000'/1000 as bigint),'yyyy-MM-dd HH:mm:ss')
+   hive  select unix_timestamp('2015-09-07 02:46:43')  转换成秒
+5. shell  t=$(($1/1000))
+6. shell  date -d @1545300015   +'%Y-%m-%d %H:%M:%S'
+   shell  date -d @1525148486000   +'%Y-%m-%d %H:%M:%S'

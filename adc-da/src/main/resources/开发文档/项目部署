@@ -3,8 +3,10 @@
 
 
 
-flink 程序提交
+3.flink 程序提交
 bin/flink  run  -m yarn-cluster -c com.adc.da.app.ChargeAndStartupMonitor  /opt/app/adc-da-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-
+4.es设置
+PUT /_all/_settings
+{ "index.max_result_window" :"1000000"}
 

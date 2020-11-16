@@ -3,7 +3,6 @@ package com.adc.da.app;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.collections4.Put;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 
 public class FileParse {
 
-
     public static double[] str2DouleArr(String str) {
         if (str == null) {
             return null;
@@ -35,7 +33,6 @@ public class FileParse {
         }
         return res;
     }
-
 
     /**
      * 将日期转换成时间戳
@@ -147,7 +144,7 @@ public class FileParse {
                             LGJE13EA8HM612681
                             LGJE13EA8HM612682
                      */
-                    data.put("vin", "LGJE13EA8HM612679");
+                    data.put("vin", "LGJE13EA8HM612678");
 
                     String tmp = data.get("insulationResistance").toString().replaceAll("KΩ", "");
                     data.put("insulationResistance", tmp);
