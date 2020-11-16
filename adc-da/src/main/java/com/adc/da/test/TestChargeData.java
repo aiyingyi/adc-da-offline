@@ -50,7 +50,7 @@ public class TestChargeData {
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
         // 创建数据源,提取水位线并设置WaterMark的延时
-        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer<String>("data", new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
+        KeyedStream<OdsData, String> dataStream = env.addSource(new FlinkKafkaConsumer<String>("computeResult", new SimpleStringSchema(), odsDataConfig)).map(new MapFunction<String, OdsData>() {
             //KeyedStream<OdsData, String> dataStream = env.socketTextStream("hadoop32", 7777).map(new MapFunction<String, OdsData>() {
             @Override
             public OdsData map(String data) {
@@ -58,7 +58,8 @@ public class TestChargeData {
                 JSONObject obj = JSON.parseObject(data, JSONObject.class);
                 double soc = Double.parseDouble(obj.getString("soc"));
                 ods.setVin(obj.getString("vin"));
-                ods.setMsgTime(Long.parseLong(obj.getString("msgTime")));
+
+                ods.setMsgTime(CommonUtil.dateToTimeStamp(obj.getString("msgTime")));
                 //ods.setMsgTime(Long.parseLong(obj.getString("msgTime")));
                 ods.setSpeed(obj.getDouble("speed"));
                 ods.setStartupStatus(obj.getString("startupStatus"));
@@ -126,7 +127,7 @@ public class TestChargeData {
             }
         });
 
-        //chargeStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("charge----------------------------------");
+        chargeStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("charge----------------------------------");
 
 
        /* Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
@@ -176,7 +177,7 @@ public class TestChargeData {
             }
         });
 
-        runStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("run----------------------------------");
+        //runStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("run----------------------------------");
 
         /* *//**
          * 充电完成状态匹配

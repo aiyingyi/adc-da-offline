@@ -97,7 +97,7 @@ public class CommonUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(dateToTimeStamp("1525234121000"));
+        System.out.println(dateToTimeStamp("2020-11-12 14:25:24"));
     }
 
 }
