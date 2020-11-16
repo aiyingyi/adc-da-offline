@@ -6,8 +6,8 @@ db=warningplatform
 
 # 脚本参数：vin,startTime,endTime
 vin=$1
-startTime=$2
-endTime=$3
+startTime=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+endTime=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 th1=0.16666
 
 

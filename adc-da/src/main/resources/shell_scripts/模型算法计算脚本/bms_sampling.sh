@@ -6,8 +6,8 @@ db=warningplatform
 
 # 脚本参数：vin,startTime,endTime
 vin=$1
-startTime=$2
-endTime=$3
+startTime=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+endTime=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 # 不需要传入工况参数，根据平均压差判断是充电还是放电
 
@@ -43,8 +43,9 @@ other_info as
         get_json_object(data,'$.enterprise') as enterprise
   from ${db}.ods_preprocess_vehicle_data
   where dt = date_format('${startTime}','yyyy-MM-dd')
-  and get_json_object(data,'$.msgTime') = '${startTime}'
   and get_json_object(data,'$.vin') = '${vin}'
+  and get_json_object(data,'$.msgTime') = '${startTime}'
+
 ),
 -- 获取车辆的基础信息
 vehicle_base as

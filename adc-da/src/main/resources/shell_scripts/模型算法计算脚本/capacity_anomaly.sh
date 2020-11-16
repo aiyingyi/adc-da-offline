@@ -6,10 +6,10 @@ db=warningplatform
 # vin,充放电时间端点
 
 vin=$1
-charge_start=$2
-charge_end=$3
-discharge_start=$4
-discharge_end=$5
+charge_start=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
+charge_end=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
+discharge_start=`date -d @$(($4/1000)) +'%Y-%m-%d %H:%M:%S'`
+discharge_end=`date -d @$(($5/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 # 计算电芯的个数
 th1=3
@@ -100,7 +100,7 @@ join (
    select
         get_json_object(data,'$.vin') vin,
         get_json_object(data,'$.province') province,
-        get_json_object(data,'$.vehicleType') as vehicleType
+        get_json_object(data,'$.vehicleType') as vehicleType,
         get_json_object(data,'$.enterprise') as enterprise
   from ${db}.ods_preprocess_vehicle_data
   where dt = date_format('${discharge_start}','yyyy-MM-dd')

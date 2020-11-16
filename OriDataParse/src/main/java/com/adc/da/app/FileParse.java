@@ -171,6 +171,8 @@ public class FileParse {
 
                 List<Map<String, Object>> res = parseVehicleData(f);
                 res.forEach(record -> {
+
+
                     //System.out.println(new JSONObject(record).toJSONString());
 
                     // 指定key,将同一辆车的数据发往同一个分区

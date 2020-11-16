@@ -9,7 +9,7 @@ hive.exec.dynamic.partition=true
 3.自定义udf 并注册永久函数
 将jar包上传到hdfs
 create function add_prefix as 'com.test.AddPrefix' using jar 'hdfs:///wh/test/addPrefix.jar'
-、
+
 
 
 
