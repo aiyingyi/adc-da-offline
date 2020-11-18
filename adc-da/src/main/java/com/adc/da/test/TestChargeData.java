@@ -1,6 +1,7 @@
 package com.adc.da.test;
 
 import com.adc.da.bean.OdsData;
+import com.adc.da.functions.ChargeSinkFunction;
 import com.adc.da.functions.EventFilterFunction;
 import com.adc.da.util.CommonUtil;
 import com.alibaba.fastjson.JSON;
@@ -29,7 +30,6 @@ import java.util.Properties;
 
 /*import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;*/
-
 
 /**
  * 监控充电,放电,充放电循环,静置状态和行驶状态结束,然后触发计算
@@ -75,7 +75,6 @@ public class TestChargeData {
                 ods.setEnterprise(obj.getString("enterprise"));
                 ods.setLicensePlate(obj.getString("licensePlate"));
                 ods.setProvince(obj.getString("province"));
-
                 return ods;
             }
         }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(120))
@@ -291,7 +290,13 @@ public class TestChargeData {
 
         chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
 
-        *//**
+        */
+
+
+        chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
+
+
+        /**
          * 电芯自放电大模型算法 判断车辆是否静置半天
          *//*
         Pattern<OdsData, OdsData> staticPattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {

@@ -34,7 +34,7 @@ preprocess_vehicle_data0 as
       get_json_object(data,'$.vehicleType') vehicleType,
       get_json_object(data,'$.enterprise') enterprise,
       cast(get_json_object(data,'$.totalCurrent') as double)  totalCurrent,
-      cast(substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100  soc
+      cast(get_json_object(data,'$.soc') as double)  soc
   from ${db}.ods_preprocess_vehicle_data where dt>=date_format('${start_time}','yyyy-MM-dd')
   and dt<=date_format('${end_time}','yyyy-MM-dd')      --根据日期分区查找数据
   and get_json_object(data,'$.msgTime') >= '${start_time}'
@@ -64,7 +64,8 @@ charge_mode_electricity  as
 (
   select
     vin,
-    case when avg(totalCurrent)>= 30  or max(totalCurrent) >=70 then '${quickcharge}' else '${slowcharge}' end as  chargeType,
+    -- case when avg(totalCurrent)>= 30  or max(totalCurrent) >=70 then '${quickcharge}' else '${slowcharge}' end as  chargeType,
+    case when avg(totalCurrent)>= 30  or max(totalCurrent) >=70 then '快充' else '慢充' end as  chargeType,
     sum(timeDiff/(60*60.0 ) * totalCurrent) as chargeElectricity
   from  preprocess_vehicle_data1
   group by vin
@@ -125,7 +126,7 @@ select
     date_format('${end_time}','yyyy-MM-dd HH:mm:ss'),
     data1.chargeStartSOC,
     data1.chargeEndSOC,
-    round(cme.chargeElectricity,1),  -- 保留一位小数
+    abs(round(cme.chargeElectricity,1)),  -- 保留一位小数
     cme.chargeType,
     fre.max_frequency,
     fre.min_frequency
