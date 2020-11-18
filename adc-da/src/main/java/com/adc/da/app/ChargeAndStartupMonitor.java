@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFilterFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -107,7 +108,7 @@ public class ChargeAndStartupMonitor {
         }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return "0".equals(data.getChargeStatus());
+                return "2".equals(data.getChargeStatus());
             }
         }).times(1);
 
@@ -129,15 +130,19 @@ public class ChargeAndStartupMonitor {
             @Override
             public void open(Configuration parameters) throws Exception {
                 state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("chargeState", OdsData[].class));
+                //    过滤掉极短时间的充电
+            }
+        }).filter(new FilterFunction<OdsData[]>() {
+            @Override
+            public boolean filter(OdsData[] odsData) throws Exception {
+                if (odsData[1].getMsgTime() - odsData[0].getMsgTime() > 120000) {
+                    return true;
+                }
+                return false;
             }
         });
 
-
-        chargeStream.print("charge----------------------------------");
-
-
         // todo  状态检查更改
-
         /**
          * 行驶工况匹配
          */

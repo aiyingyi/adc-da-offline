@@ -2,7 +2,6 @@ package com.adc.da.test;
 
 import ch.ethz.ssh2.Connection;
 import com.adc.da.bean.OdsData;
-import com.adc.da.functions.ChargeSinkFunction;
 import com.adc.da.functions.EventFilterFunction;
 import com.adc.da.util.CommonUtil;
 import com.adc.da.util.ShellUtil;
@@ -10,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -45,7 +45,6 @@ public class ConnectionImpedance {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = CommonUtil.initEnvironment();
-
         Properties shellConfig = CommonUtil.loadProperties("config/shell.properties");
         Properties odsDataConfig = CommonUtil.loadProperties("config/odsTopic.properties");
 
@@ -94,6 +93,19 @@ public class ConnectionImpedance {
         ).keyBy(data -> data.getVin());
 
 
+       /* Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) {
+                return ("1".equals(data.getChargeStatus()) && data.getSoc() < 0);
+            }
+        }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
+                return ("1".equals(data.getChargeStatus()) && data.getSoc() >= 0) || "0".equals(data.getChargeStatus());
+            }
+        }).times(1);*/
+
+
         Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
@@ -102,9 +114,10 @@ public class ConnectionImpedance {
         }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return "0".equals(data.getChargeStatus());
+                return "2".equals(data.getChargeStatus());
             }
         }).times(1);
+
 
         //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
         //  cep 会根据key进行匹配，不同的key的数据不会相互影响
@@ -126,32 +139,32 @@ public class ConnectionImpedance {
                 state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("chargeState", OdsData[].class));
             }
         });
-        //chargeStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("charge------");
-        chargeStream.map(new RichMapFunction<OdsData[], String>() {
 
+
+        SingleOutputStreamOperator<OdsData[]> monStream = chargeStream.filter(new FilterFunction<OdsData[]>() {
+            @Override
+            public boolean filter(OdsData[] odsData) throws Exception {
+                if (odsData[1].getMsgTime() - odsData[0].getMsgTime() > 120000) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        //chargeStream.map(ods -> ods[0].getMsgTime() + " " + ods[1].getMsgTime()).print("-------");
+
+        monStream.keyBy(data -> data[0].getVin()).addSink(new RichSinkFunction<OdsData[]>() {
+
+            Connection conn = null;
             SimpleDateFormat sdf = null;
 
             @Override
             public void open(Configuration parameters) throws Exception {
+
                 sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            }
-
-            @Override
-            public String map(OdsData[] odsData) throws Exception {
-                return sdf.format(odsData[0].getMsgTime()) + "--" + sdf.format(odsData[1].getMsgTime());
-            }
-        }).print();
-
-        chargeStream.map(ods -> ods[0].getMsgTime() + " " + ods[1].getMsgTime()).print("-------");
-
-        chargeStream.keyBy(data -> data[0].getVin()).addSink(new RichSinkFunction<OdsData[]>() {
-
-            Connection conn = null;
-
-            @Override
-            public void open(Configuration parameters) throws Exception {
-
                 conn = ShellUtil.getConnection(shellConfig.getProperty("userName"), shellConfig.getProperty("passWord"), shellConfig.getProperty("ip"), Integer.parseInt(shellConfig.getProperty("port")));
+
             }
 
             @Override
@@ -163,8 +176,15 @@ public class ConnectionImpedance {
 
             @Override
             public void invoke(OdsData[] value, SinkFunction.Context context) throws Exception {
-                // 1. 执行充电方式，电量以及最大最低电压单体频次脚本
-                ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+                //System.out.println(sdf.format(value[0].getMsgTime()) + "--" + sdf.format(value[1].getMsgTime()));
+                //ShellUtil.exec(conn, shellConfig.getProperty("connection_impedance") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + (value[1].getMsgTime() - 20000));
+                //ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
+
+                if (value[1].getSoc() - value[0].getSoc() > 40) {
+                    System.out.println(sdf.format(value[0].getMsgTime()) + "--" + sdf.format(value[1].getMsgTime()));
+                    ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
+                }
+
             }
         });
         env.execute("ChargeAndStartupMonitor222");

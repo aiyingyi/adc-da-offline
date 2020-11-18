@@ -20,11 +20,11 @@ public class Vehicle2Kafka {
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        String[] str = new String[]{"{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612678\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59415\",\"batteryType\":\"三元电池\",\"company\":\"ZQY11101\"}",
-                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612679\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59416\",\"batteryType\":\"三元电池\",\"company\":\"ZQY11101\"}",
-                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612680\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59417\",\"batteryType\":\"三元电池\",\"company\":\"ZQY11101\"}",
-                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612681\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59418\",\"batteryType\":\"三元电池\",\"company\":\"ZQY11102\"}",
-                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612682\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59419\",\"batteryType\":\"三元电池\",\"company\":\"ZQY11102\"}",
+        String[] str = new String[]{"{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612678\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59415\",\"batteryType\":\"三元电池\",\"enterprise\":\"CLEYQP8C27\"}",
+                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612679\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59416\",\"batteryType\":\"三元电池\",\"enterprise\":\"CLEYQP8C27\"}",
+                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612680\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59417\",\"batteryType\":\"三元电池\",\"enterprise\":\"CLEYQP8C27\"}",
+                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612681\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59418\",\"batteryType\":\"三元电池\",\"enterprise\":\"CLEYQP8C27\"}",
+                "{\"province\":\"天津市\",\"vin\":\"LGJE13EA8HM612682\",\"vehicleType\": \"EU001\",\"unit\": \"私人\" ,\"licensePlate\":\"津AF59419\",\"batteryType\":\"三元电池\",\"enterprise\":\"CLEYQP8C27\"}",
         };
 
         for (String s : str) {

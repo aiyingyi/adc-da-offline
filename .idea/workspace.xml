@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="时间戳修改">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ConnectionImpedance.java" afterDir="false" />
+    <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeComputeResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ChargeMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/FileParse.java" beforeDir="false" afterPath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/FileParse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/Vehicle2Kafka.java" beforeDir="false" afterPath="$PROJECT_DIR$/OriDataParse/src/main/java/com/adc/da/app/Vehicle2Kafka.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ConnectionImpedance.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ConnectionImpedance.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/shell.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/shell.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/charge_mode_electricity_frequency.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/charge_mode_electricity_frequency.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/未完成charge_vol_diff_expand_module.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/a.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/a.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/开发文档/es抽稀" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/开发文档/es抽稀" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,19 +137,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CommonUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.util.CommonUtil" />
-      <module name="adc-da" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.adc.da.util.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ConnectionImpedance" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.adc.da.test.ConnectionImpedance" />
       <module name="adc-da" />
@@ -166,7 +155,7 @@
       <module name="OriDataParse" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.adc.da.test.*" />
+          <option name="PATTERN" value="com.adc.da.app.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -174,12 +163,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestChargeData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.TestChargeData" />
-      <module name="adc-da" />
+    <configuration name="PlatformAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.algorithm.PlatformAlgorithm" />
+      <module name="hiveFunctions" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.adc.da.test.*" />
+          <option name="PATTERN" value="com.adc.da.algorithm.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Vehicle2Kafka" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.app.Vehicle2Kafka" />
+      <module name="OriDataParse" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.app.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -190,10 +192,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.ConnectionImpedance" />
-        <item itemvalue="Application.ChargeMode" />
-        <item itemvalue="Application.TestChargeData" />
-        <item itemvalue="Application.CommonUtil" />
+        <item itemvalue="Application.PlatformAlgorithm" />
         <item itemvalue="Application.FileParse" />
+        <item itemvalue="Application.Vehicle2Kafka" />
+        <item itemvalue="Application.ChargeMode" />
       </list>
     </recent_temporary>
   </component>
@@ -251,14 +253,7 @@
       <workItem from="1605537697478" duration="5734000" />
       <workItem from="1605571123776" duration="8474000" />
       <workItem from="1605582319242" duration="12413000" />
-      <workItem from="1605619642433" duration="3925000" />
-    </task>
-    <task id="LOCAL-00005" summary="充电压差扩大模型完成">
-      <created>1602212297944</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1602212297944</updated>
+      <workItem from="1605619642433" duration="33436000" />
     </task>
     <task id="LOCAL-00006" summary="充电压差扩大模型完成">
       <created>1602237693309</created>
@@ -596,7 +591,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605543368062</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="时间戳修改">
+      <created>1605658601754</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1605658601754</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -632,10 +634,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="时间戳修改" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="361" y="74" key="#Project_Structure" timestamp="1604914627298">
+    <state x="361" y="74" key="#Project_Structure" timestamp="1605685585468">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="74" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1604914627298" />
+    <state x="361" y="74" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1605685585468" />
     <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603256812163">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -660,30 +662,30 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605543393701">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605658600824">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605543393701" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605658600824" />
     <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1605237867662">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605237867662" />
-    <state width="1493" height="198" key="GridCell.Tab.0.bottom" timestamp="1605598158665">
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1605688975089">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="198" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605598158665" />
-    <state width="1493" height="198" key="GridCell.Tab.0.center" timestamp="1605598158665">
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605688975089" />
+    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1605688975089">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="198" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605598158665" />
-    <state width="1493" height="198" key="GridCell.Tab.0.left" timestamp="1605598158665">
+    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605688975089" />
+    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1605688975089">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="198" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605598158665" />
-    <state width="1493" height="198" key="GridCell.Tab.0.right" timestamp="1605598158665">
+    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605688975089" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1605688975089">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="198" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605598158665" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605688975089" />
     <state width="1493" height="51" key="GridCell.Tab.1.bottom" timestamp="1605259342259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -704,10 +706,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605513662701" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605543402261">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605658614584">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605543402261" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605658614584" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -720,13 +722,13 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1605580326053">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1605693662649">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605580326053" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605508800504">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605693662649" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605677683034">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1605508800504" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1605677683034" />
   </component>
 </project>

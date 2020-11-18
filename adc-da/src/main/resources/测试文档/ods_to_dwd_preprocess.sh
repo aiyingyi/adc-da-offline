@@ -59,7 +59,7 @@ select
     get_json_object(data,'$.vehicleType'),
     get_json_object(data,'$.enterprise'),
     cast (get_json_object(data,'$.totalCurrent') as double),
-    cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100,
+    cast (get_json_object(data,'$.soc') as double),,
     cast (get_json_object(data,'$.totalVoltage') as double),
     cast (get_json_object(data,'$.differenceTemperature') as double),
     dt

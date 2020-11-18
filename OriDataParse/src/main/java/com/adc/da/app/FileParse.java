@@ -121,9 +121,12 @@ public class FileParse {
                     }
                     if ("未充电状态".equals(data.get("chargeStatus"))) {
                         data.put("chargeStatus", "0");
-                    } else {
+                    } else if("充电完成".equals(data.get("chargeStatus"))){
+                        data.put("chargeStatus", "2");
+                    }else {
                         data.put("chargeStatus", "1");
                     }
+
                     if ("纯电".equals(data.get("runMode"))) {
                         data.put("runMode", "1");
                     }

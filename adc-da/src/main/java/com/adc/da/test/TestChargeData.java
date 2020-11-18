@@ -126,20 +126,9 @@ public class TestChargeData {
             }
         });
 
-        chargeStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("charge----------------------------------");
 
+        //chargeStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("charge----------------------------------");
 
-       /* Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() > 0 && "1".equals(data.getStartupStatus()) ? true : false;
-            }
-        }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
-            }
-        }).times(1);*/
 
         Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
             @Override
@@ -149,17 +138,14 @@ public class TestChargeData {
         }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-
-                OdsData run = context.getEventsForPattern("run").iterator().next();
-                if ((run.getMsgTime() - data.getMsgTime() / (1000 * 60 * 3600.0)) >= 2) {
-                    return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
-                }
                 return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
             }
         }).times(1);
 
-        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
-        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
+
+
+
+
         SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
             @Override
             public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
@@ -175,6 +161,49 @@ public class TestChargeData {
                 state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
             }
         });
+
+
+
+
+
+
+
+
+
+       /* Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) {
+                return data.getSpeed() > 0 && "1".equals(data.getStartupStatus()) ? true : false;
+            }
+        }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
+            @Override
+            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
+
+                OdsData run = context.getEventsForPattern("run").iterator().next();
+                if ((run.getMsgTime() - data.getMsgTime() / (1000 * 60 * 3600.0)) >= 2) {
+                    return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
+                }
+                return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
+            }
+        }).times(1);*/
+
+        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
+        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
+       /* SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
+            @Override
+            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
+                List<OdsData> runList = map.get("run");
+                OdsData o1 = runList.get(0);
+                OdsData o2 = runList.get(runList.size() - 1);
+                return new OdsData[]{o1, o2};
+            }
+            // 将同一行驶过程中的其他匹配给过滤掉，只保留第一条数据到最后一条数据的匹配
+        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
+            @Override
+            public void open(Configuration parameters) throws Exception {
+                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
+            }
+        });*/
 
         //runStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("run----------------------------------");
 

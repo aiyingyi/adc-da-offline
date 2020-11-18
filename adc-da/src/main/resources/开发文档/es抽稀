@@ -68,3 +68,14 @@ GET his_vehicle_data_20200913/_search
     }
 }
 
+
+
+--  更新字段
+
+POST latest_vehicle_data/latest_vehicle_data/_update_by_query
+{
+  "script": {
+    "lang": "painless",
+    "inline": "if (ctx._source.enterprise== null) {ctx._source.enterprise= 'CLEYQP8C27'}"
+  }
+}
