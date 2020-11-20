@@ -1773,6 +1773,7 @@ public class MatlabUtil {
         Arrays.sort(value);
         double maxValue = MatlabUtil.max(value);   /* 获取数组最大值*/
         double[][] result = new double[(int) maxValue][3];   /* 定义返回结果*/
+        System.out.println(result.length+"-----------------");
         int valueLength = value.length;  /* 获取数组长度*/
         for (int i = 1; ; i++) {
             int count = 0;  /* 数组出现的频数*/
@@ -1783,6 +1784,7 @@ public class MatlabUtil {
                     if (count > 0) break;
                 }
             }
+            System.out.println(i-1);
             result[i - 1][0] = i;   /* value数据值*/
             if (count > 0) {        /* value数据出现时*/
                 result[i - 1][1] = count;                                             /* value数据出现的频次*/
@@ -1796,9 +1798,7 @@ public class MatlabUtil {
             }
         }
         return result;
-
     }
-
 
     /**
      * 统计数组的值、频数、频率
