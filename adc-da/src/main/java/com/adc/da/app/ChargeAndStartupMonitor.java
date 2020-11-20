@@ -83,6 +83,7 @@ public class ChargeAndStartupMonitor {
                 ods.setEnterprise(obj.getString("enterprise"));
                 ods.setLicensePlate(obj.getString("licensePlate"));
                 ods.setProvince(obj.getString("province"));
+                ods.setTotalCurrent(obj.getDouble("totalCurrent"));
                 return ods;
             }
         }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(60))
@@ -94,7 +95,6 @@ public class ChargeAndStartupMonitor {
                 })
         ).keyBy(data -> data.getVin());
 
-        dataStream.print();
 
 
         /**
@@ -103,7 +103,7 @@ public class ChargeAndStartupMonitor {
         Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-                return "1".equals(data.getChargeStatus());
+                return ("1".equals(data.getChargeStatus())) && (data.getTotalCurrent() < 0 );
             }
         }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
             @Override

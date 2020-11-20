@@ -35,7 +35,6 @@ public class Vehicle2Kafka {
             //System.out.println(s);
         }
 
-
         producer.close();
 
     }

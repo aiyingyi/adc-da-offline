@@ -25,6 +25,8 @@ public class OdsData {
     private String licensePlate;
     private String province;
 
+    private double totalCurrent;
+
 
     @Override
     public String toString() {
@@ -42,6 +44,7 @@ public class OdsData {
                 ", enterprise='" + enterprise + '\'' +
                 ", licensePlate='" + licensePlate + '\'' +
                 ", province='" + province + '\'' +
+                ", totalCurrent=" + totalCurrent +
                 '}';
     }
 }

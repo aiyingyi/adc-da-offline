@@ -121,22 +121,25 @@ public class FileParse {
                     }
                     if ("未充电状态".equals(data.get("chargeStatus"))) {
                         data.put("chargeStatus", "0");
-                    } else if("充电完成".equals(data.get("chargeStatus"))){
+                    } else if ("充电完成".equals(data.get("chargeStatus"))) {
                         data.put("chargeStatus", "2");
-                    }else {
+                    } else if ("停车充电".equals(data.get("chargeStatus"))) {
                         data.put("chargeStatus", "1");
+                    } else if ("异常".equals(data.get("chargeStatus"))) {
+                        data.put("chargeStatus", "3");  // 发生异常
                     }
+
 
                     if ("纯电".equals(data.get("runMode"))) {
                         data.put("runMode", "1");
+                    } else {
+                        data.put("runMode", "0");
                     }
+
                     if ("有效".equals(data.get("positionStatus"))) {
                         data.put("positionStatus", "1");
-                    }
-                    if ("自动档".equals(data.get("gearStatus"))) {
-                        data.put("gearStatus", "1");
                     } else {
-                        data.put("gearStatus", "1");
+                        data.put("positionStatus", "0");
                     }
 
                     data.put("soc", data.get("soc").toString().replaceAll("%", ""));
@@ -153,8 +156,10 @@ public class FileParse {
                     data.put("insulationResistance", tmp);
                     double[] probeTemperature = str2DouleArr(data.get("probeTemperature").toString());
                     double[] cellVoltage = str2DouleArr(data.get("cellVoltage").toString());
+
                     data.put("probeTemperature", probeTemperature);
                     data.put("cellVoltage", cellVoltage);
+
                     return data;
                 }
             }).collect(Collectors.toList());
@@ -165,19 +170,16 @@ public class FileParse {
         return null;
     }
 
+
     public static void sendToKafak(File file, KafkaProducer<String, String> producer) {
         File[] fs = file.listFiles();
         for (File f : fs) {
             if (f.isDirectory())    //若是目录，则递归打印该目录下的文件
                 sendToKafak(f, producer);
             if (f.isFile()) {
-
                 List<Map<String, Object>> res = parseVehicleData(f);
                 res.forEach(record -> {
-
-
                     //System.out.println(new JSONObject(record).toJSONString());
-
                     // 指定key,将同一辆车的数据发往同一个分区
                     producer.send(new ProducerRecord<String, String>("data", record.get("vin").toString(), new JSONObject(record).toJSONString()));
                 });

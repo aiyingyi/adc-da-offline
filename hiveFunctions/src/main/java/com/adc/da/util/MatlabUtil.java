@@ -1337,6 +1337,8 @@ public class MatlabUtil {
      */
     public static double[] matrixStartStop(double[] value, int start, int stop) {
 
+        System.out.println(start + " " + stop);
+        System.out.println(value.length);
         double[] result = new double[stop - start + 1];                  /* 返回值*/
         int j = 0;
         for (int i = start; i <= stop; i++) {
@@ -1886,9 +1888,10 @@ public class MatlabUtil {
 
         int rowLength = x.length;   /* 获取行数*/
         int columnLength = x[0].length;  /* 获取列数*/
-        double[][] result = new double[rowLength][1];           /* 返回值(未去掉多余的长度)*/
+        double[][] result = new double[columnLength][1];           /* 返回值(未去掉多余的长度)*/
         int resultRow = 0;
         for (int column = 0; column < columnLength; column++) {
+
             for (int row = 0; row < rowLength; row++) {
                 double cellValue = x[row][column];
                 if (cellValue < condition1 || cellValue > condition2) {

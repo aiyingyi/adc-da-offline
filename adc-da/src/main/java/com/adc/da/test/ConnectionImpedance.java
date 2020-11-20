@@ -81,6 +81,8 @@ public class ConnectionImpedance {
                 ods.setEnterprise(obj.getString("enterprise"));
                 ods.setLicensePlate(obj.getString("licensePlate"));
                 ods.setProvince(obj.getString("province"));
+                ods.setTotalCurrent(obj.getDouble("totalCurrent"));
+
                 return ods;
             }
         }).assignTimestampsAndWatermarks(WatermarkStrategy.<OdsData>forBoundedOutOfOrderness(Duration.ofSeconds(120))
@@ -109,7 +111,7 @@ public class ConnectionImpedance {
         Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-                return "1".equals(data.getChargeStatus());
+                return ("1".equals(data.getChargeStatus())) && (data.getTotalCurrent() < 0 );
             }
         }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
             @Override
@@ -182,7 +184,7 @@ public class ConnectionImpedance {
 
                 if (value[1].getSoc() - value[0].getSoc() > 40) {
                     System.out.println(sdf.format(value[0].getMsgTime()) + "--" + sdf.format(value[1].getMsgTime()));
-                    ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
+                    //ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
                 }
 
             }

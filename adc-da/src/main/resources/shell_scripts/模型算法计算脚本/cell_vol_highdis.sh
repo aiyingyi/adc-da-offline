@@ -12,7 +12,7 @@ startTime=`date -d @$(($2/1000)) +'%Y-%m-%d %H:%M:%S'`
 endTime=`date -d @$(($3/1000)) +'%Y-%m-%d %H:%M:%S'`
 
 th1=20
-th2=80
+th2=100
 
 sql="
 with

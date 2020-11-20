@@ -33,7 +33,7 @@ preprocess_vehicle_data0 as
       get_json_object(data,'$.minCellVoltageNum') minCellVoltageNum,
       get_json_object(data,'$.vehicleType') vehicleType,
       get_json_object(data,'$.enterprise') enterprise,
-      cast(get_json_object(data,'$.totalCurrent') as double)  totalCurrent,
+      abs(cast(get_json_object(data,'$.totalCurrent') as double))  totalCurrent,   --  求电流的绝对值
       cast(get_json_object(data,'$.soc') as double)  soc
   from ${db}.ods_preprocess_vehicle_data where dt>=date_format('${start_time}','yyyy-MM-dd')
   and dt<=date_format('${end_time}','yyyy-MM-dd')      --根据日期分区查找数据

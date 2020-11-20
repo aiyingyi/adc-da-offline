@@ -51,4 +51,17 @@ public class AvgVolAndStd extends UDF {
         return res;
 
     }
+
+    public static void main(String[] args) {
+
+        ArrayList<String> r = new ArrayList<>();
+
+
+        r.add("[2.0,3.0,4.0]");
+        r.add("[2.0,3.0,4.0]");
+        r.add("[2.0,3.0,4.0]");
+
+        System.out.println(new AvgVolAndStd().evaluate(r, "std"));
+
+    }
 }

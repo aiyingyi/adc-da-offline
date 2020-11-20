@@ -1885,7 +1885,7 @@ public class MatlabUtil {
 
         int rowLength = x.length;   /* 获取行数*/
         int columnLength = x[0].length;  /* 获取列数*/
-        double[][] result = new double[rowLength][1];           /* 返回值(未去掉多余的长度)*/
+        double[][] result = new double[columnLength][1];           /* 返回值(未去掉多余的长度)*/
         int resultRow = 0;
         for (int column = 0; column < columnLength; column++) {
             for (int row = 0; row < rowLength; row++) {

@@ -20,7 +20,7 @@ ods_data as
     select
         get_json_object(data,'$.vin') vin,
         get_json_object(data,'$.msgTime') msgTime,
-        cast(get_json_object(data,'$.resistance') as double) resistance
+        cast(get_json_object(data,'$.insulationResistance') as double) resistance
     from ${db}.ods_preprocess_vehicle_data
     where dt >= date_format('${startTime}','yyyy-MM-dd')
     and   dt <= date_format('${endTime}','yyyy-MM-dd')
