@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/util/MatlabUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/util/MatlabUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,14 +244,7 @@
       <workItem from="1605571123776" duration="8474000" />
       <workItem from="1605582319242" duration="12413000" />
       <workItem from="1605619642433" duration="33489000" />
-      <workItem from="1605743191107" duration="51016000" />
-    </task>
-    <task id="LOCAL-00008" summary="电池包衰减预警未完成">
-      <created>1602321606731</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1602321606731</updated>
+      <workItem from="1605743191107" duration="51207000" />
     </task>
     <task id="LOCAL-00009" summary="抗阻大_ssh连接问题">
       <created>1602496686068</created>
@@ -591,7 +582,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605858245329</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="行驶工况完成">
+      <created>1605867833705</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1605867833705</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -599,7 +597,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="绝缘电阻突降完成" />
     <MESSAGE value="单体电压离散度高" />
     <MESSAGE value="单体电压波动性差异大" />
     <MESSAGE value="充电完成检测" />
@@ -624,7 +621,8 @@
     <MESSAGE value="测试" />
     <MESSAGE value="修改行驶状态检测" />
     <MESSAGE value="时间戳修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="时间戳修改" />
+    <MESSAGE value="行驶工况完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="行驶工况完成" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="74" key="#Project_Structure" timestamp="1605685585468">
@@ -655,10 +653,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605858244038">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1605867832883">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605858244038" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1605867832883" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -703,10 +701,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605513662701" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605858254449">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1605867843273">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605858254449" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605867843273" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
