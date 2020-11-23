@@ -37,7 +37,7 @@ do
                and get_json_object(data,'$.msgTime') >= '${args[$[2*$i-2]]}'
                and get_json_object(data,'$.msgTime') <= '${args[$[2*$i-1]]}'
                and get_json_object(data,'$.vin') = '${vin}'
-               and cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100 >= 0.8
+               and cast (get_json_object(data,'$.soc') as double)/100 >= 0.8
              "
    if [ $i -lt $[$window_size] ]
    then
@@ -72,7 +72,7 @@ charge_time as
     (
       select
         vin,
-        cast ((unix_timestamp(charge_start_time)-cast('${1}'/1000 as bigint))/(60*60*24) as int) as timeDiff
+        cast ((unix_timestamp(charge_start_time)-cast('${1}'/1000 as bigint))/(60*60*24.0) as double) as timeDiff
       from charge_info
     ) as tmp
   group by tmp.vin
@@ -88,7 +88,7 @@ charge_statistics as
     (select
         vin,
         collect_list(avg_vol_diff) as vol_diff,
-        collect_list(cast(unix_timestamp(charge_start_time)*1000 as string)) as charge_start_time
+        collect_list(charge_start_time) as charge_start_time
     from charge_info
     group by vin) as t1
   join charge_time as t2
@@ -105,8 +105,8 @@ select
 from
   (select
     vin,
-    '${args[$[2*$window_size-2]]}'  as startTime,  -- 最近10次充电中最后一次充电的开始时间
-    '${args[$[2*$window_size-1]]}'  as endTime,    -- 最近10次充电中最后一次充电的结束时间
+   '${args[$[2*$window_size-2]]}' as startTime,  -- 最近10次充电中最后一次充电的开始时间
+   '${args[$[2*$window_size-1]]}' as endTime,    -- 最近10次充电中最后一次充电的结束时间
     vol_diff,  -- 压差数组
     timeDiff,  -- 时间间隔
     ${db}.charge_vol_diff_exp(vol_diff,charge_start_time,cast('${th1}' as double),cast('${th2}' as double)) as iswarning

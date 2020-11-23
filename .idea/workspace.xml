@@ -2,16 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestStaticState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/bean/OdsData.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/bean/OdsData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/functions/HighSelfDischargeEsSink.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/functions/HighSelfDischargeEsSink.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ConnectionImpedance.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ConnectionImpedance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/risk_level_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/risk_level_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,26 +119,13 @@
       <command value="Hive" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.ConnectionImpedance">
-    <configuration name="ChargeAndStartupMonitor2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.app.ChargeAndStartupMonitor2" />
-      <module name="adc-da" />
+  <component name="RunManager" selected="Application.ChargeVolDiffExpUdf">
+    <configuration name="ChargeVolDiffExpUdf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.udf.ChargeVolDiffExpUdf" />
+      <module name="hiveFunctions" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.adc.da.app.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ChargeMode" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.ChargeMode" />
-      <module name="adc-da" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.adc.da.test.*" />
+          <option name="PATTERN" value="com.adc.da.udf.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -162,12 +146,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestChargeData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.TestChargeData" />
-      <module name="adc-da" />
+    <configuration name="PlatformAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.algorithm.PlatformAlgorithm" />
+      <module name="hiveFunctions" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.adc.da.test.*" />
+          <option name="PATTERN" value="com.adc.da.algorithm.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.algorithm.Test" />
+      <module name="hiveFunctions" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adc.da.algorithm.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -190,11 +187,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ChargeVolDiffExpUdf" />
+        <item itemvalue="Application.PlatformAlgorithm" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.ConnectionImpedance" />
         <item itemvalue="Application.TestStaticState" />
-        <item itemvalue="Application.ChargeAndStartupMonitor2" />
-        <item itemvalue="Application.ChargeMode" />
-        <item itemvalue="Application.TestChargeData" />
       </list>
     </recent_temporary>
   </component>
@@ -253,14 +250,8 @@
       <workItem from="1605571123776" duration="8474000" />
       <workItem from="1605582319242" duration="12413000" />
       <workItem from="1605619642433" duration="33489000" />
-      <workItem from="1605743191107" duration="66578000" />
-    </task>
-    <task id="LOCAL-00010" summary="连接抗阻大完成">
-      <created>1602571702733</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1602571702733</updated>
+      <workItem from="1605743191107" duration="73694000" />
+      <workItem from="1606110514356" duration="13552000" />
     </task>
     <task id="LOCAL-00011" summary="连接抗阻大完成">
       <created>1602582574776</created>
@@ -598,7 +589,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606045202729</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="行驶工况计算完成">
+      <created>1606099571933</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1606099571933</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -662,10 +660,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606045202000">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606099571128">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606045202000" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606099571128" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -674,46 +672,46 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605857615628" />
-    <state width="1493" height="27" key="GridCell.Tab.0.bottom" timestamp="1606099535722">
+    <state width="1493" height="264" key="GridCell.Tab.0.bottom" timestamp="1606120170568">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="27" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606099535722" />
-    <state width="1493" height="27" key="GridCell.Tab.0.center" timestamp="1606099535722">
+    <state width="1493" height="264" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
+    <state width="1493" height="264" key="GridCell.Tab.0.center" timestamp="1606120170568">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="27" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606099535722" />
-    <state width="1493" height="27" key="GridCell.Tab.0.left" timestamp="1606099535722">
+    <state width="1493" height="264" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
+    <state width="1493" height="264" key="GridCell.Tab.0.left" timestamp="1606120170568">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="27" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606099535722" />
-    <state width="1493" height="27" key="GridCell.Tab.0.right" timestamp="1606099535722">
+    <state width="1493" height="264" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
+    <state width="1493" height="264" key="GridCell.Tab.0.right" timestamp="1606120170568">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="27" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606099535722" />
-    <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1605860529390">
+    <state width="1493" height="264" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
+    <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1606110922555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605860529390" />
-    <state width="1493" height="290" key="GridCell.Tab.1.center" timestamp="1605860529390">
+    <state width="1493" height="290" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
+    <state width="1493" height="290" key="GridCell.Tab.1.center" timestamp="1606110922555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1605860529390" />
-    <state width="1493" height="290" key="GridCell.Tab.1.left" timestamp="1605860529390">
+    <state width="1493" height="290" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
+    <state width="1493" height="290" key="GridCell.Tab.1.left" timestamp="1606110922555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1605860529390" />
-    <state width="1493" height="290" key="GridCell.Tab.1.right" timestamp="1605860529390">
+    <state width="1493" height="290" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
+    <state width="1493" height="290" key="GridCell.Tab.1.right" timestamp="1606110922555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1605860529390" />
-    <state x="179" y="0" key="SettingsEditor" timestamp="1605513662701">
+    <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
+    <state x="179" y="0" key="SettingsEditor" timestamp="1606108921132">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605513662701" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606045219360">
+    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606108921132" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606099585558">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606045219360" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606099585558" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -730,10 +728,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606095190657">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606109597897">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606095190657" />
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606109597897" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605677683034">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

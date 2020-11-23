@@ -5,6 +5,7 @@ import com.adc.da.util.HiveUtils;
 import org.apache.hadoop.hive.ql.exec.UDF;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * 充电压差扩大模型算法自定义UDF函数
@@ -25,6 +26,25 @@ public class ChargeVolDiffExpUdf extends UDF {
         if (volDiff == null || time == null) {
             return null;
         }
-        return new PlatformAlgorithm().chargeDifferentialVoltageExpansion(HiveUtils.listToArray(volDiff), (String[]) time.toArray(), th1, th2) + "";
+        String[] timeStr = new String[time.size()];
+        for (int i = 0; i < time.size(); i++) {
+            timeStr[i] = (String) time.get(i);
+        }
+        return new PlatformAlgorithm().chargeDifferentialVoltageExpansion(HiveUtils.listToArray(volDiff), timeStr, th1,th2) + "";
+    }
+
+    public static void main(String[] args) {
+
+        double[] vol = {1.2,2.2};
+        String[] time = {"2018-02-01 12:14:14","2018-02-01 13:14:14"};
+        ArrayList<String> timeList = new ArrayList<>();
+        ArrayList<Double> volList = new ArrayList<>();
+        for (double v : vol) {
+            volList.add(v);
+        }
+        for (String s : time) {
+            timeList.add(s);
+        }
+        System.out.println(new ChargeVolDiffExpUdf().evaluate(volList, timeList, 0.5, 1.0));
     }
 }

@@ -14,14 +14,14 @@ th2=40
 _index=0
 for i in "$@"
 do
-  args[_index]=$i
-  let _index++
+  if [ $_index -lt $[$#-1] ]
+  then
+    args[_index]=`date -d @$(($i/1000)) +'%Y-%m-%d %H:%M:%S'`
+    let _index++
+  else
+    vin=$i
+  fi
 done
-
-vin=${args[$[${#args[@]}-1]]}
-
-
-echo "数组的元素为: ${args[*]}"
 
 
 query_sql="
@@ -37,7 +37,7 @@ do
                and get_json_object(data,'$.msgTime') >= '${args[$[2*$i-2]]}'
                and get_json_object(data,'$.msgTime') <= '${args[$[2*$i-1]]}'
                and get_json_object(data,'$.vin') = '${vin}'
-               and cast (substring(get_json_object(data,'$.soc'),0,length(get_json_object(data,'$.soc'))-1) as double)/100 >= 0.8
+               and cast (get_json_object(data,'$.soc') as double)/100 >= 0.8
              "
    if [ $i -lt $[$window_size] ]
    then
@@ -72,7 +72,7 @@ charge_time as
     (
       select
         vin,
-        cast ((cast(charge_start_time as bigint)-cast('${1}' as bigint))/(1000*60*60*24) as int) as timeDiff
+        cast ((unix_timestamp(charge_start_time)-cast('${1}'/1000 as bigint))/(60*60*24.0) as double) as timeDiff
       from charge_info
     ) as tmp
   group by tmp.vin
@@ -94,58 +94,13 @@ charge_statistics as
   join charge_time as t2
   on t1.vin = t2.vin
 )
---  前10次充电并且发生预警的计算结果存入到es
-insert into table ${db}.charge_vol_day_diff_es
-select
-  tmp.vin,
-  tmp.startTime,
-  tmp.endTime,
-  tmp.vol_diff,
-  tmp.timeDiff
-from
-  (select
-    vin,
-    '${args[$[2*$window_size-2]]}'  as startTime,  -- 最近10次充电中最后一次充电的开始时间
-    '${args[$[2*$window_size-1]]}'  as endTime,    -- 最近10次充电中最后一次充电的结束时间
-    vol_diff,  -- 压差数组
-    timeDiff,  -- 时间间隔
-    ${db}.charge_vol_diff_exp(vol_diff,charge_start_time,cast('${th1}' as double),cast('${th2}' as double)) as iswarning
-  from charge_statistics)  tmp
-where tmp.iswarning = '1';
 
--- 写入预警信息表
-insert into table ${db}.battery_warning_info_es
 select
-  w.vin,
-  p.vehicleType,
-  p.enterprise,
-  b.licensePlate,
-  b.battery_type,
-  '1',
-  p.province,
-  w.startTime,
-  w.endTime,
-  '充电压差扩大',
-  '充电压差扩大',
-  '1',
-  null,
-  null
-from (select vin,startTime,endTime from ${db}.charge_vol_day_diff_es  where startTime = '${args[$[2*$window_size-2]]}' and vin = '${vin}') as w
-join (select vin,licensePlate,battery_type from ${db}.vehicle_base_info where vin  = '${vin}') as b
-on w.vin = b.vin
-join (
-  -- 计算出最后一次充电的省份信息
-  select
-    get_json_object(data,'$.vin') as vin,
-    get_json_object(data,'$.province') as province,
-    get_json_object(data,'$.vehicleType') as vehicleType,
-    get_json_object(data,'$.enterprise') as enterprise
-  from ${db}.ods_preprocess_vehicle_data
-  where dt = date_format('${args[$[2*$window_size-1]]}','yyyy-MM-dd')
-  and get_json_object(data,'$.msgTime') = '${args[$[2*$window_size-1]]}'
-  and get_json_object(data,'$.vin') = '${vin}'
-) as p
-on w.vin = p.vin;
+   vin,
+   vol_diff,
+   charge_start_time,
+  from charge_statistics
+
 "
 
 hive  -e "${sql}"

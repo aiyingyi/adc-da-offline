@@ -558,7 +558,7 @@ create external table charge_vol_day_diff_es
     startTime string,
     endTime   string,
     volDiff   array<double>,
-    dayDiff   array<int>
+    dayDiff   array<double>
 ) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
     location '/warningplatform.db/ads/charge_vol_day_diff_es'
     TBLPROPERTIES ('es.resource' = 'charge_vol_day_diff/charge_vol_day_diff',
