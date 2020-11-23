@@ -63,7 +63,7 @@ select
     get_json_object(data,'$.differenceModuleCellVoltages'),
     cast (get_json_object(data,'$.instantaneousConsumption') as double),
     cast (get_json_object(data,'$.wDischargeRate') as double),
-    cast (get_json_object(data,'$.resistance') as double),
+    cast (get_json_object(data,'$.insulationResistance') as double),
     get_json_object(data,'$.province'),
     get_json_object(data,'$.city'),
     get_json_object(data,'$.country'),

@@ -26,6 +26,7 @@ public class OdsData {
     private String province;
 
     private double totalCurrent;
+    private String batteryType;
 
 
     @Override
@@ -45,6 +46,7 @@ public class OdsData {
                 ", licensePlate='" + licensePlate + '\'' +
                 ", province='" + province + '\'' +
                 ", totalCurrent=" + totalCurrent +
+                ", batteryType='" + batteryType + '\'' +
                 '}';
     }
 }

@@ -26,9 +26,9 @@ tmp as
     select
         risk_stat.enterprise,
         risk_stat.risk_level,
-        case risk_stat.risk_level when '1' then risk_stat.total else 0 end r1,
-        case risk_stat.risk_level when '2' then risk_stat.total else 0 end r2,
-        case risk_stat.risk_level when '3' then risk_stat.total else 0 end r3
+        case risk_stat.risk_level when '高风险' then risk_stat.total else 0 end r1,
+        case risk_stat.risk_level when '中风险' then risk_stat.total else 0 end r2,
+        case risk_stat.risk_level when '低风险' then risk_stat.total else 0 end r3
     from risk_stat
 )
 insert into table ${db}.risk_level_statistic_es

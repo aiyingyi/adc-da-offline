@@ -111,7 +111,7 @@ public class ConnectionImpedance {
         Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-                return ("1".equals(data.getChargeStatus())) && (data.getTotalCurrent() < 0 );
+                return ("1".equals(data.getChargeStatus())) && (data.getTotalCurrent() < 0);
             }
         }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
             @Override
@@ -146,7 +146,7 @@ public class ConnectionImpedance {
         SingleOutputStreamOperator<OdsData[]> monStream = chargeStream.filter(new FilterFunction<OdsData[]>() {
             @Override
             public boolean filter(OdsData[] odsData) throws Exception {
-                if (odsData[1].getMsgTime() - odsData[0].getMsgTime() > 120000) {
+                if (odsData[0].getSoc() < 80 && odsData[1].getSoc() > 80 && (odsData[1].getMsgTime() - odsData[0].getMsgTime()) / (1000 * 10) > 10) {
                     return true;
                 }
                 return false;
@@ -183,6 +183,7 @@ public class ConnectionImpedance {
                 //ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
 
                 if (value[1].getSoc() - value[0].getSoc() > 40) {
+                    System.out.println(value[0].getMsgTime() + "  " + value[1].getMsgTime());
                     System.out.println(sdf.format(value[0].getMsgTime()) + "--" + sdf.format(value[1].getMsgTime()));
                     //ShellUtil.exec(conn, shellConfig.getProperty("battery_pack_attenuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime() + " " + value[0].getSoc() + " " + value[1].getSoc() + " " + value[1].getOdo());
                 }

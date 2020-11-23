@@ -86,42 +86,33 @@ public class TestChargeData {
                 })
         ).keyBy(data -> data.getVin());
 
-
-        /**
-         * 行驶工况匹配
-         */
-        /*Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
+        //
+        Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run" , AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() > 0 || "1".equals(data.getStartupStatus()) ? true : false;
+                return ("自动档".equals(data.getGearStatus())) && ("0".equals(data.getChargeStatus())) ? true : false;
             }
-        }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
+        }).oneOrMore().greedy().followedBy("unRun").where(new IterativeCondition<OdsData>() {  // 速度为0的时刻
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                OdsData run = context.getEventsForPattern("run").iterator().next();
-                if ((run.getMsgTime() - data.getMsgTime() / (1000 * 60 * 3600.0)) >= 2) {
-                    return data.getSpeed() <= 0 || !("1".equals(data.getStartupStatus())) ? true : false;
+                if ("0".equals(data.getStartupStatus()) ) {   //  && ("空档".equals(data.getGearStatus()))
+                    OdsData last = null;
+                    Iterator<OdsData> run = context.getEventsForPattern("run").iterator();
+                    while (run.hasNext()) {
+                        last = run.next();
+
+                    }
+
+                    System.out.println(last.getMsgTime());
+                    if (last != null && data.getMsgTime() - last.getMsgTime() >= 5 * 60 * 1000) {
+                        return true;
+                    }
                 }
                 return false;
             }
-        }).times(1);*/
+        }).times(1);
 
-
-     /*   Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() > 0 ? true : false;
-            }
-        }).oneOrMore().greedy().next("unRun").where(new IterativeCondition<OdsData>() {  // 速度为0的时刻
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return data.getSpeed() <= 0 ? true : false;
-
-            }
-        }).times(1);  */
-
-
-        Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run", AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
+        /*Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run", AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
             @Override
             public boolean filter(OdsData data, Context<OdsData> context) {
                 return ("自动档".equals(data.getGearStatus())) && ("0".equals(data.getChargeStatus())) ? true : false;
@@ -141,7 +132,7 @@ public class TestChargeData {
                 }
                 return false;
             }
-        }).times(1);
+        }).times(1);*/
 
 
         //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出

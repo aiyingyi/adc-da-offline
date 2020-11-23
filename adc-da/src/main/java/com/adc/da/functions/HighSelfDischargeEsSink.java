@@ -48,7 +48,7 @@ public class HighSelfDischargeEsSink {
                             json.put("enterprise", element[1].getEnterprise());
                             json.put("licensePlate", element[1].getLicensePlate());
                             json.put("batteryType", null);
-                            json.put("riskLevel", "1");
+                            json.put("riskLevel", "高风险");
                             json.put("province", element[1].getProvince());
                             json.put("warningStartTime", element[0].getMsgTime() + "");
                             json.put("warningEndTime", element[1].getMsgTime() + "");
@@ -57,6 +57,7 @@ public class HighSelfDischargeEsSink {
                             json.put("reviewStatus", "1");
                             json.put("reviewResult", null);
                             json.put("reviewUser", null);
+                            json.put("batteryType", element[0].getBatteryType());
 
                             return Requests.indexRequest()
                                     .index("warning")
