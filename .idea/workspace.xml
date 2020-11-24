@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/batterypack_exception_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/batterypack_exception_statistics.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/province_risk_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/province_risk_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/impala即席查询sql.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/impala即席查询sql.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,14 +247,7 @@
       <workItem from="1605619642433" duration="33489000" />
       <workItem from="1605743191107" duration="73694000" />
       <workItem from="1606110514356" duration="27048000" />
-      <workItem from="1606194158616" duration="6686000" />
-    </task>
-    <task id="LOCAL-00012" summary="绝缘电阻突降完成">
-      <created>1602665804748</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1602665804748</updated>
+      <workItem from="1606194158616" duration="9809000" />
     </task>
     <task id="LOCAL-00013" summary="绝缘电阻突降完成">
       <created>1602667965697</created>
@@ -596,7 +585,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606124368660</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="脚本更改">
+      <created>1606200980740</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1606200980740</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -660,10 +656,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606124367970">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606200980070">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606124367970" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606200980070" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -708,10 +704,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606108921132" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606124397830">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606201001343">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606124397830" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606201001343" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
