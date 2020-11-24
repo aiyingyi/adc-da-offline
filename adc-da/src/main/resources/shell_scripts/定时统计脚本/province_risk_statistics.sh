@@ -28,9 +28,9 @@ warning_level as
 (select
     warning.enterprise,
     warning.province,
-    case warning.risk_level when '1' then warning.total else 0 end r1,
-    case warning.risk_level when '2' then warning.total else 0 end r2,
-    case warning.risk_level when '3' then warning.total else 0 end r3
+    case warning.risk_level when '高风险' then warning.total else 0 end r1,
+    case warning.risk_level when '中风险' then warning.total else 0 end r2,
+    case warning.risk_level when '低风险' then warning.total else 0 end r3
 from warning
 )
 

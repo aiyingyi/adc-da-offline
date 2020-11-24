@@ -28,6 +28,8 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
@@ -140,49 +142,58 @@ public class ChargeAndStartupMonitor2 {
             }
         });
 
-
-        // todo  状态检查更改
         /**
-         * 行驶工况匹配
+         * 1. 充电压差扩大模型算法调用（10次充电）
+         * 2. 充电完成后调用:
+         *  1) 电池包衰减预警模型
+         *  2) 执行充电方式，电量以及最大最低电压单体频次脚本
+         *  3) 连接阻抗大模型算法
          */
+        chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
 
-        Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run", AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return ("自动档".equals(data.getGearStatus())) && ("0".equals(data.getChargeStatus())) ? true : false;
-            }
-        }).oneOrMore().greedy().followedBy("unRun").where(new IterativeCondition<OdsData>() {  // 速度为0的时刻
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                if ("0".equals(data.getStartupStatus())) {
-                    OdsData last = null;
-                    Iterator<OdsData> run = context.getEventsForPattern("run").iterator();
-                    while (run.hasNext()) {
-                        last = run.next();
-                    }
-                    if (last != null && data.getMsgTime() - last.getMsgTime() >= 5 * 60 * 1000) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }).times(1);
+        /**
+         * 行驶工况检测
+         */
+        SingleOutputStreamOperator<OdsData[]> runStream = dataStream.process(new KeyedProcessFunction<String, OdsData, OdsData[]>() {
+            ValueState<OdsData> startOds = null;  // 开始行驶数据
+            ValueState<OdsData> endOds = null;    // 行驶结束数据
 
-        SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
-                List<OdsData> runList = map.get("run");
-                OdsData o1 = runList.get(0);
-                OdsData o2 = runList.get(runList.size() - 1);
-                return new OdsData[]{o1, o2};
-            }
-            // 将同一行驶过程中的其他匹配给过滤掉，只保留第一条数据到最后一条数据的匹配
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
             @Override
             public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
+                startOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("startOds", OdsData.class));
+                endOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("endOds", OdsData.class));
+            }
+
+            @Override
+            public void processElement(OdsData value, Context ctx, Collector<OdsData[]> out) throws Exception {
+                // 非充电并且是启动状态
+                if (startOds.value() == null) {
+                    if (("0".equals(value.getChargeStatus())) && "1".equals(value.getStartupStatus())) {
+                        startOds.update(value);
+                    }
+                } else {
+                    if (!("0".equals(value.getStartupStatus()) && "停车档".equals(value.getGearStatus()))) {
+                        if (startOds.value() == null) {
+                            startOds.update(value);
+                        } else {
+                            endOds.update(value);
+                        }
+                    } else if (endOds.value() != null) {
+                        // 如果大于指定的时间间隔
+                        if (value.getMsgTime() - endOds.value().getMsgTime() >= 5 * 60 * 1000) {
+                            OdsData[] run = new OdsData[2];
+                            run[0] = startOds.value();
+                            run[1] = endOds.value();
+                            out.collect(run);
+                            // 清空状态
+                            startOds.clear();
+                            endOds.clear();
+                        }
+                    }
+                }
             }
         });
+
         // 合并充电和行驶状态
         SingleOutputStreamOperator<OdsData[]> chargeAndRunStream = chargeStream.connect(runStream).process(new CoProcessFunction<OdsData[], OdsData[], OdsData[]>() {
             @Override
@@ -212,15 +223,6 @@ public class ChargeAndStartupMonitor2 {
             }
         });
 
-        /**
-         * 1. 充电压差扩大模型算法调用（10次充电）
-         * 2. 充电完成后调用:
-         *  1) 电池包衰减预警模型
-         *  2) 执行充电方式，电量以及最大最低电压单体频次脚本
-         *  3) 连接阻抗大模型算法
-         */
-
-        chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
 
         /**
          * 电芯自放电大模型算法 判断车辆是否静置半天

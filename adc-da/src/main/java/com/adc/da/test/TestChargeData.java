@@ -8,12 +8,14 @@ import com.adc.da.util.CommonUtil;
 import com.adc.da.util.ShellUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.flink.api.common.distributions.DataDistribution;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.cep.CEP;
 import org.apache.flink.cep.PatternSelectFunction;
@@ -25,9 +27,12 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.util.Collector;
 
+import javax.sound.midi.Soundbank;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
@@ -86,93 +91,48 @@ public class TestChargeData {
                 })
         ).keyBy(data -> data.getVin());
 
-        //
-        Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run" , AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return ("自动档".equals(data.getGearStatus())) && ("0".equals(data.getChargeStatus())) ? true : false;
-            }
-        }).oneOrMore().greedy().followedBy("unRun").where(new IterativeCondition<OdsData>() {  // 速度为0的时刻
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                if ("0".equals(data.getStartupStatus()) ) {   //  && ("空档".equals(data.getGearStatus()))
-                    OdsData last = null;
-                    Iterator<OdsData> run = context.getEventsForPattern("run").iterator();
-                    while (run.hasNext()) {
-                        last = run.next();
 
-                    }
+        SingleOutputStreamOperator<OdsData[]> runStream = dataStream.process(new KeyedProcessFunction<String, OdsData, OdsData[]>() {
 
-                    System.out.println(last.getMsgTime());
-                    if (last != null && data.getMsgTime() - last.getMsgTime() >= 5 * 60 * 1000) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }).times(1);
+            ValueState<OdsData> startOds = null;  // 开始行驶数据
+            ValueState<OdsData> endOds = null;    // 行驶结束数据
 
-        /*Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run", AfterMatchSkipStrategy.skipPastLastEvent()).where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return ("自动档".equals(data.getGearStatus())) && ("0".equals(data.getChargeStatus())) ? true : false;
-            }
-        }).oneOrMore().greedy().followedBy("unRun").where(new IterativeCondition<OdsData>() {  // 速度为0的时刻
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                if ("0".equals(data.getStartupStatus())) {
-                    OdsData last = null;
-                    Iterator<OdsData> run = context.getEventsForPattern("run").iterator();
-                    while (run.hasNext()) {
-                        last = run.next();
-                    }
-                    if (last != null && data.getMsgTime() - last.getMsgTime() >= 5 * 60 * 1000) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }).times(1);*/
-
-
-        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
-        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
-        SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
-                List<OdsData> runList = map.get("run");
-                OdsData o1 = runList.get(0);
-                OdsData o2 = runList.get(runList.size() - 1);
-                return new OdsData[]{o1, o2};
-            }
-            // 将同一行驶过程中的其他匹配给过滤掉，只保留第一条数据到最后一条数据的匹配
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
             @Override
             public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
+                startOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("startOds", OdsData.class));
+                endOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("endOds", OdsData.class));
+            }
+
+            @Override
+            public void processElement(OdsData value, Context ctx, Collector<OdsData[]> out) throws Exception {
+                // 非充电并且是启动状态
+
+                if (startOds.value() == null) {
+                    if (("0".equals(value.getChargeStatus()))&& "1".equals(value.getStartupStatus())) {
+                        startOds.update(value);
+                    }
+                } else {
+                    if (!("0".equals(value.getStartupStatus()) && "停车档".equals(value.getGearStatus()))) {
+                        if (startOds.value() == null) {
+                            startOds.update(value);
+                        } else {
+                            endOds.update(value);
+                        }
+                    } else if (endOds.value() != null) {
+                        // 如果大于指定的时间间隔
+                        if (value.getMsgTime() - endOds.value().getMsgTime() >= 5 * 60 * 1000) {
+                            OdsData[] run = new OdsData[2];
+                            run[0] = startOds.value();
+                            run[1] = endOds.value();
+                            out.collect(run);
+                            // 清空状态
+                            startOds.clear();
+                            endOds.clear();
+                        }
+                    }
+                }
             }
         });
-
-/*
-        runStream.addSink(new ShellRichSink<OdsData[]>(shellConfig) {
-            @Override
-            public void invoke(OdsData[] value, SinkFunction.Context context) throws Exception {
-
-                // 单体电压离散度高模型
-                ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-                // 绝缘电阻突降
-                //ShellUtil.exec(conn, shellConfig.getProperty("resistance_reduce") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-                //
-                //// bms采样异常
-                //ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-                //
-                //// 模组电压离群
-                //ShellUtil.exec(conn, shellConfig.getProperty("module_vol_exception") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-
-            }
-        });*/
-
-
         runStream.map(new RichMapFunction<OdsData[], String>() {
             SimpleDateFormat sdf = null;
 
@@ -184,319 +144,10 @@ public class TestChargeData {
             @Override
             public String map(OdsData[] odsData) throws Exception {
 
+                System.out.println(odsData[0].getMsgTime() + "  " + odsData[1].getMsgTime());
                 return sdf.format(odsData[0].getMsgTime()) + "   " + sdf.format(odsData[1].getMsgTime());
             }
         }).print();
-
-        runStream.map(new MapFunction<OdsData[], String>() {
-            @Override
-            public String map(OdsData[] odsData) throws Exception {
-                return  odsData[0].getMsgTime()+"  "+odsData[1].getMsgTime();
-            }
-        }).print();
-
-
-
-       /* Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() > 0 && "1".equals(data.getStartupStatus()) ? true : false;
-            }
-        }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-
-                OdsData run = context.getEventsForPattern("run").iterator().next();
-                if ((run.getMsgTime() - data.getMsgTime() / (1000 * 60 * 3600.0)) >= 2) {
-                    return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
-                }
-                return data.getSpeed() <= 0 && !("1".equals(data.getStartupStatus())) ? true : false;
-            }
-        }).times(1);*/
-
-        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
-        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
-       /* SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
-                List<OdsData> runList = map.get("run");
-                OdsData o1 = runList.get(0);
-                OdsData o2 = runList.get(runList.size() - 1);
-                return new OdsData[]{o1, o2};
-            }
-            // 将同一行驶过程中的其他匹配给过滤掉，只保留第一条数据到最后一条数据的匹配
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
-            }
-        });*/
-
-        //runStream.map(ods -> ods[0].getMsgTime() + "       " + ods[1].getMsgTime()).print("run----------------------------------");
-
-        /* *//**
-         * 充电完成状态匹配
-         *//*
-        Pattern<OdsData, OdsData> chargePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return "1".equals(data.getChargeStatus());
-            }
-        }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return "0".equals(data.getChargeStatus());
-            }
-        }).times(1);
-
-        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
-        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
-        SingleOutputStreamOperator<OdsData[]> chargeStream = CEP.pattern(dataStream, chargePattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
-
-                List<OdsData> chargeList = map.get("charge");
-                OdsData o1 = chargeList.get(0);
-                OdsData o2 = chargeList.get(chargeList.size() - 1);
-                return new OdsData[]{o1, o2};
-            }
-            // 将同一充电过程中的其他匹配给过滤掉，只保留第一条充电数据到第一条非充电数据的匹配
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
-
-
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("chargeState", OdsData[].class));
-            }
-        });
-
-
-        chargeStream.print("charge----------------------------------");
-
-        *//**
-         * 行驶工况匹配
-         *//*
-        Pattern<OdsData, OdsData> runPattren = Pattern.<OdsData>begin("run").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return data.getSpeed() <= 0 ? true : false;
-            }
-        }).oneOrMore().consecutive().greedy().next("unRun").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return data.getSpeed() > 0 ? true : false;
-            }
-        }).times(1);
-
-        //  cep 会将数据按照时间戳进行排序，并且只有watermark>匹配数据的最大的时间戳，才会输出
-        //  cep 会根据key进行匹配，不同的key的数据不会相互影响
-        SingleOutputStreamOperator<OdsData[]> runStream = CEP.pattern(dataStream, runPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> map) throws Exception {
-                List<OdsData> runList = map.get("run");
-                OdsData o1 = runList.get(0);
-                OdsData o2 = runList.get(runList.size() - 1);
-                return new OdsData[]{o1, o2};
-            }
-            // 将同一行驶过程中的其他匹配给过滤掉，只保留第一条数据到最后一条数据的匹配
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("runState", OdsData[].class));
-            }
-        });
-
-        // 合并充电和行驶状态
-        SingleOutputStreamOperator<OdsData[]> chargeAndRunStream = chargeStream.connect(runStream).process(new CoProcessFunction<OdsData[], OdsData[], OdsData[]>() {
-            @Override
-            public void processElement1(OdsData[] value, Context ctx, Collector<OdsData[]> out) throws Exception {
-                out.collect(value);
-            }
-
-            @Override
-            public void processElement2(OdsData[] value, Context ctx, Collector<OdsData[]> out) throws Exception {
-                out.collect(value);
-            }
-        });
-        chargeAndRunStream.keyBy(odsData -> odsData[0].getVin()).addSink(new ShellRichSink<OdsData[]>(shellConfig) {
-            @Override
-            public void invoke(OdsData[] value, Context context) throws Exception {
-
-                // 单体电压离散度高模型
-                ShellUtil.exec(conn, shellConfig.getProperty("cellVolHighDis") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-                // 绝缘电阻突降
-                ShellUtil.exec(conn, shellConfig.getProperty("resistance_reduce") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-
-                // bms采样异常
-                ShellUtil.exec(conn, shellConfig.getProperty("bms_sampling") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-
-                // 模组电压离群
-                ShellUtil.exec(conn, shellConfig.getProperty("module_vol_exception") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-
-            }
-        });
-
-        *//**
-         * 1. 充电压差扩大模型算法调用（10次充电）
-         * 2. 充电完成后调用:
-         *  1) 电池包衰减预警模型
-         *  2) 执行充电方式，电量以及最大最低电压单体频次脚本
-         *  3) 连接阻抗大模型算法
-         *//*
-
-        chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
-
-        */
-
-
-        //chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
-
-
-        /**
-         * 电芯自放电大模型算法 判断车辆是否静置半天
-         *//*
-        Pattern<OdsData, OdsData> staticPattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                if (data.getSpeed() == 0.0 && "0".equals(data.getStartupStatus())) {
-                    return true;
-                }
-                return false;
-            }
-        }).oneOrMore().consecutive().greedy().next("end").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                if (data.getSpeed() != 0.0 || !"0".equals(data.getStartupStatus())) {
-                    OdsData start = context.getEventsForPattern("start").iterator().next();
-                    double gap = (data.getMsgTime() - start.getMsgTime()) / (1000 * 3600 * 24.0);
-                    return gap > 0.5 && (start.getSoc() - data.getSoc() >= -5 && start.getSoc() - data.getSoc() <= 5) ? true : false;
-                }
-                return false;
-            }
-        });
-
-
-        // 获取静置状态的两端的两条数据
-        SingleOutputStreamOperator<OdsData[]> staticStream = CEP.pattern(dataStream, staticPattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> pattern) throws Exception {
-                OdsData[] startAndEnd = new OdsData[2];
-                List<OdsData> events = pattern.get("start");
-                startAndEnd[0] = events.get(0);
-                startAndEnd[1] = events.get(events.size() - 1);
-                return startAndEnd;
-            }
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
-
-            // 设置静置状态
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("staticState", OdsData[].class));
-            }
-        });
-
-        // todo sink到es还有一部分未完成：电池类型数据源,风险等级变化,
-        staticStream.keyBy(data -> data[0].getVin()).addSink(HighSelfDischargeEsSink.getEsSink());
-
-        *//**
-         * 放电状态匹配：上一次充电完成-下次充电开始的时间
-         *//*
-        Pattern<OdsData, OdsData> disChargePattren = Pattern.<OdsData>begin("start").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return "0".equals(data.getChargeStatus());
-            }
-        }).oneOrMore().consecutive().greedy().next("end").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return "1".equals(data.getChargeStatus());
-            }
-        });
-
-        SingleOutputStreamOperator<OdsData[]> disChargeStream = CEP.pattern(dataStream, disChargePattren).select(new PatternSelectFunction<OdsData, OdsData[]>() {
-            @Override
-            public OdsData[] select(Map<String, List<OdsData>> pattern) throws Exception {
-                List<OdsData> start = pattern.get("start");
-                return new OdsData[]{start.get(0), start.get(start.size() - 1)};
-            }
-        }).keyBy(data -> data[0].getVin()).filter(new EventFilterFunction() {
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<OdsData[]>("disChargeState", OdsData[].class));
-            }
-        });
-        // 执行单体电压波动性差异大模型算法脚本
-        disChargeStream.keyBy(data -> data[0].getVin()).addSink(new ShellRichSink<OdsData[]>(shellConfig) {
-            @Override
-            public void invoke(OdsData[] value, Context context) throws Exception {
-                ShellUtil.exec(conn, shellConfig.getProperty("volFluctuation") + " " + value[0].getVin() + " " + value[0].getMsgTime() + " " + value[1].getMsgTime());
-            }
-        });
-
-        *//**
-         * 一次充放电循环状态匹配
-         *//*
-        Pattern<OdsData, OdsData> circlePattren = Pattern.<OdsData>begin("charge").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) {
-                return "1".equals(data.getChargeStatus());
-            }
-        }).oneOrMore().consecutive().greedy().next("uncharge").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData data, Context<OdsData> context) throws Exception {
-                return "0".equals(data.getChargeStatus());
-            }
-        }).oneOrMore().consecutive().greedy().next("nextCharge").where(new IterativeCondition<OdsData>() {
-            @Override
-            public boolean filter(OdsData value, Context<OdsData> ctx) throws Exception {
-                return "1".equals(value.getChargeStatus());
-            }
-        }).times(1);
-
-        SingleOutputStreamOperator<chargeAndDisChargeInfo> chargeCircle = CEP.pattern(dataStream, circlePattren).select(new PatternSelectFunction<OdsData, chargeAndDisChargeInfo>() {
-            @Override
-            public chargeAndDisChargeInfo select(Map<String, List<OdsData>> pattern) throws Exception {
-                List<OdsData> charge = pattern.get("charge"); // 首次充电
-                List<OdsData> disCharge = pattern.get("uncharge"); // 未充电
-                chargeAndDisChargeInfo info = new chargeAndDisChargeInfo();
-                info.setChargeStartTime(charge.get(0).getMsgTime());
-                info.setChargeEndTime(charge.get(charge.size() - 1).getMsgTime());
-                info.setDisChargeStartTime(disCharge.get(0).getMsgTime());
-                info.setDisChargeEndTime(disCharge.get(charge.size() - 1).getMsgTime());
-                info.setVin(charge.get(0).getVin());
-                return info;
-            }
-        }).keyBy(data -> data.getVin()).filter(new RichFilterFunction<chargeAndDisChargeInfo>() {
-
-            ValueState<chargeAndDisChargeInfo> state = null;
-
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                state = getRuntimeContext().getState(new ValueStateDescriptor<chargeAndDisChargeInfo>("chargeAndDisCharge", chargeAndDisChargeInfo.class));
-            }
-
-            @Override
-            public void close() throws Exception {
-                state.clear();
-            }
-
-            @Override
-            public boolean filter(chargeAndDisChargeInfo data) throws Exception {
-                if (state.value() == null || state.value().getDisChargeEndTime() < data.getChargeEndTime() && state.value().getChargeStartTime() > data.getChargeStartTime()) {
-                    state.update(data);
-                    return true;
-                }
-                return false;
-            }
-        });
-        chargeCircle.keyBy(data -> data.getVin()).addSink(new ShellRichSink<chargeAndDisChargeInfo>(shellConfig) {
-            @Override
-            // 执行容量异常脚本
-            public void invoke(chargeAndDisChargeInfo value, Context context) throws Exception {
-                ShellUtil.exec(conn, shellConfig.getProperty("capacity_anomaly") + " " + value.getVin() + " " + value.getChargeStartTime() + " " + value.getChargeEndTime() + " " + value.getDisChargeStartTime() + " " + value.getDisChargeEndTime());
-            }
-        });
-*/
 
         env.execute("ChargeAndStartupMonitor");
     }

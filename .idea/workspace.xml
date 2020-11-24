@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/模型算法计算脚本/charge_vol_diff_expand_module.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/测试文档/test.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/algorithm/PlatformAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/src/main/java/com/adc/da/udf/ChargeVolDiffExpUdf.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/app/ChargeAndStartupMonitor2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/TestChargeData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/batterypack_exception_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/batterypack_exception_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/province_risk_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/province_risk_statistics.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +84,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/adc-da/src/main/resources/测试文档" />
+    <property name="last_opened_file_path" value="E:/ADCPWB-DOC/ADCPWB-SYSTEM" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -119,7 +118,7 @@
       <command value="Hive" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.ChargeVolDiffExpUdf">
+  <component name="RunManager" selected="Application.TestChargeData">
     <configuration name="ChargeVolDiffExpUdf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.adc.da.udf.ChargeVolDiffExpUdf" />
       <module name="hiveFunctions" />
@@ -172,8 +171,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestStaticState" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.TestStaticState" />
+    <configuration name="TestChargeData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.TestChargeData" />
       <module name="adc-da" />
       <extension name="coverage">
         <pattern>
@@ -187,11 +186,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestChargeData" />
         <item itemvalue="Application.ChargeVolDiffExpUdf" />
         <item itemvalue="Application.PlatformAlgorithm" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.ConnectionImpedance" />
-        <item itemvalue="Application.TestStaticState" />
       </list>
     </recent_temporary>
   </component>
@@ -251,14 +250,8 @@
       <workItem from="1605582319242" duration="12413000" />
       <workItem from="1605619642433" duration="33489000" />
       <workItem from="1605743191107" duration="73694000" />
-      <workItem from="1606110514356" duration="13552000" />
-    </task>
-    <task id="LOCAL-00011" summary="连接抗阻大完成">
-      <created>1602582574776</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1602582574776</updated>
+      <workItem from="1606110514356" duration="27048000" />
+      <workItem from="1606194158616" duration="6686000" />
     </task>
     <task id="LOCAL-00012" summary="绝缘电阻突降完成">
       <created>1602665804748</created>
@@ -596,7 +589,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606099571933</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="脚本更改">
+      <created>1606124368660</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1606124368660</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -604,7 +604,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="单体电压波动性差异大" />
     <MESSAGE value="充电完成检测" />
     <MESSAGE value="离散度高" />
     <MESSAGE value="静置模式/放电状态匹配" />
@@ -629,7 +628,8 @@
     <MESSAGE value="时间戳修改" />
     <MESSAGE value="行驶工况完成" />
     <MESSAGE value="行驶工况计算完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="行驶工况计算完成" />
+    <MESSAGE value="脚本更改" />
+    <option name="LAST_COMMIT_MESSAGE" value="脚本更改" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="74" key="#Project_Structure" timestamp="1606047166770">
@@ -640,18 +640,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1603256812163" />
-    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604633196947">
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606184192905">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1604633196947" />
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1606184192905" />
     <state x="515" y="332" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1601452429083">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="515" y="332" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog/0.0.1536.824@0.0.1536.824" timestamp="1601452429083" />
-    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1606090850903">
+    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1606200721016">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1606090850903" />
+    <state x="574" y="109" width="821" height="582" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1606200721016" />
     <state x="391" y="93" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1602657672302">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -660,58 +660,58 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606099571128">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606124367970">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606099571128" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606124367970" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="389" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1605849711984" />
-    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1605857615628">
+    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1606184251870">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1605857615628" />
-    <state width="1493" height="264" key="GridCell.Tab.0.bottom" timestamp="1606120170568">
+    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606184251870" />
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1606199960433">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="264" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
-    <state width="1493" height="264" key="GridCell.Tab.0.center" timestamp="1606120170568">
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
+    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1606199960433">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="264" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
-    <state width="1493" height="264" key="GridCell.Tab.0.left" timestamp="1606120170568">
+    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
+    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1606199960433">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="264" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
-    <state width="1493" height="264" key="GridCell.Tab.0.right" timestamp="1606120170568">
+    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1606199960433">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="264" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606120170568" />
-    <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1606110922555">
+    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
+    <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
-    <state width="1493" height="290" key="GridCell.Tab.1.center" timestamp="1606110922555">
+    <state width="1493" height="290" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
+    <state width="1493" height="290" key="GridCell.Tab.1.center" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
-    <state width="1493" height="290" key="GridCell.Tab.1.left" timestamp="1606110922555">
+    <state width="1493" height="290" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
+    <state width="1493" height="290" key="GridCell.Tab.1.left" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
-    <state width="1493" height="290" key="GridCell.Tab.1.right" timestamp="1606110922555">
+    <state width="1493" height="290" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
+    <state width="1493" height="290" key="GridCell.Tab.1.right" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606110922555" />
+    <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
     <state x="179" y="0" key="SettingsEditor" timestamp="1606108921132">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606108921132" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606099585558">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606124397830">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606099585558" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606124397830" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -728,10 +728,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606109597897">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606181543872">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606109597897" />
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606181543872" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605677683034">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

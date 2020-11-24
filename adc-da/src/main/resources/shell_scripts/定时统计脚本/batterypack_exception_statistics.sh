@@ -25,12 +25,12 @@ insert overwrite  table  ${db}.avg_vehicle_data_perweek
       province,
       vehicleType,
       vin,
-      round(avg(differenceCellVoltage),1)  diff_Voltage,
-      round(avg(maxProbeTemperature-minProbeTemperature),1) diff_temper,
-      round(avg(maxTemperatureRate),1) temper_rate,
-      round(avg(averageProbeTemperature),1) temper,
-      round(avg(resistance),1) resistance,
-      round(avg(wDischargeRate),1) wDischargeRate
+      avg(differenceCellVoltage)  diff_Voltage,
+      avg(maxProbeTemperature-minProbeTemperature) diff_temper,
+      avg(maxTemperatureRate) temper_rate,
+      avg(averageProbeTemperature) temper,
+      avg(resistance) resistance,
+      avg(wDischargeRate) wDischargeRate
   from ${db}.dwd_preprocess_vehicle_data
   where dt >= date_format(date_add(next_day('${do_date}','MO'),-14),'yyyy-MM-dd')
   and dt <= date_format(date_add(next_day('${do_date}','SU'),-7),'yyyy-MM-dd')
