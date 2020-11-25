@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ImpalaTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/maven仓库配置" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_boxplot_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_boxplot_statistics.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hiveFunctions/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,11 +80,11 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/ImpalaJDBC41.jar!/" />
+    <property name="last_opened_file_path" value="E:/ADCPWB-DOC/ADCPWB-SYSTEM" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.31954023" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -253,14 +247,8 @@
       <workItem from="1605619642433" duration="33489000" />
       <workItem from="1605743191107" duration="73694000" />
       <workItem from="1606110514356" duration="27048000" />
-      <workItem from="1606194158616" duration="32673000" />
-    </task>
-    <task id="LOCAL-00014" summary="单体电压离散度高">
-      <created>1602731674346</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1602731674346</updated>
+      <workItem from="1606194158616" duration="34773000" />
+      <workItem from="1606297154737" duration="1764000" />
     </task>
     <task id="LOCAL-00015" summary="单体电压波动性差异大">
       <created>1602746644062</created>
@@ -598,7 +586,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606210790922</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="行驶状态检测更改">
+      <created>1606294637889</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1606294637889</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -634,18 +629,18 @@
     <option name="LAST_COMMIT_MESSAGE" value="行驶状态检测更改" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="361" y="74" key="#Project_Structure" timestamp="1606047166770">
+    <state x="361" y="74" key="#Project_Structure" timestamp="1606299044884">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="74" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1606047166770" />
+    <state x="361" y="74" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1606299044884" />
     <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603256812163">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1603256812163" />
-    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606184192905">
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606295051791">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1606184192905" />
+    <state x="479" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1606295051791" />
     <state x="515" y="332" key="#com.intellij.framework.addSupport.AddSupportForSingleFrameworkDialog" timestamp="1601452429083">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -666,34 +661,34 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="429" y="170" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1536.824@0.0.1536.824" timestamp="1606267051959" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606210790151">
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606294637304">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606210790151" />
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606294637304" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="389" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1605849711984" />
-    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1606266998712">
+    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1606296437994">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606266998712" />
-    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1606270522356">
+    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606296437994" />
+    <state width="1493" height="405" key="GridCell.Tab.0.bottom" timestamp="1606297858037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606270522356" />
-    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1606270522355">
+    <state width="1493" height="405" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606297858037" />
+    <state width="1493" height="405" key="GridCell.Tab.0.center" timestamp="1606297858037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606270522355" />
-    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1606270522355">
+    <state width="1493" height="405" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606297858037" />
+    <state width="1493" height="405" key="GridCell.Tab.0.left" timestamp="1606297858037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606270522355" />
-    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1606270522356">
+    <state width="1493" height="405" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606297858037" />
+    <state width="1493" height="405" key="GridCell.Tab.0.right" timestamp="1606297858037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606270522356" />
+    <state width="1493" height="405" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606297858037" />
     <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -710,14 +705,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
-    <state x="179" y="0" key="SettingsEditor" timestamp="1606267053876">
+    <state x="179" y="0" key="SettingsEditor" timestamp="1606299002718">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606267053876" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606210802780">
+    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606299002718" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606294647549">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606210802780" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606294647549" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
