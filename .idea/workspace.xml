@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9a8a4a9-c7d5-45a5-98a4-d5add71fc2cf" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/adc-da/src/main/java/com/adc/da/test/ImpalaTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/impala即席查询sql.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/impala即席查询sql.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/config/odsTopic.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/Hive部署/ini_hive.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/ods_to_dwd_preprocess.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_boxplot_statistics.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adc-da/src/main/resources/shell_scripts/定时统计脚本/warning_boxplot_statistics.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hiveFunctions/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hiveFunctions/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,10 +86,10 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="E:/ADCPWB-DOC/ADCPWB-SYSTEM" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/ImpalaJDBC41.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="project.structure.side.proportion" value="0.31954023" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
   </component>
   <component name="RecentsManager">
@@ -114,7 +120,7 @@
       <command value="Hive" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.TestChargeData">
+  <component name="RunManager" selected="Application.ImpalaTest">
     <configuration name="ChargeVolDiffExpUdf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.adc.da.udf.ChargeVolDiffExpUdf" />
       <module name="hiveFunctions" />
@@ -128,8 +134,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConnectionImpedance" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.ConnectionImpedance" />
+    <configuration name="ImpalaTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adc.da.test.ImpalaTest" />
       <module name="adc-da" />
       <extension name="coverage">
         <pattern>
@@ -182,11 +188,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ImpalaTest" />
         <item itemvalue="Application.TestChargeData" />
         <item itemvalue="Application.ChargeVolDiffExpUdf" />
         <item itemvalue="Application.PlatformAlgorithm" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.ConnectionImpedance" />
       </list>
     </recent_temporary>
   </component>
@@ -247,14 +253,7 @@
       <workItem from="1605619642433" duration="33489000" />
       <workItem from="1605743191107" duration="73694000" />
       <workItem from="1606110514356" duration="27048000" />
-      <workItem from="1606194158616" duration="9809000" />
-    </task>
-    <task id="LOCAL-00013" summary="绝缘电阻突降完成">
-      <created>1602667965697</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1602667965697</updated>
+      <workItem from="1606194158616" duration="32673000" />
     </task>
     <task id="LOCAL-00014" summary="单体电压离散度高">
       <created>1602731674346</created>
@@ -592,7 +591,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606200980740</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="行驶状态检测更改">
+      <created>1606210790921</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1606210790922</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -600,7 +606,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="充电完成检测" />
     <MESSAGE value="离散度高" />
     <MESSAGE value="静置模式/放电状态匹配" />
     <MESSAGE value="充放电循环状态检测" />
@@ -625,7 +630,8 @@
     <MESSAGE value="行驶工况完成" />
     <MESSAGE value="行驶工况计算完成" />
     <MESSAGE value="脚本更改" />
-    <option name="LAST_COMMIT_MESSAGE" value="脚本更改" />
+    <MESSAGE value="行驶状态检测更改" />
+    <option name="LAST_COMMIT_MESSAGE" value="行驶状态检测更改" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="74" key="#Project_Structure" timestamp="1606047166770">
@@ -656,34 +662,38 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="397" y="340" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1602727857330" />
-    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606200980070">
+    <state x="429" y="170" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1606267051959">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606200980070" />
+    <state x="429" y="170" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1536.824@0.0.1536.824" timestamp="1606267051959" />
+    <state x="145" y="5" key="CommitChangelistDialog2" timestamp="1606210790151">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="145" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1606210790151" />
     <state width="389" height="466" key="DebuggerActiveHint" timestamp="1605849711984">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="389" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1605849711984" />
-    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1606184251870">
+    <state x="549" y="156" key="FileChooserDialogImpl" timestamp="1606266998712">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606184251870" />
-    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1606199960433">
+    <state x="549" y="156" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606266998712" />
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1606270522356">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
-    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1606199960433">
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606270522356" />
+    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1606270522355">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
-    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1606199960433">
+    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606270522355" />
+    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1606270522355">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
-    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1606199960433">
+    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606270522355" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1606270522356">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606199960433" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606270522356" />
     <state width="1493" height="290" key="GridCell.Tab.1.bottom" timestamp="1606194092880">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -700,14 +710,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="290" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606194092880" />
-    <state x="179" y="0" key="SettingsEditor" timestamp="1606108921132">
+    <state x="179" y="0" key="SettingsEditor" timestamp="1606267053876">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606108921132" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606201001343">
+    <state x="179" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606267053876" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606210802780">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606201001343" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606210802780" />
     <state x="564" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603159852245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -724,14 +734,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="116" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1604634261991" />
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606181543872">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup" timestamp="1606292356262">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606181543872" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605677683034">
+    <state x="425" y="186" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606292356262" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1606267979091">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1605677683034" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1606267979091" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -747,6 +757,9 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/adc_da_offline$PlatformAlgorithm.ic" NAME="PlatformAlgorithm Coverage Results" MODIFIED="1605781050476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.adc.da.algorithm.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/adc_da_offline$TestChargeData.ic" NAME="TestChargeData Coverage Results" MODIFIED="1606211011998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.adc.da.test.*</FILTER>
     </SUITE>
   </component>
 </project>

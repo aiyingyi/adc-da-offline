@@ -49,8 +49,8 @@ select
     cast (get_json_object(data,'$.averageCellVoltage') as double),
     cast (get_json_object(data,'$.varianceCellVoltage') as double),
     cast (get_json_object(data,'$.varianceProbeTemperature') as double),
-    cast (get_json_object(data,'$.entropy') as double),
-    cast (get_json_object(data,'$.variation') as double),
+    get_json_object(data,'$.entropy'),
+    get_json_object(data,'$.variation'),
     get_json_object(data,'$.wDifferenceCellVoltages'),
     cast (get_json_object(data,'$.wDifferenceTotalCellVoltage')  as double),
     cast (get_json_object(data,'$.differenceInternalResistance') as double),
@@ -72,8 +72,7 @@ select
     cast (get_json_object(data,'$.totalCurrent') as double),
     cast (get_json_object(data,'$.soc') as double),
     cast (get_json_object(data,'$.totalVoltage') as double),
-    cast (get_json_object(data,'$.differenceTemperature') as double)
-
+    cast (get_json_object(data,'$.differenceProbeTemperature') as double)
 from ${db}.ods_preprocess_vehicle_data
 where dt = '${do_date}';
 "
