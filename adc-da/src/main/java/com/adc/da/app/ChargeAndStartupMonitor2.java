@@ -152,7 +152,7 @@ public class ChargeAndStartupMonitor2 {
         chargeStream.keyBy(data -> data[0].getVin()).addSink(new ChargeSinkFunction(10, shellConfig));
 
         /**
-         * 行驶工况检测
+         * 行驶工况检测,数据在预处理之后就已经是有序的了
          */
         SingleOutputStreamOperator<OdsData[]> runStream = dataStream.process(new KeyedProcessFunction<String, OdsData, OdsData[]>() {
             ValueState<OdsData> startOds = null;  // 开始行驶数据

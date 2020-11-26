@@ -93,7 +93,6 @@ public class TestChargeData {
 
 
         SingleOutputStreamOperator<OdsData[]> runStream = dataStream.process(new KeyedProcessFunction<String, OdsData, OdsData[]>() {
-
             ValueState<OdsData> startOds = null;  // 开始行驶数据
             ValueState<OdsData> endOds = null;    // 行驶结束数据
 
@@ -102,13 +101,11 @@ public class TestChargeData {
                 startOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("startOds", OdsData.class));
                 endOds = getRuntimeContext().getState(new ValueStateDescriptor<OdsData>("endOds", OdsData.class));
             }
-
             @Override
             public void processElement(OdsData value, Context ctx, Collector<OdsData[]> out) throws Exception {
                 // 非充电并且是启动状态
-
-                if (startOds.value() == null) {
-                    if (("0".equals(value.getChargeStatus()))&& "1".equals(value.getStartupStatus())) {
+                if (startOds.value() == null || value.getMsgTime() < startOds.value().getMsgTime()) {
+                    if (("0".equals(value.getChargeStatus())) && "1".equals(value.getStartupStatus())) {
                         startOds.update(value);
                     }
                 } else {
@@ -116,7 +113,11 @@ public class TestChargeData {
                         if (startOds.value() == null) {
                             startOds.update(value);
                         } else {
-                            endOds.update(value);
+                            if (endOds.value() == null) {
+                                endOds.update(value);
+                            } else if (value.getMsgTime() > endOds.value().getMsgTime()) {
+                                endOds.update(value);
+                            }
                         }
                     } else if (endOds.value() != null) {
                         // 如果大于指定的时间间隔
@@ -133,6 +134,7 @@ public class TestChargeData {
                 }
             }
         });
+
         runStream.map(new RichMapFunction<OdsData[], String>() {
             SimpleDateFormat sdf = null;
 
